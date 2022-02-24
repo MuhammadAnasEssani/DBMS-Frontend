@@ -1,0 +1,15 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+.slick-initialized .slick-slide {
+    display: flex;
+    justify-content: center;
+}
+
+.slick-track {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+/* .slick-slider {
+    margin: 40px 0px 50px 0px;
+} */

@@ -1,0 +1,60 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+/* .teamx_slider .slick-track {
+    float: right !important;
+}
+.teamx .slick-track {
+    float: left !important;
+} */
+.slick-initialized .slick-slide {
+    display: flex;
+    justify-content: center;
+}
+
+.slick-track {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.slick-slider {
+    margin: 40px 0px 50px 0px;
+}
+.slick-next {
+    right: 0px;
+    z-index: 1;
+}
+.slick-prev {
+    left: 0px;
+    z-index: 1;
+}
+.slick-slider {
+    width: 100%;
+  }
+ 
+[dir='rtl'] .slick-prev {
+    right: 0px;
+    z-index: 1;
+}
+[dir='rtl'] .slick-next {
+    left: 0px;
+    z-index: 1;
+}
+/* @media (max-width: 1600px) {
+    .slick-slider {
+        margin: 40px 0px 50px 0px;
+    }
+  }
+@media (max-width: 768px) {
+    .slick-slider {
+        margin: 20px 0px 30px 0px;
+    }
+  }
+
+/* .slick-cloned {
+    display: none;
+} */
+
+@media (max-width: 768px) {
+    .slick-slider {
+        margin: 18px 0px 25px 0px;
+    }
+  }

@@ -1,0 +1,28 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+
+.main-banner {
+    /* height: 75vh;
+    width: 100vw; */
+    opacity: 1;
+    background: transparent;
+    color: #344767;
+    border-radius: none;
+    box-shadow: none;
+    /* background-image: url("assets/img/e-commerce.png"); */
+    -webkit-background-size: cover;
+    background-size: cover;
+    -webkit-background-position: top;
+    background-position: top;
+    display: grid;
+    place-items: center;
+    margin-top: 49px;
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+    /* max-height: 75vh; */
+    /* min-height: 75vh;
+    max-height: 75vh;
+    min-width: 100vw; */
+}
