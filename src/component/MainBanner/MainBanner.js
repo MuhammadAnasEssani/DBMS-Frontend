@@ -1,37 +1,52 @@
 import React from "react";
 import "./MainBanner.css";
-import Slider from "react-slick";
+// import Slider from "react-slick";
+import { Carousel } from "react-responsive-carousel";
+import { Link } from "react-router-dom";
 
 export default function MainBanner() {
-  const settings = {
-    dots: false,
-    infinite: true,
-    fade: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 2000,
-    autoplaySpeed: 5000,
-    pauseOnHover: false,
-    cssEase: "linear",
-  };
   return (
     <>
-      <div>
-        <Slider {...settings}>
-            <div  >
-                <div >
-            <img src="../assets/img/banner-1.png" alt="" className="main-banner" />
-            </div>
-            </div>
-            {/* <div  className="main-banner" Style="background-image: url(../assets/img/banner-1.png);">
-            
-            </div> */}
-            {/* <>
-            <img src="https://th.bing.com/th/id/R.55c761105e287ace01c354bb4bb6a20d?rik=8M4xb%2bKNIiizjw&pid=ImgRaw&r=0" alt="" style={{width: "100%", height: "80vh"}}/>
-            </> */}
-        </Slider>
-      </div>
+    {/* <div style={{width: "99vw",height: "500px",position: "relative", overflow: "hidden", marginTop: "89px"}}>
+      <div class="untitled">
+	<div class="untitled__slides">
+		<div class="untitled__slide">
+			<div class="untitled__slideBg"></div>
+			<div class="untitled__slideContent">
+				<span>Marketing &</span> 
+				<span>Communications</span>
+				<a class="button" href="https://www.google.com" target="/black">Click Here</a>
+			</div>
+		</div>
+		<div class="untitled__slide">
+			<div class="untitled__slideBg"></div>
+			<div class="untitled__slideContent">
+				
+				<span>Athletics</span> 
+				<span></span>
+				<a class="button" href="https://www.google.com" target="/black">Click Here</a>
+			</div>
+		</div>
+		<div class="untitled__slide">
+			<div class="untitled__slideBg"></div>
+			<div class="untitled__slideContent">
+				<span>University</span> 
+				<span>Advancement</span>
+				<a class="button" href="https://www.google.com" target="/black">Click Here</a>
+			</div>
+		</div>
+		<div class="untitled__slide">
+			<div class="untitled__slideBg"></div>
+			<div class="untitled__slideContent">
+				<span>University</span> 
+				<span>Development</span>
+				<a class="button" href="https://www.google.com" target="/black">Click Here</a>
+			</div>
+		</div>
+	</div>
+	<div class="untitled__shutters"></div>
+</div>
+</div> */}
     </>
   );
 }

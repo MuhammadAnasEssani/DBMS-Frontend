@@ -8,7 +8,9 @@ import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
-
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "./store";
 i18next
   .use(HttpApi)
   .use(LanguageDetector)
@@ -35,13 +37,17 @@ const loadingMarkup = (
 );
 
 ReactDOM.render(
+  <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
   <Suspense fallback={loadingMarkup}>
   <React.StrictMode>
     <Router>
       <App />
     </Router>
   </React.StrictMode>
-  </Suspense>,
+  </Suspense>
+  </PersistGate>
+  </Provider>,
   document.getElementById("root")
 );
 

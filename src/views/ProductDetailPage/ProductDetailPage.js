@@ -4,10 +4,13 @@ import { getProductDetail } from "../../config/api/products";
 import Notification from "../../component/notification/Notification";
 import { BsHeart } from "react-icons/bs";
 import { RiStarSFill } from "react-icons/ri";
+import { addToCart } from "../../store/actions";
+import { useDispatch } from "react-redux";
 export default function ProductDetailPage() {
   const { productId } = useParams();
   const [productDetail, setProductDetail] = useState("");
   const [addToWishList, setAddToWishList] = useState(true);
+  const dispatch = useDispatch()
   const getProductDetails = async () => {
     try {
       const res = await getProductDetail(productId);
@@ -51,89 +54,23 @@ export default function ProductDetailPage() {
   useEffect(() => {
     getProductDetails();
   }, []);
-  console.log(productDetail);
+  // console.log(productDetail);
   return (
     <>
-      {/* {productDetail.length != "" ? <section className="productpage">
-        <div className="productpage-section">
-          <div className="productpage-img">
-            <div className="sale-new">
-              <span className="sale">Sale</span>
-              <span className="new">New</span>
-            </div>
-
-            <div className="productpage-allimg">
-              <img
-                src={productDetail.productPictures[0].avatar}
-                alt={`${productDetail.productPictures[0].avatar}`}
-                className="productpage-product-img"
-                id="productDescImg"
-                style={{height: "450px",width: "100%"}}
-              />
-            </div>
-            <div class="small_img_row">
-              {productDetail.productPictures.map((thumb, index) => (
-                <div class="small_img_coloums">
-                  <img
-                    key={thumb.avatar}
-                    src={thumb.avatar}
-                    alt={thumb.avatar}
-                    width="100%"
-                    class="small_img"
-                    onClick={Active}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="productpage-desc">
-            <div className="product-content">
-              <div className="productpage-customer-reviewer">
-                <h3 className="customer-reviewer">(25 customer reviews)</h3>
-                <div className="productpage-product-rating">
-                <RiStarSFill />
-                <RiStarSFill />
-                <RiStarSFill />
-                <RiStarSFill />
-                <RiStarSFill />
-              </div>
-              </div>
-            </div>
-            <h1 className="productpage-product-title">
-              {productDetail.name}
-            </h1>
-            <h3 className="productpage-product-price">
-              $ 
-              {productDetail.price}
-            </h3>
-            <p className="productpage-product-desc">
-              {productDetail.description}
-            </p>
-            <div className="productpage-add-to-cart-btn">
-              <button
-                className="add-to-cart"
-              >
-                Add To Cart
-              </button>
-              <button
-                id="add-to-wishlist"
-                onMouseOver={() => setAddToWishList(!addToWishList)}
-                className={addToWishList ? "wishlistblack" : "wishlistwhite"}
-              >
-                <BsHeart />
-              </button>
-            </div>
-            <hr />
-          </div>
-        </div>
-      </section> : null} */}
-      <div class="card-wrapper">
+      {productDetail.length != "" ? <div class="card-wrapper">
         <div class="card">
           {/* <!-- card left --> */}
           <div class="product-imgs">
             <div class="img-display">
               <div class="img-showcase">
+              {productDetail.productPictures.map((thumb, index) => (
                 <img
+                key={thumb.avatar}
+                    src={thumb.avatar}
+                    alt={thumb.avatar}
+              />
+              ))}
+                {/* <img
                   src="https://fadzrinmadu.github.io/hosted-assets/product-detail-page-design-with-image-slider-html-css-and-javascript/shoe_1.jpg"
                   alt="shoe image"
                 />
@@ -148,11 +85,22 @@ export default function ProductDetailPage() {
                 <img
                   src="https://fadzrinmadu.github.io/hosted-assets/product-detail-page-design-with-image-slider-html-css-and-javascript/shoe_4.jpg"
                   alt="shoe image"
-                />
+                /> */}
               </div>
             </div>
             <div class="img-select">
+            {productDetail.productPictures.map((thumb, index) => (
               <div class="img-item">
+              <a href="#" data-id={index+1}>
+                <img
+                  key={thumb.avatar}
+                  src={thumb.avatar}
+                  alt={thumb.avatar}
+                />
+              </a>
+            </div>
+            ))}
+              {/* <div class="img-item">
                 <a href="#" data-id="1">
                   <img
                     src="https://fadzrinmadu.github.io/hosted-assets/product-detail-page-design-with-image-slider-html-css-and-javascript/shoe_1.jpg"
@@ -183,12 +131,12 @@ export default function ProductDetailPage() {
                     alt="shoe image"
                   />
                 </a>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* <!-- card right --> */}
           <div class="product-content">
-            <h2 class="product-title">nike shoes</h2>
+            <h2 class="product-title">{productDetail.name}</h2>
             <a href="#" class="product-link">
               visit nike store
             </a>
@@ -203,7 +151,7 @@ export default function ProductDetailPage() {
 
             <div class="product-price">
               <p class="last-price">
-                Old Price: <span>$257.00</span>
+                Old Price: <span>$ {productDetail.price}</span>
               </p>
               <p class="new-price">
                 New Price: <span>$249.00 (5%)</span>
@@ -213,9 +161,7 @@ export default function ProductDetailPage() {
             <div class="product-detail">
               <h2>about this item: </h2>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo
-                eveniet veniam tempora fuga tenetur placeat sapiente architecto
-                illum soluta consequuntur, aspernatur quidem at sequi ipsa!
+                {productDetail.description}
               </p>
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -243,7 +189,12 @@ export default function ProductDetailPage() {
 
             <div class="purchase-info">
               <input type="number" min="0" value="1" />
-              <button type="button" class="btn">
+              <button type="button" class="btn" onClick={() => {
+                  const { _id, name, price, createdBy } = productDetail;
+                  const img = productDetail.productPictures[0].avatar;
+                  dispatch(addToCart({ _id, name, price, img , createdBy}));
+                  // props.history.push(`/cart`);
+                }}>
                 Add to Cart <i class="fas fa-shopping-cart"></i>
               </button>
               <button type="button" class="btn">
@@ -271,7 +222,7 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </div>
-      </div>
+      </div> : null}
     </>
   );
 }

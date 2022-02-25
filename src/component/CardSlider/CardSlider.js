@@ -6,7 +6,6 @@ import NoImageArabic from "../../images/No-image-arabic.jpg";
 import "./style.css";
 import Card from "../Card";
 import { RiStarSFill } from "react-icons/ri";
-import { BaseUrl } from "../../config/api/_Domain";
 import { IoIosFlash } from "react-icons/io";
 
 export default function CardSlider(props) {

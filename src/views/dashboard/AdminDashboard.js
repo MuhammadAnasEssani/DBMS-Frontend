@@ -5,6 +5,7 @@ import NoData from "../../component/No-Data/NoData";
 import ShopLoader from "../../component/ShopLoader/ShopLoader";
 import BannerMain from "../../component/BannerMain/BannerMain";
 import ShopServices from "../../component/ShopServices";
+import MainBanner from "../../component/MainBanner/MainBanner";
 export default function AdminDashboard() {
   const [reviewedShops, setReviewedShops] = useState([1, 2]);
   const [shopLoader, setShopLoader] = useState(false);
@@ -12,6 +13,7 @@ export default function AdminDashboard() {
 
   return (
     <>
+    <MainBanner />
       <BannerMain />
       <section id="hero" className="hero d-flex align-items-center">
         <div className="container" style={{ position: "relative" }}>

@@ -1,5 +1,6 @@
-import Profile from "../../component/profile/Profile";
+
 import PageNotFound from "../../views/404/PageNotFound";
+import Checkout from "../../views/Checkout/Checkout";
 import Dashboard from "../../views/dashboard/Dashboard";
 import ProductDetailPage from "../../views/ProductDetailPage/ProductDetailPage";
 import ProductPage from "../../views/ProductPage/ProductPage";
@@ -25,6 +26,11 @@ const routes = [
     path: "/",
     title: "Home",
     component: () => <Dashboard />,
+  },
+  {
+    path: "/checkout",
+    title: "Home",
+    component: () => <Checkout />,
   },
   {
     path: "/:productSlug/:productId/p",
@@ -85,12 +91,12 @@ const routes = [
   //   isLoginRequired: false,
   //   component: () => <TermsAndCondition />,
   // },
-  {
-    path: "/profile/:id",
-    title: "profile",
-    isLoginRequired: false,
-    component: () => <Profile />,
-  },
+  // {
+  //   path: "/profile/:id",
+  //   title: "profile",
+  //   isLoginRequired: false,
+  //   component: () => <Profile />,
+  // },
   // {
   //   path: "/search:search",
   //   title: "search",

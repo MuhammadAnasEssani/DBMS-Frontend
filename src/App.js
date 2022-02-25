@@ -1,18 +1,14 @@
 import React, { useEffect } from "react";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-
+import { useDispatch, useSelector } from "react-redux";
 import 'antd/dist/antd.css';
 import "./App.css";
 import Routers from "./config/routers/Routers";
-import { persistor, store } from "../src/store/index";
 import Header from "../src/component/header/Header";
 import { useTranslation } from 'react-i18next'
-import i18next from 'i18next'
 import cookies from 'js-cookie'
-import classNames from 'classnames'
 import Footer from "./component/Footer";
 import SearchBar from "./component/Search_Bar/SearchBar";
+import { updateCart } from "./store/actions";
 
 const languages = [
   {
@@ -33,20 +29,24 @@ function App() {
   const currentLanguage = languages.find((l) => l.code === currentLanguageCode)
   const { t } = useTranslation()
 
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  useEffect(() => {
+    {auth.authenticate && dispatch(updateCart());}
+  }, [auth.authenticate]);
+
   useEffect(() => {
     document.body.dir = currentLanguage.dir || 'ltr'
     document.title = t('app_title')
   }, [currentLanguage, t])
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+    <>
         <Header lang={currentLanguage} />
         <SearchBar />
         <Routers />
       <Footer/>
-      </PersistGate>
-    </Provider>
+      </>
   );
 }
 
