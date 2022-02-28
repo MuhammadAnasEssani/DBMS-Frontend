@@ -1,13 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Form, Select } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { addOrder } from '../../config/api/order';
 import { cartConstants } from '../../store/actions/contants';
+import Notification from "../../component/notification/Notification";
+import { addOrder } from '../../config/api/order';
+import { useHistory } from 'react-router-dom';
 
 export default function Checkout() {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
-  const handleAddress = async (values) => {
+  const [name, setName] = useState("")
+  const [mobileNumber, setMobileNumber] = useState("")
+  const [pinCode, setPinCode] = useState("")
+  const [address, setAddress] = useState("")
+  const [cityDistrictTown, setCityDistrictTown] = useState("")
+  const [state, setState] = useState("")
+  const [country, setCountry] = useState("")
+  const [payment, setPayment] = useState("")
+  const history = useHistory();
+  const handleCheckout = async (e) => {
+    e.preventDefault();
     const totalAmount = Object.keys(cart.cartItems).reduce(
       (totalPrice, key) => {
         const { price, qty } = cart.cartItems[key];
@@ -25,33 +37,38 @@ export default function Checkout() {
       totalAmount,
       items,
       address: {
-        name: values.name,
-        mobileNumber: values.mobileNumber,
-        pinCode: values.pinCode,
-        address: values.address,
-        cityDistrictTown: values.cityDistrictTown,
-        state: values.state,
-        country: values.country,
+        name: name,
+        mobileNumber: mobileNumber,
+        pinCode: pinCode,
+        address: address,
+        cityDistrictTown: cityDistrictTown,
+        state: state,
+        country: country,
       },
       paymentStatus: "pending",
-      paymentType: values.payment,
+      paymentType: payment,
     };
     // console.log(payload)
     try {
+      if(Object.keys(cart.cartItems).length != 0){
       const res = await addOrder(payload);
       if (res.status === 201) {
         dispatch({
           type: cartConstants.RESET_CART,
         });
         Notification("Order Department", res.data.message, "Success");
+        history.push(`/invoice/${res.data.orderId}`)
         return
       }
       if(res.status === 400) {
         Notification("Order Department", res.data.message, "Error");
         return
       }
+    }else {
+      Notification("Order Department", "Your cart is empty", "Error");
+    }
     } catch (err) {
-      console.log(err);
+      Notification("Order Department", "Something went wrong", "Error");
     }
   };
   return (
@@ -65,7 +82,7 @@ export default function Checkout() {
                 <h2>Make Your Checkout Here</h2>
                 <p>Please register in order to checkout more quickly</p>
                 {/* <!-- Form --> */}
-                <Form onFinish={handleAddress} initialValues={""}>
+                <form onSubmit={handleCheckout} >
                   <div class="row">
                     <div class="col-lg-8 col-12">
                       <div class="row">
@@ -74,11 +91,14 @@ export default function Checkout() {
                             <label>
                               Name<span>*</span>
                             </label>
-                            <Form.Item name="name">
+                            {/* <Form.Item name="name"> */}
                               <input
+                              required
                                 type="text"
                                 placeholder=""
                                 required
+                                value={name}
+                  onChange={(e) => setName(e.target.value)}
                                 style={{
                                   width: "100%",
                                   height: "45px",
@@ -89,7 +109,7 @@ export default function Checkout() {
                                   background: "#F6F7FB",
                                 }}
                               />
-                            </Form.Item>
+                            {/* </Form.Item> */}
                           </div>
                         </div>
                         {/* <div class="col-lg-6 col-md-6 col-12">
@@ -120,10 +140,13 @@ export default function Checkout() {
                             <label>
                               Phone Number<span>*</span>
                             </label>
-                            <Form.Item name="mobileNumber">
+                            {/* <Form.Item name="mobileNumber"> */}
                               <input
+                              required
                                 type="number"
                                 placeholder=""
+                                value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
                                 required
                                 style={{
                                   width: "100%",
@@ -135,7 +158,7 @@ export default function Checkout() {
                                   background: "#F6F7FB",
                                 }}
                               />
-                            </Form.Item>
+                            {/* </Form.Item> */}
                           </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
@@ -146,10 +169,13 @@ export default function Checkout() {
                             <label>
                               Country<span>*</span>
                             </label>
-                            <Form.Item name="country">
+                            {/* <Form.Item name="country"> */}
                               <select
+                              required
                                 id="country"
                                 required
+                                value={country}
+                  onChange={(e) => setCountry(e.target.value)}
                                 style={{
                                   width: "100%",
                                   height: "45px",
@@ -439,7 +465,7 @@ export default function Checkout() {
                                 <option value="ZM">Zambia</option>
                                 <option value="ZW">Zimbabwe</option>
                               </select>
-                            </Form.Item>
+                            {/* </Form.Item> */}
                           </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
@@ -450,10 +476,13 @@ export default function Checkout() {
                             <label>
                               State / Divition<span>*</span>
                             </label>
-                            <Form.Item name="state">
+                            {/* <Form.Item name="state"> */}
                               <select
+                              required
                                 id="state-province"
                                 required="required"
+                                value={state}
+                  onChange={(e) => setState(e.target.value)}
                                 style={{
                                   width: "100%",
                                   height: "45px",
@@ -473,7 +502,7 @@ export default function Checkout() {
                                 <option value="Dallas">Dallas</option>
                                 <option value="Charlotte">Charlotte</option>
                               </select>
-                            </Form.Item>
+                            {/* </Form.Item> */}
                           </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
@@ -484,10 +513,13 @@ export default function Checkout() {
                             <label>
                               City<span>*</span>
                             </label>
-                            <Form.Item name="cityDistrictTown">
+                            {/* <Form.Item name="cityDistrictTown"> */}
                               <select
+                              required
                                 id="state-province"
                                 required="required"
+                                value={cityDistrictTown}
+                  onChange={(e) => setCityDistrictTown(e.target.value)}
                                 style={{
                                   width: "100%",
                                   height: "45px",
@@ -507,7 +539,7 @@ export default function Checkout() {
                                 <option value="Dallas">Dallas</option>
                                 <option value="Charlotte">Charlotte</option>
                               </select>
-                            </Form.Item>
+                            {/* </Form.Item> */}
                           </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
@@ -515,11 +547,14 @@ export default function Checkout() {
                             <label>
                               Postal Code<span>*</span>
                             </label>
-                            <Form.Item name="pinCode">
+                            {/* <Form.Item name="pinCode"> */}
                               <input
                                 type="number"
                                 name="post"
+                                required
                                 placeholder=""
+                                value={pinCode}
+                  onChange={(e) => setPinCode(e.target.value)}
                                 required
                                 style={{
                                   width: "100%",
@@ -531,7 +566,7 @@ export default function Checkout() {
                                   background: "#F6F7FB",
                                 }}
                               />
-                            </Form.Item>
+                            {/* </Form.Item> */}
                           </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-12">
@@ -539,11 +574,14 @@ export default function Checkout() {
                             <label>
                               Address<span>*</span>
                             </label>
-                            <Form.Item name="address">
+                            {/* <Form.Item name="address"> */}
                               <textarea
+                              required
                                 type="text"
                                 name="address"
                                 placeholder=""
+                                value={address}
+                  onChange={(e) => setAddress(e.target.value)}
                                 required
                                 style={{
                                   width: "100%",
@@ -556,7 +594,7 @@ export default function Checkout() {
                                   height: "100px",
                                 }}
                               />
-                            </Form.Item>
+                            {/* </Form.Item> */}
                           </div>
                         </div>
                         {/* <div class="col-lg-12 col-md-12 col-12">
@@ -662,10 +700,13 @@ export default function Checkout() {
                             <label>
                               Payment Method<span>*</span>
                             </label>
-                            <Form.Item name="payment">
+                            {/* <Form.Item name="payment"> */}
                               <select
+                              required
                                 id="state-province"
                                 required="required"
+                                value={payment}
+                  onChange={(e) => setPayment(e.target.value)}
                                 style={{
                                   width: "100%",
                                   height: "45px",
@@ -679,7 +720,7 @@ export default function Checkout() {
                                 <option value="">None</option>
                                 <option value="cod">Cash On Delivery</option>
                               </select>
-                            </Form.Item>
+                            {/* </Form.Item> */}
                             {/* <label class="checkbox-inline" for="1">
                         <input name="updates" id="1" type="checkbox" /> Check
                         Payments
@@ -697,7 +738,7 @@ export default function Checkout() {
 							<!-- Payment Method Widget --> */}
                         <div class="single-widget payement">
                           <div class="content">
-                            <img src="images/payment-method.png" alt="#" />
+                            <img src="assets/images/payment-method.png" alt="#" />
                           </div>
                         </div>
                         {/* <!--/ End Payment Method Widget -->
@@ -708,11 +749,11 @@ export default function Checkout() {
                               class="button"
                               style={{ background: "#333333" }}
                             >
-                              <Form.Item>
-                                <button className="btn btn-get-started">
+                              {/* <Form.Item> */}
+                                <button className="btn btn-get-started"  type="submit">
                                   Proceed To Checkout
                                 </button>
-                              </Form.Item>
+                              {/* </Form.Item> */}
                             </div>
                           </div>
                         </div>
@@ -720,7 +761,7 @@ export default function Checkout() {
                       </div>
                     </div>
                   </div>
-                </Form>
+                </form>
                 {/* <!--/ End Form --> */}
               </div>
             </div>

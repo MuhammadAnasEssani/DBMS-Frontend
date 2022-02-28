@@ -798,6 +798,25 @@ tr th {
     --bs-gutter-x: 0px;
     --bs-gutter-y: 0px;
   }
+  .market_container .ant-rate {
+    box-sizing: border-box;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    font-feature-settings: 'tnum', "tnum", "tnum";
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    color: #c1a700;
+    font-size: 8px;
+    line-height: unset;
+    list-style: none;
+    outline: none;
+}
+.market_container .ant-rate-star:not(:last-child) {
+  margin-right: 5px;
+}
   .onset-xl-1 {
     margin-right: 0%;
     margin-left: 0%;

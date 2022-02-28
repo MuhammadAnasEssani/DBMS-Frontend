@@ -2,6 +2,8 @@
 import PageNotFound from "../../views/404/PageNotFound";
 import Checkout from "../../views/Checkout/Checkout";
 import Dashboard from "../../views/dashboard/Dashboard";
+import OrderInvoive from "../../views/OrderInvoice/OrderInvoive";
+import Order from "../../views/Orders/Order";
 import ProductDetailPage from "../../views/ProductDetailPage/ProductDetailPage";
 import ProductPage from "../../views/ProductPage/ProductPage";
 
@@ -28,9 +30,19 @@ const routes = [
     component: () => <Dashboard />,
   },
   {
+    path: "/account/orders",
+    title: "Orders",
+    component: () => <Order />,
+  },
+  {
     path: "/checkout",
-    title: "Home",
+    title: "Checkout",
     component: () => <Checkout />,
+  },
+  {
+    path: "/invoice/:orderId",
+    title: "Invoice",
+    component: () => <OrderInvoive />,
   },
   {
     path: "/:productSlug/:productId/p",

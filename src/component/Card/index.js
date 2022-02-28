@@ -18,9 +18,9 @@ export default function Card(props) {
       >
         <img src={image} className="shop_image"  />
         <div className="col-lg-12 shop_content" >
-          <h3 className= "shop_content_title">{name}</h3>
+          <h3 className= "shop_content_title limit-text">{name}</h3>
           <div ><Rate allowHalf value={rating} /></div>
-          <div style={{color: "rgb(125, 135, 156)"}}>
+          <div style={{color: "rgb(125, 135, 156)"}} className="product_price">
             $&nbsp;<span>{price}</span>
           </div>
         </div>

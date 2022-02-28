@@ -30,6 +30,7 @@ export default function Header(props) {
   var title = "Admin";
   const state = useSelector((state) => state);
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+  const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,6 +39,7 @@ export default function Header(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const auth = useSelector((state) => state.auth);
+  const pathName = window.location.pathname
 
   const removeStyle = () => {
     setTimeout(() => {
@@ -50,11 +52,11 @@ export default function Header(props) {
   };
   const handleSignin = async (e) => {
     e.preventDefault();
-    setLoading(true)
-    try{
+    setLoading(true);
+    try {
       const users = {
         email,
-        password
+        password,
       };
       const res = await userSignin(users);
       if (res.status === 200) {
@@ -69,27 +71,26 @@ export default function Header(props) {
           },
         });
         Notification("Login", res.data.message, "Success");
-        setLoading(false)
-        setEmail("")
-        setPassword("")
+        setLoading(false);
+        setEmail("");
+        setPassword("");
         setAuthVisible(false);
         return;
-      }else {
+      } else {
         Notification("Login", res.data.message, "Error");
-        setLoading(false)
+        setLoading(false);
         return;
       }
-    }catch{
-      setLoading(false)
+    } catch {
+      setLoading(false);
       Notification("Login", "Something went wrong", "Error");
     }
-    
   };
   const logout = () => {
     localStorage.clear();
     dispatch({ type: authConstants.LOGOUT_SUCCESS });
     Notification("Logout", "Logout Successfully", "Success");
-  }
+  };
   const menu = (
     <Menu>
       <Menu.Item>
@@ -111,9 +112,10 @@ export default function Header(props) {
   // };
 
   useEffect(() => {
+    {(pathName == "/checkout" || pathName.split("/")[1] == "invoice" || pathName == "/account/orders")  && !auth.authenticate && setAuthVisible(true)}
+    // {pathName.split("/")[1] == "invoice"}
     removeStyle();
-    console.log(auth)
-  }, [removeStyle()]);
+  }, [removeStyle(),pathName,auth.authenticate]);
   return (
     <>
       <Modal
@@ -121,7 +123,7 @@ export default function Header(props) {
         centered
         visible={authVisible}
         onCancel={() => {
-          setAuthVisible(false);
+          {(pathName == "/checkout" || pathName.split("/")[1] == "invoice")? auth.authenticate && setAuthVisible(false) : setAuthVisible(false)}
         }}
         width={400}
       >
@@ -320,9 +322,7 @@ export default function Header(props) {
                           className="header-catorgies-icon"
                           style={{ cursor: "pointer" }}
                         >
-                          <span
-                            className="dropdownFilter"
-                          >
+                          <span className="dropdownFilter">
                             <img src={icon} alt="" />
                           </span>
                         </div>
@@ -336,26 +336,44 @@ export default function Header(props) {
           </nav>
 
           <div className="header-icons">
-            {auth.token != null ? <div
-              className="header-icon"
-              onClick={logout}
-            >
-              <RiLogoutCircleLine />
-            </div> : <div
-              className="header-icon"
-              onClick={() => {
-                authVisible ? setAuthVisible(false) : setAuthVisible(true);
-              }}
-            >
-              <AiOutlineUser />
-            </div>}
+            {auth.token != null ? (
+              <div className="header-icon" onClick={logout}>
+                <RiLogoutCircleLine />
+              </div>
+            ) : (
+              <div
+                className="header-icon"
+                onClick={() => {
+                  authVisible ? pathName == "/checkout" ? auth.authenticate && setAuthVisible(false) : setAuthVisible(false) : setAuthVisible(true);
+                }}
+              >
+                <AiOutlineUser />
+              </div>
+            )}
             <div
               className="header-icon"
               onClick={() => {
+                
                 visible ? setVisible(false) : setVisible(true);
               }}
+              style={{position: "relative"}}
             >
               <IoBagCheckOutline />
+              <div
+                cursor="unset"
+                class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 dlowzc iDDLYe"
+              >
+                <span
+                  font-size="10px"
+                  color="white"
+                  font-weight="600"
+                  class="Typography-sc-1nbqu5-0 YnhBG"
+                >
+                  {Object.keys(cart.cartItems).reduce((count, key) => {
+            return count + 1;
+          }, 0)}
+                </span>
+              </div>
             </div>
           </div>
         </div>

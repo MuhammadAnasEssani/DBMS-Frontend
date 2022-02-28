@@ -3,6 +3,7 @@ import ShopCard from "../ShopCard/ShopCard";
 import { RiStarSFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, getCartItems } from "../../store/actions";
+import { Link } from "react-router-dom";
 
 export default function Cart() {
   const cart = useSelector((state) => state.cart);
@@ -48,7 +49,8 @@ export default function Cart() {
             />
           </div>
         ))}
-        <button color="primary" class="Button-l2616d-0 hlOtvl">
+        <Link to={Object.keys(cart.cartItems).length != 0 && "/checkout"}>
+        <button color="primary" class="Button-l2616d-0 hlOtvl" >
           <div font-weight="600" class="Typography-sc-1nbqu5-0 hcjNSe">
             {`Checkout Now ($${Object.keys(cart.cartItems).reduce((totalPrice, key) => {
             const { price, qty } = cart.cartItems[key];
@@ -56,6 +58,7 @@ export default function Cart() {
           }, 0)})`}
           </div>
         </button>
+        </Link>
       </div>
     </>
   );

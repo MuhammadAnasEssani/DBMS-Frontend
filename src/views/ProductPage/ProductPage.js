@@ -10,6 +10,7 @@ import Notification from "../../component/notification/Notification";
 export default function ProductPage() {
   const shops = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [products, setProducts] = useState([]);
+  const [filter, setFilter] = useState(false)
   const { slug } = useParams();
 
   const getProduct = async() => {
@@ -41,10 +42,12 @@ export default function ProductPage() {
               visible={visible}
             >
                 </Drawer> */}
-        <div className="container">
+        <div className="container" style={{position : "relative"}}>
           <div className="elevation container">
             <div>
-              <FaFilter style={{ cursor: "pointer" }} />
+              <FaFilter style={{ cursor: "pointer" }} onClick={()=> {
+                filter ? setFilter(false) : setFilter(true)
+              }}/>
             </div>
             <div>
               <h5 className="elevation-title">Searching For Mobile</h5>
@@ -52,7 +55,11 @@ export default function ProductPage() {
           </div>
           <div className="col-xl-12 col-lg-12 col-md-12">
             <div className="row">
-              <div className="col-xl-3 col-lg-3 col-md-3">
+              <div className={
+            filter
+              ? "col-xl-3 col-lg-3 col-md-3 col-12 filter-sidebar"
+              : "col-xl-3 col-lg-3 col-md-3 col-12 filter"
+          } >
                 <div className="side-bar">
                   <h6 className="sidebar-titles">Price Range</h6>
                   <div

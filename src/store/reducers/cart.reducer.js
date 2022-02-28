@@ -3,8 +3,7 @@
 import { cartConstants } from "../actions/contants";
 
 const initState = {
-    cartItems: {
-    },
+    cartItems: {},
     updatingCart: false,
     error: null,
     loading: false

@@ -16,7 +16,6 @@ export default function ProductDetailPage() {
       const res = await getProductDetail(productId);
       if (res.status == 200) {
         setProductDetail(res.data.product);
-        console.log(res);
       } else {
         Notification("Product Detail", "Something went wrong", "Error");
       }
