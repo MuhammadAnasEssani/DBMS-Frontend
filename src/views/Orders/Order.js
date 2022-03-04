@@ -109,7 +109,7 @@ export default function Order() {
       </div>
       {orders.length > 0 && orders.map((data) => {
         return (
-<Link class="TableRow-sc-1sslxri-0 jvUCMA">
+<Link to={`/invoice/${data._id}`} class="TableRow-sc-1sslxri-0 jvUCMA">
         <h5
           font-weight="600"
           font-size="16px"
@@ -125,11 +125,15 @@ export default function Order() {
               class="Typography-sc-1nbqu5-0 fooWlQ"
             >
              {
-             data.orderStatus.forEach((element, count=0) => {
-               count += 1
-               if(element.isCompleted){
-                return console.log(count);
+             data.orderStatus.map((element) => {
+              //  count += 1
+              //  console.log(count)
+               if(!element.isCompleted){
+                // console.log(count)
+                return false
                }
+              //  console.log(count)
+              return element.type
              })}
             </span>
           </div>

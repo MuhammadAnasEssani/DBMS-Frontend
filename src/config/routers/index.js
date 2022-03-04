@@ -6,7 +6,8 @@ import OrderInvoive from "../../views/OrderInvoice/OrderInvoive";
 import Order from "../../views/Orders/Order";
 import ProductDetailPage from "../../views/ProductDetailPage/ProductDetailPage";
 import ProductPage from "../../views/ProductPage/ProductPage";
-
+import ShopPage from "../../views/ShopPage/ShopPage";
+import Shops from "../../views/Shops/Shops";
 
 const routes = [
   // {
@@ -40,9 +41,19 @@ const routes = [
     component: () => <Checkout />,
   },
   {
+    path: "/shops",
+    title: "Shops",
+    component: () => <Shops />,
+  },
+  {
     path: "/invoice/:orderId",
     title: "Invoice",
     component: () => <OrderInvoive />,
+  },
+  {
+    path: "/shop/:shopId",
+    title: "Shop Page",
+    component: () => <ShopPage />,
   },
   {
     path: "/:productSlug/:productId/p",

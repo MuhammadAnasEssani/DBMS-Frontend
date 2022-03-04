@@ -13,7 +13,7 @@ export default function AdminDashboard() {
 
   return (
     <>
-    <MainBanner />
+    {/* <MainBanner /> */}
       <BannerMain />
       <section id="hero" className="hero d-flex align-items-center">
         <div className="container" style={{ position: "relative" }}>

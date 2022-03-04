@@ -56,7 +56,7 @@ export default function ProductDetailPage() {
   // console.log(productDetail);
   return (
     <>
-      {productDetail.length != "" ? <div class="card-wrapper">
+      {productDetail != "" ? <div class="card-wrapper">
         <div class="card">
           {/* <!-- card left --> */}
           <div class="product-imgs">

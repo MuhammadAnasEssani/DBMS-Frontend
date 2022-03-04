@@ -26,7 +26,9 @@ export default function OrderInvoive() {
   };
 
   useEffect(() => {
-    {auth.authenticate && fetchOrderDetail();}
+    {
+      auth.authenticate && fetchOrderDetail();
+    }
   }, [auth.authenticate]);
   return orderDetail != "" ? (
     <>
@@ -86,7 +88,11 @@ export default function OrderInvoive() {
                 size="64"
                 color="gray.white"
                 class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"
-                className={orderDetail.orderStatus[1].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 CEKcw"}
+                className={
+                  orderDetail.orderStatus[1].isCompleted
+                    ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"
+                    : "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 CEKcw"
+                }
               >
                 <span>
                   <div
@@ -126,54 +132,63 @@ export default function OrderInvoive() {
                   </div>
                 </span>
               </div>
-              {orderDetail.orderStatus[1].isComplete &&
-              <div cursor="unset" class="Box-sc-15jsbqj-0 fyCHB">
-                <div
-                  size="22"
-                  color="success.main"
-                  // color="gray.white"
-                  class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 iMFHjT"
-                  // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
-                >
-                  <span>
-                    <div
-                      defaultcolor="currentColor"
-                      variant="medium"
-                      class="IconStyle__StyledIcon-sc-18inybg-0 DIQGX"
-                    >
-                      <div>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          class="injected-svg"
-                          data-src="/assets/images/icons/done.svg"
-                          xlink="http://www.w3.org/1999/xlink"
-                        >
-                          <g clip-path="url(#clip0-209)">
-                            <path
-                              d="M11.7212 1.96136C11.3499 1.58959 10.747 1.58982 10.3752 1.96136L4.31744 8.01936L1.62503 5.32697C1.25325 4.95519 0.650609 4.95519 0.278832 5.32697C-0.0929441 5.69874 -0.0929441 6.30139 0.278832 6.67316L3.6442 10.0385C3.82997 10.2243 4.07357 10.3174 4.31718 10.3174C4.5608 10.3174 4.80463 10.2245 4.9904 10.0385L11.7212 3.30753C12.0929 2.93602 12.0929 2.33311 11.7212 1.96136Z"
-                              fill="#33D067"
-                            ></path>
-                          </g>
-                          <defs>
-                            <clipPath id="clip0-209">
-                              <rect width="12" height="12" fill="white"></rect>
-                            </clipPath>
-                          </defs>
-                        </svg>
+              {orderDetail.orderStatus[1].isComplete && (
+                <div cursor="unset" class="Box-sc-15jsbqj-0 fyCHB">
+                  <div
+                    size="22"
+                    color="success.main"
+                    // color="gray.white"
+                    class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 iMFHjT"
+                    // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
+                  >
+                    <span>
+                      <div
+                        defaultcolor="currentColor"
+                        variant="medium"
+                        class="IconStyle__StyledIcon-sc-18inybg-0 DIQGX"
+                      >
+                        <div>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                            class="injected-svg"
+                            data-src="/assets/images/icons/done.svg"
+                            xlink="http://www.w3.org/1999/xlink"
+                          >
+                            <g clip-path="url(#clip0-209)">
+                              <path
+                                d="M11.7212 1.96136C11.3499 1.58959 10.747 1.58982 10.3752 1.96136L4.31744 8.01936L1.62503 5.32697C1.25325 4.95519 0.650609 4.95519 0.278832 5.32697C-0.0929441 5.69874 -0.0929441 6.30139 0.278832 6.67316L3.6442 10.0385C3.82997 10.2243 4.07357 10.3174 4.31718 10.3174C4.5608 10.3174 4.80463 10.2245 4.9904 10.0385L11.7212 3.30753C12.0929 2.93602 12.0929 2.33311 11.7212 1.96136Z"
+                                fill="#33D067"
+                              ></path>
+                            </g>
+                            <defs>
+                              <clipPath id="clip0-209">
+                                <rect
+                                  width="12"
+                                  height="12"
+                                  fill="white"
+                                ></rect>
+                              </clipPath>
+                            </defs>
+                          </svg>
+                        </div>
                       </div>
-                    </div>
-                  </span>
+                    </span>
+                  </div>
                 </div>
-              </div>}
+              )}
             </div>
             <div
               height="4"
               cursor="unset"
-              className={orderDetail.orderStatus[1].isCompleted ? "Box-sc-15jsbqj-0 gbwuDb" : "Box-sc-15jsbqj-0 kYfptl"}
+              className={
+                orderDetail.orderStatus[1].isCompleted
+                  ? "Box-sc-15jsbqj-0 gbwuDb"
+                  : "Box-sc-15jsbqj-0 kYfptl"
+              }
               // class="Box-sc-15jsbqj-0 gbwuDb"
             ></div>
             <div cursor="unset" class="Box-sc-15jsbqj-0 hXORQp">
@@ -182,7 +197,11 @@ export default function OrderInvoive() {
                 // color="gray.white"
                 color="gray.white"
                 // class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"
-                className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 CEKcw"}
+                className={
+                  orderDetail.orderStatus[2].isCompleted
+                    ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"
+                    : "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 CEKcw"
+                }
               >
                 <span>
                   <div
@@ -212,61 +231,74 @@ export default function OrderInvoive() {
                   </div>
                 </span>
               </div>
-              {orderDetail.orderStatus[2].isComplete &&
-              <div cursor="unset" class="Box-sc-15jsbqj-0 fyCHB">
-                <div
-                  size="22"
-                  color="success.main"
-                  // color="gray.white"
-                  class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 iMFHjT"
-                  // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
-                >
-                  <span>
-                    <div
-                      defaultcolor="currentColor"
-                      variant="medium"
-                      class="IconStyle__StyledIcon-sc-18inybg-0 DIQGX"
-                    >
-                      <div>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          class="injected-svg"
-                          data-src="/assets/images/icons/done.svg"
-                          xlink="http://www.w3.org/1999/xlink"
-                        >
-                          <g clip-path="url(#clip0-209)">
-                            <path
-                              d="M11.7212 1.96136C11.3499 1.58959 10.747 1.58982 10.3752 1.96136L4.31744 8.01936L1.62503 5.32697C1.25325 4.95519 0.650609 4.95519 0.278832 5.32697C-0.0929441 5.69874 -0.0929441 6.30139 0.278832 6.67316L3.6442 10.0385C3.82997 10.2243 4.07357 10.3174 4.31718 10.3174C4.5608 10.3174 4.80463 10.2245 4.9904 10.0385L11.7212 3.30753C12.0929 2.93602 12.0929 2.33311 11.7212 1.96136Z"
-                              fill="#33D067"
-                            ></path>
-                          </g>
-                          <defs>
-                            <clipPath id="clip0-209">
-                              <rect width="12" height="12" fill="white"></rect>
-                            </clipPath>
-                          </defs>
-                        </svg>
+              {orderDetail.orderStatus[2].isComplete && (
+                <div cursor="unset" class="Box-sc-15jsbqj-0 fyCHB">
+                  <div
+                    size="22"
+                    color="success.main"
+                    // color="gray.white"
+                    class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 iMFHjT"
+                    // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
+                  >
+                    <span>
+                      <div
+                        defaultcolor="currentColor"
+                        variant="medium"
+                        class="IconStyle__StyledIcon-sc-18inybg-0 DIQGX"
+                      >
+                        <div>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                            class="injected-svg"
+                            data-src="/assets/images/icons/done.svg"
+                            xlink="http://www.w3.org/1999/xlink"
+                          >
+                            <g clip-path="url(#clip0-209)">
+                              <path
+                                d="M11.7212 1.96136C11.3499 1.58959 10.747 1.58982 10.3752 1.96136L4.31744 8.01936L1.62503 5.32697C1.25325 4.95519 0.650609 4.95519 0.278832 5.32697C-0.0929441 5.69874 -0.0929441 6.30139 0.278832 6.67316L3.6442 10.0385C3.82997 10.2243 4.07357 10.3174 4.31718 10.3174C4.5608 10.3174 4.80463 10.2245 4.9904 10.0385L11.7212 3.30753C12.0929 2.93602 12.0929 2.33311 11.7212 1.96136Z"
+                                fill="#33D067"
+                              ></path>
+                            </g>
+                            <defs>
+                              <clipPath id="clip0-209">
+                                <rect
+                                  width="12"
+                                  height="12"
+                                  fill="white"
+                                ></rect>
+                              </clipPath>
+                            </defs>
+                          </svg>
+                        </div>
                       </div>
-                    </div>
-                  </span>
+                    </span>
+                  </div>
                 </div>
-              </div>}
+              )}
             </div>
             <div
               height="4"
               cursor="unset"
-              className={orderDetail.orderStatus[2].isCompleted ? "Box-sc-15jsbqj-0 gbwuDb" : "Box-sc-15jsbqj-0 kYfptl"}
+              className={
+                orderDetail.orderStatus[2].isCompleted
+                  ? "Box-sc-15jsbqj-0 gbwuDb"
+                  : "Box-sc-15jsbqj-0 kYfptl"
+              }
               // class="Box-sc-15jsbqj-0 kYfptl"
             ></div>
             <div cursor="unset" class="Box-sc-15jsbqj-0 hXORQp">
               <div
                 size="64"
                 color="primary.main"
-                className={orderDetail.orderStatus[3].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 CEKcw"}
+                className={
+                  orderDetail.orderStatus[3].isCompleted
+                    ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"
+                    : "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 CEKcw"
+                }
               >
                 <span>
                   <div
@@ -310,49 +342,54 @@ export default function OrderInvoive() {
                   </div>
                 </span>
               </div>
-              {orderDetail.orderStatus[3].isComplete &&
-              <div cursor="unset" class="Box-sc-15jsbqj-0 fyCHB">
-                <div
-                  size="22"
-                  color="success.main"
-                  // color="gray.white"
-                  class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 iMFHjT"
-                  // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
-                >
-                  <span>
-                    <div
-                      defaultcolor="currentColor"
-                      variant="medium"
-                      class="IconStyle__StyledIcon-sc-18inybg-0 DIQGX"
-                    >
-                      <div>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          class="injected-svg"
-                          data-src="/assets/images/icons/done.svg"
-                          xlink="http://www.w3.org/1999/xlink"
-                        >
-                          <g clip-path="url(#clip0-209)">
-                            <path
-                              d="M11.7212 1.96136C11.3499 1.58959 10.747 1.58982 10.3752 1.96136L4.31744 8.01936L1.62503 5.32697C1.25325 4.95519 0.650609 4.95519 0.278832 5.32697C-0.0929441 5.69874 -0.0929441 6.30139 0.278832 6.67316L3.6442 10.0385C3.82997 10.2243 4.07357 10.3174 4.31718 10.3174C4.5608 10.3174 4.80463 10.2245 4.9904 10.0385L11.7212 3.30753C12.0929 2.93602 12.0929 2.33311 11.7212 1.96136Z"
-                              fill="#33D067"
-                            ></path>
-                          </g>
-                          <defs>
-                            <clipPath id="clip0-209">
-                              <rect width="12" height="12" fill="white"></rect>
-                            </clipPath>
-                          </defs>
-                        </svg>
+              {orderDetail.orderStatus[3].isComplete && (
+                <div cursor="unset" class="Box-sc-15jsbqj-0 fyCHB">
+                  <div
+                    size="22"
+                    color="success.main"
+                    // color="gray.white"
+                    class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 iMFHjT"
+                    // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
+                  >
+                    <span>
+                      <div
+                        defaultcolor="currentColor"
+                        variant="medium"
+                        class="IconStyle__StyledIcon-sc-18inybg-0 DIQGX"
+                      >
+                        <div>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                            class="injected-svg"
+                            data-src="/assets/images/icons/done.svg"
+                            xlink="http://www.w3.org/1999/xlink"
+                          >
+                            <g clip-path="url(#clip0-209)">
+                              <path
+                                d="M11.7212 1.96136C11.3499 1.58959 10.747 1.58982 10.3752 1.96136L4.31744 8.01936L1.62503 5.32697C1.25325 4.95519 0.650609 4.95519 0.278832 5.32697C-0.0929441 5.69874 -0.0929441 6.30139 0.278832 6.67316L3.6442 10.0385C3.82997 10.2243 4.07357 10.3174 4.31718 10.3174C4.5608 10.3174 4.80463 10.2245 4.9904 10.0385L11.7212 3.30753C12.0929 2.93602 12.0929 2.33311 11.7212 1.96136Z"
+                                fill="#33D067"
+                              ></path>
+                            </g>
+                            <defs>
+                              <clipPath id="clip0-209">
+                                <rect
+                                  width="12"
+                                  height="12"
+                                  fill="white"
+                                ></rect>
+                              </clipPath>
+                            </defs>
+                          </svg>
+                        </div>
                       </div>
-                    </div>
-                  </span>
+                    </span>
+                  </div>
                 </div>
-              </div>}
+              )}
             </div>
           </div>
           <div
@@ -417,67 +454,70 @@ export default function OrderInvoive() {
             </div>
           </div>
           <div cursor="unset" class="Box-sc-15jsbqj-0 kBYRep">
-          {orderDetail.items.map((data) => {
-            return (
-            <div
-            cursor="unset"
-            class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 iZSoIB hrPsZn"
-          >
-            <div
-              cursor="unset"
-              class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 gOLWtq eObGgo"
-            >
-              <div
-                size="64"
-                class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 ffSehd"
-              >
-                <img
-                  src={data.productId.productPictures[0].avatar}
-                  alt="avatar"
-                />
-              </div>
-              <div cursor="unset" class="Box-sc-15jsbqj-0 jGKOtS">
-                <h6
-                  font-weight="600"
-                  font-size="14px"
-                  class="Typography-sc-1nbqu5-0 JPPAF"
-                >
-                  {data.productId.name}
-                </h6>
+            {orderDetail.items.map((data) => {
+              return (
                 <div
-                  font-size="14px"
-                  color="text.muted"
-                  class="Typography-sc-1nbqu5-0 huVebp"
+                  cursor="unset"
+                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 iZSoIB hrPsZn"
                 >
-                  ${data.payablePrice} x {data.purchasedQty}
+                  <div
+                    cursor="unset"
+                    class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 gOLWtq eObGgo"
+                  >
+                    <div
+                      size="64"
+                      class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 ffSehd"
+                    >
+                      <img
+                        src={data.productId.productPictures[0].avatar}
+                        alt="avatar"
+                      />
+                    </div>
+                    <div cursor="unset" class="Box-sc-15jsbqj-0 jGKOtS">
+                      <h6
+                        font-weight="600"
+                        font-size="14px"
+                        class="Typography-sc-1nbqu5-0 JPPAF"
+                      >
+                        {data.productId.name}
+                      </h6>
+                      <div
+                        font-size="14px"
+                        color="text.muted"
+                        class="Typography-sc-1nbqu5-0 huVebp"
+                      >
+                        ${data.payablePrice} x {data.purchasedQty}
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    cursor="unset"
+                    class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 QZPAu hdhYdk"
+                  >
+                    <div
+                      font-size="14px"
+                      color="text.muted"
+                      class="Typography-sc-1nbqu5-0 huVebp"
+                    >
+                      Product properties: Black, L
+                    </div>
+                  </div>
+                  <div
+                    cursor="unset"
+                    class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 eRcLlJ eUlVfr"
+                  >
+                    <button color="primary" class="Button-l2616d-0 XMkZq">
+                      <div
+                        font-size="14px"
+                        class="Typography-sc-1nbqu5-0 gVliBE"
+                      >
+                        Write a Review
+                      </div>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div
-              cursor="unset"
-              class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 QZPAu hdhYdk"
-            >
-              <div
-                font-size="14px"
-                color="text.muted"
-                class="Typography-sc-1nbqu5-0 huVebp"
-              >
-                Product properties: Black, L
-              </div>
-            </div>
-            <div
-              cursor="unset"
-              class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 eRcLlJ eUlVfr"
-            >
-              <button color="primary" class="Button-l2616d-0 XMkZq">
-                <div font-size="14px" class="Typography-sc-1nbqu5-0 gVliBE">
-                  Write a Review
-                </div>
-              </button>
-            </div>
-          </div>
-            )
-          })}
+              );
+            })}
           </div>
         </div>
         <div spacing="6" class="GridStyle__StyledGrid-sc-1r6thsr-0 iLBSKL">

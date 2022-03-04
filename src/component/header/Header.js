@@ -13,7 +13,6 @@ import LOGO from "../../images/logo.png";
 import icon from "../../images/Group 16.png";
 import { useTranslation } from "react-i18next";
 import { Menu, Dropdown, Form, Spin, Space } from "antd";
-import { Select } from "antd";
 
 import $ from "jquery";
 
@@ -22,6 +21,7 @@ import Cart from "../Cart/Cart";
 import { LoadingOutlined } from "@ant-design/icons";
 import { authConstants } from "../../store/actions/contants";
 import { userSignin } from "../../config/api/auth";
+import { getCategories } from "../../config/api/categories";
 
 export default function Header(props) {
   const { lang } = props;
@@ -40,6 +40,39 @@ export default function Header(props) {
   const [password, setPassword] = useState("");
   const auth = useSelector((state) => state.auth);
   const pathName = window.location.pathname
+  const [filter, setFilter] = useState(false)
+  const [categories, setCategories] = useState([]);
+  const { SubMenu } = Menu;
+    const getAllCategories = async() => {
+      try{
+        const res = await getCategories();
+        if(res.status == 200){
+          setCategories(res.data.categoryList)
+          return
+        }else{
+          Notification("Categories", "Something went wrong", "Error");
+          return
+        }
+      }catch(err){
+        Notification("Categories", "Something went wrong", "Error");
+      }
+        // console.log(res)
+    }
+  const renderCategories = (categories) => {
+    let myCategories = [];
+    for (let category of categories) {
+      myCategories.push(
+        category.children.length > 0 ? (
+          <SubMenu key={category.id} title={category.name}>
+            {renderCategories(category.children)}
+          </SubMenu>
+        ) : (
+          <Menu.Item key={category.id}>{category.name}</Menu.Item>
+        )
+      );
+    }
+    return myCategories;
+  };
 
   const removeStyle = () => {
     setTimeout(() => {
@@ -115,9 +148,27 @@ export default function Header(props) {
     {(pathName == "/checkout" || pathName.split("/")[1] == "invoice" || pathName == "/account/orders")  && !auth.authenticate && setAuthVisible(true)}
     // {pathName.split("/")[1] == "invoice"}
     removeStyle();
+    getAllCategories()
   }, [removeStyle(),pathName,auth.authenticate]);
+  console.log(categories)
   return (
     <>
+    <div style={{ position: "relative" }}>
+        <div
+          className={
+            filter
+              ? "col-xl-3 col-lg-3 col-md-3 col-12 mobile-categories filter-sidebar"
+              : "col-xl-3 col-lg-3 col-md-3 col-12 mobile-categories filter"
+          }
+        >
+          <div className="side-bar" style={{height: "auto",maxHEight: "80vh"}}>
+            <Menu mode="inline" >
+              {categories.length > 0 &&
+                renderCategories(categories)}
+            </Menu>
+          </div>
+        </div>
+      </div>
       <Modal
         title="Login"
         centered
@@ -272,6 +323,12 @@ export default function Header(props) {
               </div>
               <MdKeyboardArrowDown className="category-header-icon" />
               <MenuHeader />
+            </div>
+            <div className="categories-header-mobile" onClick={()=> {
+                filter ? setFilter(false) : setFilter(true)
+              }}>
+              <MdDashboardCustomize className="category-header-icon" />
+              <MdKeyboardArrowDown className="category-header-icon" />
             </div>
           </div>
 
