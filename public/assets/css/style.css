@@ -5857,3 +5857,96 @@ hr {
     max-width: 70px;
   }
 }
+.jFZEiW {
+  display: flex;
+  flex-direction: row;
+  color: rgb(125, 135, 156);
+  -webkit-box-align: center;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+.jqjXmN {
+  box-shadow: none;
+  cursor: unset;
+  -webkit-box-align: center;
+  align-items: center;
+  margin-left: 0.5rem;
+  color: rgb(125, 135, 156);
+}
+.gkKqDD {
+  font-size: 14px;
+  margin-right: 0.5rem;
+  color: rgb(125, 135, 156);
+}
+.jAjWAO div {
+  width: 12px;
+  height: 12px;
+}
+.jAjWAO div {
+  display: flex;
+  width: 12px;
+  height: 12px;
+}
+.jAjWAO svg {
+  width: 100%;
+  height: 100%;
+}
+.epjUQS {
+  display: flex;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.hKAarp {
+  box-shadow: none;
+  cursor: unset;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.bNDuSn {
+  display: flex;
+  flex-direction: row;
+}
+.gEaYFE {
+  box-shadow: none;
+  cursor: unset;
+}
+.iDBwHD {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  margin-right: 0.5rem;
+  color: rgb(233, 69, 96);
+}
+.gNPSJZ {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  color: rgb(125, 135, 156);
+}
+.dErric {
+  display: inline-flex;
+  border-radius: 300px;
+  cursor: unset;
+  box-shadow: unset;
+  transition: all 150ms ease-in-out 0s;
+  padding: 5px 10px;
+  background-color: rgb(233, 69, 96);
+  color: rgb(255, 255, 255);
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.product-card {
+  position: relative;
+}

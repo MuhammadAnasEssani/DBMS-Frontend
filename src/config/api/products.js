@@ -8,6 +8,11 @@ function getProducts(slug) {
 function getProductDetail(productId) {
     return axios.get(`/product/${productId}`)
   }
+  function getFeaturedProduct() {
+    return axios.get(`/getFeaturedProducts`)
+  }
+  function getDiscountedProduct() {
+    return axios.get(`/getDiscountedProducts`)
+  }
 
-
-export {getProducts,getProductDetail };
+export {getProducts,getProductDetail,getFeaturedProduct,getDiscountedProduct };

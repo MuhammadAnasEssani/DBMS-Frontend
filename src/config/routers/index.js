@@ -3,6 +3,8 @@ import PageNotFound from "../../views/404/PageNotFound";
 import ActivateAccount from "../../views/ActivateAccount/ActivateAccount";
 import Checkout from "../../views/Checkout/Checkout";
 import Dashboard from "../../views/dashboard/Dashboard";
+import DiscountedProducts from "../../views/DiscountedProducts/DiscountedProducts";
+import FeaturedProducts from "../../views/FeaturedProducts/FeaturedProducts";
 import OrderInvoive from "../../views/OrderInvoice/OrderInvoive";
 import Order from "../../views/Orders/Order";
 import ProductDetailPage from "../../views/ProductDetailPage/ProductDetailPage";
@@ -40,6 +42,16 @@ const routes = [
     path: "/checkout",
     title: "Checkout",
     component: () => <Checkout />,
+  },
+  {
+    path: "/featured-products",
+    title: "Shops",
+    component: () => <FeaturedProducts />,
+  },
+  {
+    path: "/discounted-products",
+    title: "Shops",
+    component: () => <DiscountedProducts />,
   },
   {
     path: "/shops",

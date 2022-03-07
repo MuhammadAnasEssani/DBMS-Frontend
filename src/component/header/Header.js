@@ -180,7 +180,7 @@ export default function Header(props) {
     removeStyle();
     getAllCategories()
   }, [removeStyle(), pathName, auth.authenticate]);
-  console.log(categories)
+  // console.log(categories)
   return (
     <>
       <div style={{ position: "relative" }}>

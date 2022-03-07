@@ -3,11 +3,11 @@ import Card from "../../component/Card";
 import NoImageArabic from "../../images/No-image-arabic.jpg";
 import { FaFilter } from "react-icons/fa";
 import { Rate } from "antd";
-import { getProducts } from "../../config/api/products";
+import { getDiscountedProduct, getFeaturedProduct, getProducts } from "../../config/api/products";
 import { Link, useParams } from "react-router-dom";
 import Notification from "../../component/notification/Notification";
 
-export default function ProductPage() {
+export default function DiscountedProducts() {
   const shops = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState(false)
@@ -15,16 +15,16 @@ export default function ProductPage() {
 
   const getProduct = async() => {
       try{
-        const res = await getProducts(slug);
+        const res = await getDiscountedProduct();
         // console.log(res)
         if(res.status == 200){
 
             setProducts(res.data.products)
         }else{
-            Notification("Products", "Something went wrong", "Error");
+            Notification("Featured Products", res.data.message, "Error");
         }
       }catch(err){
-        Notification("Products", "Something went wrong", "Error");
+        Notification("Featured Products", "Something went wrong", "Error");
       }
   }
   useEffect(() => {
@@ -32,7 +32,6 @@ export default function ProductPage() {
     getProduct();
     // console.log(products)
   }, []);
-  // console.log(products)
   return (
     <>
       <section id="hero" className="hero d-flex align-items-center">
