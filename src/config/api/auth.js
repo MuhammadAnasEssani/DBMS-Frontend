@@ -3,12 +3,14 @@ import axios from "../helper/axios";
 
 
 function userSignup(user) {
-    return axios.post(`/signup`, user).then((res) => res)
+    return axios.post(`/signup`, {
+        ...user,
+    }).then((res) => res)
 }
 
-function userActivation(token){
+function userActivation(model){
     return axios.post("/email-activate", {
-        token,
+        ...model,
       }).then((res) => res)
 }
 

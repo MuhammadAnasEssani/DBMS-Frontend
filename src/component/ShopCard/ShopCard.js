@@ -1,12 +1,17 @@
 import React from "react";
 import NoImage from "../../images/No-image.jpg";
 import { AiOutlinePlusCircle,AiOutlineMinusCircle  } from "react-icons/ai";
+import { ImCross  } from "react-icons/im";
+import { useSelector } from "react-redux";
+
 export default function ShopCard(props) {
-  const { name, price ,quantity,image,increment,decrement,id } = props;
+  const { name, price ,quantity,image,increment,decrement,id, remove } = props;
+  const auth = useSelector((state) => state.auth);
   return (
     <div
       id="withOutCard"
       className="shopCard"
+      // style={{position: "reletive"}}
     >
       <div
         className="align-items-center align-self-center"
@@ -20,7 +25,7 @@ export default function ShopCard(props) {
           <div style={{color: "rgb(125, 135, 156)"}}><span >{`${price} x ${quantity}`}</span></div>
           <div style={{color: "rgb(125, 135, 156)"}}>{price*quantity}</div>
         </div>
-        <div className="col-lg-2 col-2">
+        <div className="col-lg-2 col-2" style={{marginTop: "10px"}}>
           <AiOutlinePlusCircle style={{fontSize: "24px",cursor: "pointer"}} onClick={()=> {
             increment(id)
           }}/>
@@ -29,6 +34,11 @@ export default function ShopCard(props) {
           {quantity > 1 && decrement(id)}
           }}/>
         </div>
+        {auth.autheticate &&  <div style={{position: "absolute", top: "2px", right: "23px"}}>
+        <ImCross onClick={()=> {
+            remove(id)
+          }}/>
+        </div>}
       </div>
     </div>
   );

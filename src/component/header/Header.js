@@ -20,7 +20,7 @@ import MenuHeader from "../MenuHeader/MenuHeader";
 import Cart from "../Cart/Cart";
 import { LoadingOutlined } from "@ant-design/icons";
 import { authConstants } from "../../store/actions/contants";
-import { userSignin } from "../../config/api/auth";
+import { userSignin, userSignup } from "../../config/api/auth";
 import { getCategories } from "../../config/api/categories";
 
 export default function Header(props) {
@@ -36,28 +36,32 @@ export default function Header(props) {
   const [loading, setLoading] = useState(false);
   const [Searchvalue, setValue] = useState("");
   const [authVisible, setAuthVisible] = useState("");
+  const [signup, setSignup] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [cpassword, setCPassword] = useState("");
   const auth = useSelector((state) => state.auth);
   const pathName = window.location.pathname
   const [filter, setFilter] = useState(false)
   const [categories, setCategories] = useState([]);
   const { SubMenu } = Menu;
-    const getAllCategories = async() => {
-      try{
-        const res = await getCategories();
-        if(res.status == 200){
-          setCategories(res.data.categoryList)
-          return
-        }else{
-          Notification("Categories", "Something went wrong", "Error");
-          return
-        }
-      }catch(err){
+  const getAllCategories = async () => {
+    try {
+      const res = await getCategories();
+      if (res.status == 200) {
+        setCategories(res.data.categoryList)
+        return
+      } else {
         Notification("Categories", "Something went wrong", "Error");
+        return
       }
-        // console.log(res)
+    } catch (err) {
+      Notification("Categories", "Something went wrong", "Error");
     }
+    // console.log(res)
+  }
   const renderCategories = (categories) => {
     let myCategories = [];
     for (let category of categories) {
@@ -82,6 +86,32 @@ export default function Header(props) {
   const onClose = () => {
     setVisible(false);
     removeStyle();
+  };
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const user = { firstName, lastName, email, password, cpassword };
+      const res = await userSignup(user);
+      if (res.status === 201) {
+        Notification("Signup", res.data.message, "Success");
+        setLoading(false);
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPassword("");
+        setCPassword("");
+        setAuthVisible(false);
+        return;
+      } else {
+        Notification("Signup", res.data.message, "Error");
+        setLoading(false);
+        return;
+      }
+    } catch (err) {
+      Notification("Signup", "Something went wrong", "Error");
+      setLoading(false);
+    }
   };
   const handleSignin = async (e) => {
     e.preventDefault();
@@ -145,15 +175,15 @@ export default function Header(props) {
   // };
 
   useEffect(() => {
-    {(pathName == "/checkout" || pathName.split("/")[1] == "invoice" || pathName == "/account/orders")  && !auth.authenticate && setAuthVisible(true)}
+    { (pathName == "/checkout" || pathName.split("/")[1] == "invoice" || pathName == "/account/orders") && !auth.authenticate && setAuthVisible(true) }
     // {pathName.split("/")[1] == "invoice"}
     removeStyle();
     getAllCategories()
-  }, [removeStyle(),pathName,auth.authenticate]);
+  }, [removeStyle(), pathName, auth.authenticate]);
   console.log(categories)
   return (
     <>
-    <div style={{ position: "relative" }}>
+      <div style={{ position: "relative" }}>
         <div
           className={
             filter
@@ -161,7 +191,7 @@ export default function Header(props) {
               : "col-xl-3 col-lg-3 col-md-3 col-12 mobile-categories filter"
           }
         >
-          <div className="side-bar" style={{height: "auto",maxHEight: "80vh"}}>
+          <div className="side-bar" style={{ height: "auto", maxHEight: "80vh" }}>
             <Menu mode="inline" >
               {categories.length > 0 &&
                 renderCategories(categories)}
@@ -174,13 +204,39 @@ export default function Header(props) {
         centered
         visible={authVisible}
         onCancel={() => {
-          {(pathName == "/checkout" || pathName.split("/")[1] == "invoice")? auth.authenticate && setAuthVisible(false) : setAuthVisible(false)}
+          { (pathName == "/checkout" || pathName.split("/")[1] == "invoice") ? auth.authenticate && setAuthVisible(false) : setAuthVisible(false) }
         }}
         width={400}
       >
         <div className="col-lg-12">
-          <form onSubmit={handleSignin}>
+          <form onSubmit={signup ? handleSignup : handleSignin}>
             <div className="col-lg-12">
+              <div className="row">
+              {signup && <div className="col-lg-6">
+                <label className="labeltext">First Name</label>
+                <input
+                  required
+                  type="text"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="FormInput"
+                  style={{ borderRadius: "10px" }}
+                />
+              </div>}
+              {signup && <div className="col-lg-6">
+                <label className="labeltext">Last Name</label>
+                <input
+                  required
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="FormInput"
+                  style={{ borderRadius: "10px" }}
+                />
+              </div>}
+              </div>
               <div className="col-lg-12">
                 <label className="labeltext">Email</label>
                 <input
@@ -205,6 +261,18 @@ export default function Header(props) {
                   style={{ borderRadius: "10px" }}
                 />
               </div>
+              {signup &&<div className="col-lg-12">
+                <label className="labeltext">Confirm Password</label>
+                <input
+                  required
+                  type="password"
+                  placeholder="*********"
+                  value={cpassword}
+                  onChange={(e) => setCPassword(e.target.value)}
+                  className="FormInput"
+                  style={{ borderRadius: "10px" }}
+                />
+              </div>}
               <div
                 className="col-lg-12 row"
                 style={{
@@ -268,7 +336,7 @@ export default function Header(props) {
                       borderRadius: "15px",
                       padding: "15px 40px",
                     }}
-                    // onClick={handleSignin}
+                  // onClick={handleSignin}
                   >
                     {t("lang") == "ar" ? (
                       <>
@@ -285,25 +353,52 @@ export default function Header(props) {
                 )}
                 {/* </Form.Item> */}
               </div>
-              <div className="col-lg-12">
+              {signup ? <div className="col-lg-12">
                 <p className="mt-5 text-center">
-                  Dont have an account?
+                  Already have an account
                   <span
                     // target="_blank"
                     // href="https://portal.uaqbusiness.com/en-US/Account/Register"
-                    to="/signup"
+                    // to="/signup"
                     className=""
                     style={{
                       color: "#333",
                       fontSize: 14,
                       fontWeight: 500,
                       color: "rgb(125, 135, 156)",
+                      cursor: "pointer"
+                    }}
+                    onClick={() => {
+                      setSignup(false)
+                    }}
+                  >
+                    &nbsp;Signin Now
+                  </span>
+                </p>
+              </div> : <div className="col-lg-12">
+                <p className="mt-5 text-center">
+                  Dont have an account?
+                  <span
+                    // target="_blank"
+                    // href="https://portal.uaqbusiness.com/en-US/Account/Register"
+                    // to="/signup"
+                    className=""
+                    style={{
+                      color: "#333",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: "rgb(125, 135, 156)",
+                      cursor: "pointer"
+                    }}
+                    onClick={() => {
+                      setSignup(true)
                     }}
                   >
                     &nbsp;Signup Now
                   </span>
                 </p>
-              </div>
+              </div>}
+              
             </div>
           </form>
         </div>
@@ -324,9 +419,9 @@ export default function Header(props) {
               <MdKeyboardArrowDown className="category-header-icon" />
               <MenuHeader />
             </div>
-            <div className="categories-header-mobile" onClick={()=> {
-                filter ? setFilter(false) : setFilter(true)
-              }}>
+            <div className="categories-header-mobile" onClick={() => {
+              filter ? setFilter(false) : setFilter(true)
+            }}>
               <MdDashboardCustomize className="category-header-icon" />
               <MdKeyboardArrowDown className="category-header-icon" />
             </div>
@@ -351,13 +446,12 @@ export default function Header(props) {
                         value={Searchvalue}
                         onChange={(e) => setValue(e.target.value)}
                         style={{
-                          padding: `${
-                            t("lang") == "en"
-                              ? "0px 40px 0px 10px"
-                              : "0px 10px 0px 40px"
-                          }`,
+                          padding: `${t("lang") == "en"
+                            ? "0px 40px 0px 10px"
+                            : "0px 10px 0px 40px"
+                            }`,
                         }}
-                        // onKeyPress={onKeyUp}
+                      // onKeyPress={onKeyUp}
                       />
                       <span
                         style={{
@@ -410,10 +504,10 @@ export default function Header(props) {
             <div
               className="header-icon"
               onClick={() => {
-                
+
                 visible ? setVisible(false) : setVisible(true);
               }}
-              style={{position: "relative"}}
+              style={{ position: "relative" }}
             >
               <IoBagCheckOutline />
               <div
@@ -427,8 +521,8 @@ export default function Header(props) {
                   class="Typography-sc-1nbqu5-0 YnhBG"
                 >
                   {Object.keys(cart.cartItems).reduce((count, key) => {
-            return count + 1;
-          }, 0)}
+                    return count + 1;
+                  }, 0)}
                 </span>
               </div>
             </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ShopCard from "../ShopCard/ShopCard";
 import { RiStarSFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, getCartItems } from "../../store/actions";
+import { addToCart, getCartItems, removeCartItem } from "../../store/actions";
 import { Link } from "react-router-dom";
 
 export default function Cart() {
@@ -30,6 +30,9 @@ export default function Cart() {
     const { name, price, img } = cartItems[_id];
     dispatch(addToCart({ _id, name, price, img }, -1));
   };
+  const onRemoveCartItem = (_id) => {
+    dispatch(removeCartItem({ productId: _id }));
+  };
   return (
     <>
       <div className="col-lg-12 slider">
@@ -46,6 +49,7 @@ export default function Cart() {
               id={cartItems[key]._id}
               increment={onQuantityIncrement}
               decrement={onQuantityDecrement}
+              remove = {onRemoveCartItem}
             />
           </div>
         ))}

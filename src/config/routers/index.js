@@ -1,5 +1,6 @@
 
 import PageNotFound from "../../views/404/PageNotFound";
+import ActivateAccount from "../../views/ActivateAccount/ActivateAccount";
 import Checkout from "../../views/Checkout/Checkout";
 import Dashboard from "../../views/dashboard/Dashboard";
 import OrderInvoive from "../../views/OrderInvoice/OrderInvoive";
@@ -54,6 +55,12 @@ const routes = [
     path: "/shop/:shopId",
     title: "Shop Page",
     component: () => <ShopPage />,
+  },
+  {
+    path: "/authentication/activate/:token",
+    title: "Verify Account",
+    // isLoginRequired: true,
+    component: () => <ActivateAccount />,
   },
   {
     path: "/:productSlug/:productId/p",
