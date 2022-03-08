@@ -64,11 +64,13 @@ const BannerMain = () => {
       <section class="small-banner section">
         <div class="container-fluid">
           <div class="row">
+            <div>
             <Slider {...settings}>
               {offers.length > 0
                 ? offers.map((offer) => {
                     return (
-                      <div class="col-lg-4 col-md-6 col-12">
+                      <div>
+                      <div class="col-lg-12 col-md-12 col-12">
                         <div class="single-banner">
                           <img src={offer.avatar} alt="#" />
                           <div class="content">
@@ -83,10 +85,12 @@ const BannerMain = () => {
                           </div>
                         </div>
                       </div>
+                      </div>
                     );
                   })
                 : null}
             </Slider>
+            </div>
             {/* <div class="col-lg-4 col-md-6 col-12">
               <div class="single-banner">
                 <img src="https://via.placeholder.com/600x370" alt="#" />

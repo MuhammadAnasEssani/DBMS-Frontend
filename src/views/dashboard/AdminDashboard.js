@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import CardSlider from "../../component/CardSlider/CardSlider";
-import NoData from "../../component/No-Data/NoData";
-import ShopLoader from "../../component/ShopLoader/ShopLoader";
+// import CardSlider from "../../component/CardSlider/CardSlider";
+// import NoData from "../../component/No-Data/NoData";
+// import ShopLoader from "../../component/ShopLoader/ShopLoader";
 import BannerMain from "../../component/BannerMain/BannerMain";
 import ShopServices from "../../component/ShopServices";
 import MainBanner from "../../component/MainBanner/MainBanner";
