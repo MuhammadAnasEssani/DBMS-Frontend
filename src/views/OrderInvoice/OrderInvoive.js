@@ -1,12 +1,56 @@
+import { Modal, Rate } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getOrderDetail } from "../../config/api/order";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
+import { addReviews } from "../../config/api/rating";
+import Notification from "../../component/notification/Notification";
 
 export default function OrderInvoive() {
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
   const [orderDetail, setOrderDetail] = useState("");
+  const [ratingVisible, setRatingVisible] = useState(false);
+  const [productId, setProductId] = useState("");
+  const [vendorId, setVendorId] = useState("");
+  const [coment, setComent] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [value, setValue] = useState(0);
   const { orderId } = useParams();
   const auth = useSelector((state) => state.auth);
+  const handleChange = (value) => {
+    setValue(value);
+  };
+  const handleAddReviews = async () => {
+    // if (coment != "") {
+    //   setLoading(true);
+      try {
+        const data = {
+          rating: value,
+          coment: coment,
+          productId: productId,
+          vendorId: vendorId,
+        };
+        var res = await addReviews(data);
+        // console.log(res)
+        if (res.status == 201) {
+          Notification("Feedback", res.data.message, "Success");
+          setComent("")
+          setValue(0)
+setRatingVisible(false)
+          return
+        } else {
+          Notification("Feedback", res.data.message, "Error");
+          return
+        }
+      } catch (error) {
+        Notification("Feedback", "Something went wrong", "Error");
+      }
+    // } else {
+    //   Notification(t("giveFeedback"), t("feedbackIs"), "Error");
+    // }
+  };
   const fetchOrderDetail = async () => {
     const payload = {
       orderId: orderId,
@@ -32,6 +76,105 @@ export default function OrderInvoive() {
   }, [auth.authenticate]);
   return orderDetail != "" ? (
     <>
+      <Modal
+        title="Feedback"
+        centered
+        visible={ratingVisible}
+        onCancel={() => {
+          setRatingVisible(false);
+        }}
+        width={400}
+      >
+        <div className="col-lg-12">
+          <div className="row">
+            <div className="col-lg-12 col-12">
+              <h5>Rating</h5>
+              <span>
+                <Rate allowHalf onChange={handleChange} value={value} />
+              </span>
+            </div>
+            <div className="col-lg-12 col-12 ">
+              <div className="feed">
+                <h5>Write Feedback</h5>
+              </div>
+              <div className="back">
+                <textarea
+                  // className="textarea"
+                  type="text-area"
+                  className="feedbackTextArea"
+                  // required
+                  // style={{
+                  //   height: "250px",
+                  //   borderRadius: "10px",
+                  //   width: "100%",
+                  //   border: "none",
+                  //   padding: "10px 10px 10px 10px",
+                  // }}
+                  value={coment}
+                  onChange={(e) => setComent(e.target.value)}
+                ></textarea>
+              </div>
+              <div className="col-lg-12 text-center">
+                {/* <Form.Item> */}
+                {loading ? (
+                  <button
+                    style={{ border: "none" }}
+                    type="submit"
+                    id="buttonHover"
+                    className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
+                    style={{
+                      width: "100%",
+                      borderRadius: "15px",
+                      padding: "15px 40px",
+                    }}
+                  >
+                    <>
+                      <Spin indicator={antIcon} />
+                    </>
+                  </button>
+                ) : (
+                  (coment != "" && value != 0) ? <button
+                    style={{ border: "none" }}
+                    type="submit"
+                    id="buttonHover"
+                    className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
+                    style={{
+                      width: "100%",
+                      borderRadius: "15px",
+                      padding: "15px 40px",
+                    }}
+                    onClick={handleAddReviews}
+                    // onClick={handleSignin}
+                  >
+                    <>
+                      <span>Submit</span>
+                      <i className="bi bi-arrow-right arrow_right"></i>
+                    </>
+                  </button> : <button
+                    style={{ border: "none" }}
+                    id="buttonHover"
+                    className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
+                    style={{
+                      width: "100%",
+                      borderRadius: "15px",
+                      padding: "15px 40px",
+                      // background: "black"
+                      backgroundColor: "rgb(218, 225, 231)"
+                    }}
+                    // onClick={handleSignin}
+                  >
+                    <>
+                      <span>Submit</span>
+                      <i className="bi bi-arrow-right arrow_right"></i>
+                    </>
+                  </button>
+                )}
+                {/* </Form.Item> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
       <div className="container container-margins">
         <div cursor="unset" class="Box-sc-15jsbqj-0 eeqMb">
           <div
@@ -455,6 +598,7 @@ export default function OrderInvoive() {
           </div>
           <div cursor="unset" class="Box-sc-15jsbqj-0 kBYRep">
             {orderDetail.items.map((data) => {
+              // console.log(data);
               return (
                 <div
                   cursor="unset"
@@ -510,6 +654,13 @@ export default function OrderInvoive() {
                       <div
                         font-size="14px"
                         class="Typography-sc-1nbqu5-0 gVliBE"
+                        onClick={() => {
+                          setProductId(data.productId._id);
+                          setVendorId(data.productVendor);
+                          ratingVisible
+                            ? setRatingVisible(false)
+                            : setRatingVisible(true);
+                        }}
                       >
                         Write a Review
                       </div>

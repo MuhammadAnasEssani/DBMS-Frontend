@@ -3,19 +3,19 @@ import Card from "../../component/Card";
 import NoImageArabic from "../../images/No-image-arabic.jpg";
 import { FaFilter } from "react-icons/fa";
 import { Rate } from "antd";
-import { getProducts } from "../../config/api/products";
+import { getProducts, getProductsByOffer } from "../../config/api/products";
 import { Link, useParams } from "react-router-dom";
 import Notification from "../../component/notification/Notification";
 
-export default function ProductPage() {
+export default function OfferPage() {
   const shops = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState(false)
-  const { slug } = useParams();
+  const { offerId } = useParams();
 
   const getProduct = async() => {
       try{
-        const res = await getProducts(slug);
+        const res = await getProductsByOffer(offerId);
         // console.log(res)
         if(res.status == 200){
 
@@ -28,10 +28,11 @@ export default function ProductPage() {
       }
   }
   useEffect(() => {
+    //   console.log("Hello")
     // dispatch(getProductsBySlug(slug));
     getProduct();
     // console.log(products)
-  }, [slug]);
+  }, []);
   // console.log(products)
   return (
     <>

@@ -5,10 +5,12 @@ import Checkout from "../../views/Checkout/Checkout";
 import Dashboard from "../../views/dashboard/Dashboard";
 import DiscountedProducts from "../../views/DiscountedProducts/DiscountedProducts";
 import FeaturedProducts from "../../views/FeaturedProducts/FeaturedProducts";
+import OfferPage from "../../views/OfferPage/OfferPage";
 import OrderInvoive from "../../views/OrderInvoice/OrderInvoive";
 import Order from "../../views/Orders/Order";
 import ProductDetailPage from "../../views/ProductDetailPage/ProductDetailPage";
 import ProductPage from "../../views/ProductPage/ProductPage";
+import SearchProducts from "../../views/SearchProducts/SearchProducts";
 import ShopPage from "../../views/ShopPage/ShopPage";
 import Shops from "../../views/Shops/Shops";
 
@@ -67,6 +69,16 @@ const routes = [
     path: "/shop/:shopId",
     title: "Shop Page",
     component: () => <ShopPage />,
+  },
+  {
+    path: "/product/:offerId",
+    title: "Shop Page",
+    component: () => <OfferPage />,
+  },
+  {
+    path: "/search-products/:keyword",
+    title: "Shop Page",
+    component: () => <SearchProducts />,
   },
   {
     path: "/authentication/activate/:token",

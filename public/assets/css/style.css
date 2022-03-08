@@ -63,6 +63,7 @@ body {
   font-size: 35px;
 }
 .feedbackTextArea {
+  background-color: rgb(246, 249, 252);
   height: 250px;
   border-radius: 10px;
   width: 100%;
@@ -1385,7 +1386,7 @@ section {
 
 #buttonHover:hover {
   color: rgb(125, 135, 156);
-  background-color: rgb(246, 249, 252);
+  background-color: rgb(190 195 201);
 
 }
 
@@ -1448,7 +1449,7 @@ section {
   border-radius: 100px;
   transition: 0.5s;
   color: #fff;
-  background: #fcaf17;
+  background-color: rgb(125, 135, 156);
 }
 .btn-get-started:hover {
   color: #ffffff;
@@ -1573,9 +1574,9 @@ input[type="number"] {
   }
   .hero {
     min-height: 100vh;
-    padding: 100px 0 60px 0;
+    padding: 0px;
     background-size: contain;
-  }
+}
   .hero .hero-img {
     text-align: center;
     margin-top: 80px;
@@ -3106,10 +3107,52 @@ opacity: 0;
 .small-banner .single-banner img{
   height: 300px;
 	width:100%;
+  opacity: 0.9;
 	-webkit-transition:all 0.4s ease;
 	-moz-transition:all 0.4s ease;
 	transition:all 0.4s ease;
 }
+@media (max-width: 1500px) {
+  .small-banner .single-banner img {
+    height: 280px;
+    width: 100%;
+    opacity: 0.9;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+}
+@media (max-width: 1210px){
+.small-banner .single-banner img {
+    height: 244px;
+    width: 100%;
+    opacity: 0.9;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+}
+@media (max-width: 1098px){
+.small-banner .single-banner img {
+    height: 280px;
+    width: 100%;
+    opacity: 0.9;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+}
+@media (max-width: 826px) {
+.small-banner .single-banner img {
+    height: 246px;
+    width: 100%;
+    opacity: 0.9;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+}
+
 .small-banner .single-banner .content {
 	position: absolute;
 	left: 0;
@@ -3127,11 +3170,12 @@ opacity: 0;
 	color:#F7941D;
 }
 .small-banner .single-banner p {
-	font-size: 14px;
-	color: #F7941D;
-	font-weight: 500;
-	margin-bottom: 5px;
-	text-transform: capitalize;
+  font-size: 14px;
+  /* color: #F7941D; */
+  font-weight: 500;
+  color: rgb(28 29 30);
+  margin-bottom: 5px;
+  text-transform: capitalize;
 }
 .small-banner .single-banner a {
 	color: #333;
@@ -3144,9 +3188,38 @@ opacity: 0;
 	border-bottom:2px solid #333;
 }
 .small-banner .single-banner a:hover{
-	color:#F7941D;
-	border-color:#F7941D;
+	/* color:#F7941D;
+	border-color:#F7941D; */
 }
+@media (max-width: 760px) {
+  .small-banner .single-banner a {
+    color: #333;
+    margin-top: 0px;
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+    text-transform: uppercase;
+    border-bottom: 2px solid #333;
+  }
+  .small-banner .single-banner .content {
+    position: absolute;
+    left: 0;
+    top: 41%;
+    transform: translateY(-50%);
+    padding-left: 22px;
+}
+  }
+  @media (max-width: 680px){
+.small-banner .single-banner img {
+    height: 201px;
+    width: 100%;
+    opacity: 0.9;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+  }
 /*======================================
    End Small Banner CSS
 ========================================*/ 
@@ -3363,7 +3436,7 @@ opacity: 0;
 /*=============================
 	End Footer CSS
 ===============================*/
-@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media only screen and (max-width: 991px) {
   .small-banner {
     padding: 18px 0;	
 }
@@ -3796,7 +3869,7 @@ hr {
 }
 .product-rating span{
   font-weight: 600;
-  color: #252525;
+  /* color: #252525; */
 }
 .product-price{
   margin: 1rem 0;
@@ -5285,6 +5358,7 @@ hr {
   transition: all 0.3s ease;
     visibility: hidden;
     z-index: 9999;
+    top: 94px;
     left: -372px;
     width: 367px;
 }
@@ -5294,6 +5368,7 @@ hr {
     visibility: visible;
     z-index: 9999;
     left: 12px;
+    top: 94px;
     width: 367px;
 }
 .elevation {
@@ -5949,4 +6024,144 @@ hr {
 }
 .product-card {
   position: relative;
+}
+.eNVYxU {
+  box-shadow: none;
+  cursor: unset;
+  margin-bottom: 50px;
+}
+.gEaYFE {
+  box-shadow: none;
+  cursor: unset;
+}
+.dplvjA {
+  box-shadow: none;
+  cursor: unset;
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+.IyJHd {
+  display: flex;
+  flex-direction: row;
+  -webkit-box-align: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.fOzgOq {
+  box-shadow: none;
+  cursor: unset;
+  -webkit-box-align: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.eqqGxD {
+  display: block;
+  position: relative;
+  text-align: center;
+  font-weight: 600;
+  font-size: 24px;
+  border-radius: 48px;
+  min-width: 48px;
+  overflow: hidden;
+  width: 48px;
+  height: 48px;
+}
+.eqqGxD img {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.eqqGxD > * {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 0;
+}
+.ddxbe {
+  box-shadow: none;
+  cursor: unset;
+  margin-left: 1rem;
+}
+.cpxBS {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 4px;
+  margin-top: 0px;
+}
+.hccqyr {
+  display: flex;
+  flex-direction: row;
+  -webkit-box-align: center;
+  align-items: center;
+}
+.dNNxsU {
+  box-shadow: none;
+  cursor: unset;
+  -webkit-box-align: center;
+  align-items: center;
+}
+.gCOMYr {
+  display: flex;
+  margin: 0px -1px;
+}
+.kxhGXz {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0px 10px;
+}
+.hSikqI {
+  font-size: 14px;
+  color: rgb(125, 135, 156);
+}
+.eDyJXs {
+  margin-bottom: 0px;
+  margin-top: 0px;
+  color: rgb(75, 86, 107);
+}
+@media (max-width: 500px) {
+.dErric {
+  display: inline-flex;
+  border-radius: 300px;
+  cursor: unset;
+  box-shadow: unset;
+  transition: all 150ms ease-in-out 0s;
+  padding: 3px 4px;
+  background-color: rgb(233, 69, 96);
+  color: rgb(255, 255, 255);
+  position: absolute;
+  top: 6px;
+  left: 4px;
+  font-size: 7px;
+  font-weight: 500;
+}
+.gNPSJZ {
+  font-weight: 600;
+  font-size: 11px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  color: rgb(125, 135, 156);
+}
+.gNPSJZ {
+  font-weight: 600;
+  font-size: 11px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  color: rgb(125, 135, 156);
+}
+.header-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #f3f3f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 5px;
+  cursor: pointer;
+}
+.dEBWZy {
+  max-width: 1200px;
+  margin: 0rem 15px;
+}
 }

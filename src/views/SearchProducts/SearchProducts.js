@@ -3,35 +3,38 @@ import Card from "../../component/Card";
 import NoImageArabic from "../../images/No-image-arabic.jpg";
 import { FaFilter } from "react-icons/fa";
 import { Rate } from "antd";
-import { getProducts } from "../../config/api/products";
+import { getProducts, getSearchedProducts } from "../../config/api/products";
 import { Link, useParams } from "react-router-dom";
 import Notification from "../../component/notification/Notification";
 
-export default function ProductPage() {
+export default function SearchProducts() {
   const shops = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState(false)
-  const { slug } = useParams();
+  const { keyword } = useParams();
 
   const getProduct = async() => {
+      const data = {
+        keyword: keyword
+      }
       try{
-        const res = await getProducts(slug);
+        const res = await getSearchedProducts(data);
         // console.log(res)
         if(res.status == 200){
 
             setProducts(res.data.products)
         }else{
-            Notification("Products", "Something went wrong", "Error");
+            Notification("Search Products", res.data.message, "Error");
         }
       }catch(err){
-        Notification("Products", "Something went wrong", "Error");
+        Notification("Search Products", "Something went wrong", "Error");
       }
   }
   useEffect(() => {
     // dispatch(getProductsBySlug(slug));
     getProduct();
     // console.log(products)
-  }, [slug]);
+  }, [keyword]);
   // console.log(products)
   return (
     <>

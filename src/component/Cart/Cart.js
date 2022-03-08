@@ -31,6 +31,7 @@ export default function Cart() {
     dispatch(addToCart({ _id, name, price, img }, -1));
   };
   const onRemoveCartItem = (_id) => {
+    // console.log("Helllo")
     dispatch(removeCartItem({ productId: _id }));
   };
   return (

@@ -5,7 +5,7 @@ import { Drawer } from "antd";
 import Notification from "../../component/notification/Notification";
 import { useParams } from "react-router";
 import { Modal } from "antd";
-import { AiOutlineSearch, AiOutlineUser } from "react-icons/ai";
+import { AiOutlineSearch,AiOutlineLogin, AiOutlineUser } from "react-icons/ai";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { MdDashboardCustomize, MdKeyboardArrowDown } from "react-icons/md";
@@ -47,6 +47,7 @@ export default function Header(props) {
   const [filter, setFilter] = useState(false)
   const [categories, setCategories] = useState([]);
   const { SubMenu } = Menu;
+  const history = useHistory();
   const getAllCategories = async () => {
     try {
       const res = await getCategories();
@@ -156,23 +157,36 @@ export default function Header(props) {
   };
   const menu = (
     <Menu>
-      <Menu.Item>
+    </Menu>
+  );
+  const userMenu = (
+    <Menu>
+      {auth.authenticate && <Menu.Item onClick={() => {
+        history.push("/account/orders")
+          }}
+          >
         <span
-        // onClick={() => {
-        //   setSearchKey("Category");
-        // }}
         >
-          {t("Category")}
+          My Orders
+        </span>
+      </Menu.Item>}
+      <Menu.Item onClick={() => {
+        history.push("/shops")
+          }}
+          >
+        <span
+        >
+          All Shops
         </span>
       </Menu.Item>
     </Menu>
   );
-  // const onKeyUp = (e) => {
-  //   if (e.charCode === 13) {
-  //     e.preventDefault();
-  //     history.push(`/search=${Searchvalue}&filterBy=${SearchKey}`);
-  //   }
-  // };
+  const onKeyUp = (e) => {
+    if (e.charCode === 13) {
+      e.preventDefault();
+      history.push(`/search-products/${Searchvalue}`);
+    }
+  };
 
   useEffect(() => {
     { (pathName == "/checkout" || pathName.split("/")[1] == "invoice" || pathName == "/account/orders") && !auth.authenticate && setAuthVisible(true) }
@@ -451,14 +465,14 @@ export default function Header(props) {
                             : "0px 10px 0px 40px"
                             }`,
                         }}
-                      // onKeyPress={onKeyUp}
+                      onKeyPress={onKeyUp}
                       />
                       <span
                         style={{
                           right: `${t("lang") == "en" ? "8%" : "-8%"}`,
                         }}
                       >
-                        {/* <Link to={`/search/query=${Searchvalue}`} > */}
+                        <Link to={`/search-products/${Searchvalue}`} >
                         <AiOutlineSearch
                         // onClick={() => {
                         //   history.push(
@@ -466,7 +480,7 @@ export default function Header(props) {
                         //   );
                         // }}
                         />
-                        {/* </Link> */}
+                        </Link>
                       </span>
                       <Dropdown overlay={menu} placement="bottomLeft">
                         <div
@@ -487,6 +501,12 @@ export default function Header(props) {
           </nav>
 
           <div className="header-icons">
+            
+            <Dropdown overlay={userMenu} placement="bottomLeft">
+            <div className="header-icon" >
+            <AiOutlineUser />
+            </div>
+            </Dropdown>
             {auth.token != null ? (
               <div className="header-icon" onClick={logout}>
                 <RiLogoutCircleLine />
@@ -498,7 +518,7 @@ export default function Header(props) {
                   authVisible ? pathName == "/checkout" ? auth.authenticate && setAuthVisible(false) : setAuthVisible(false) : setAuthVisible(true);
                 }}
               >
-                <AiOutlineUser />
+                <AiOutlineLogin />
               </div>
             )}
             <div

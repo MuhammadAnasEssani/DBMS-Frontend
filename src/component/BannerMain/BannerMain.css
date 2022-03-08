@@ -1,0 +1,9 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+.slick-slide > div {
+    width: 96%;
+}
+/* .slick-slider .slick-track, .slick-slider .slick-list {
+    transform: translate3d(0, 0, 0) !important;
+} */

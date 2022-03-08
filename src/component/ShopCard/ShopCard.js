@@ -34,8 +34,8 @@ export default function ShopCard(props) {
           {quantity > 1 && decrement(id)}
           }}/>
         </div>
-        {auth.autheticate &&  <div style={{position: "absolute", top: "2px", right: "23px"}}>
-        <ImCross onClick={()=> {
+        {auth.authenticate &&  <div style={{position: "absolute", top: "2px", right: "23px"}}>
+        <ImCross style={{cursor: "pointer"}} onClick={()=> {
             remove(id)
           }}/>
         </div>}

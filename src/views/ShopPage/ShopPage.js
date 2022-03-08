@@ -3,7 +3,7 @@ import Card from "../../component/Card";
 import NoImageArabic from "../../images/No-image-arabic.jpg";
 import { FaFilter } from "react-icons/fa";
 import { Rate } from "antd";
-import { getProducts } from "../../config/api/products";
+import { getProducts, getProductsByShop } from "../../config/api/products";
 import { Link, useParams } from "react-router-dom";
 import Notification from "../../component/notification/Notification";
 import { getShopDetail } from "../../config/api/shops";
@@ -12,6 +12,7 @@ export default function ShopPage() {
   const shops = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [shop, setShop] = useState("");
   const [filter, setFilter] = useState(false);
+  const [products, setProducts] = useState([]);
   const { shopId } = useParams();
 
   const getShop = async () => {
@@ -26,9 +27,24 @@ export default function ShopPage() {
       Notification("Shop Detail", "Something went wrong", "Error");
     }
   };
+  const getProduct = async() => {
+    try{
+      const res = await getProductsByShop(shopId);
+      // console.log(res)
+      if(res.status == 200){
+
+          setProducts(res.data.products)
+      }else{
+          Notification("Shop Products", "Something went wrong", "Error");
+      }
+    }catch(err){
+      Notification("Shop Products", "Something went wrong", "Error");
+    }
+}
   useEffect(() => {
     // dispatch(getProductsBySlug(slug));
     getShop();
+    getProduct();
     // console.log(products)
   }, []);
   // console.log(shop)
@@ -840,26 +856,26 @@ export default function ShopPage() {
                     height: "80vh",
                   }}
                 >
-                  {/* {products.length > 0
-                    ? products.map((data) => {
-                        return (
-                          <div
-                            className="justifyContentCenter"
-                            style={{ width: "auto", margin: "15px 0px" }}
-                            // style={{ display: "flex", justifyContent: "center" }}
-                          >
-                            <Card
-                              id={data._id}
-                              image={data.productPictures[0].avatar}
-                              name={data.name}
-                              rating={4}
-                              price={data.price}
-                              slug={data.slug}
-                            />
-                          </div>
-                        );
-                      })
-                    : null} */}
+                  {products.length > 0 ? products.map((data) => {
+                    return (
+                      <div
+                        className="justifyContentCenter"
+                        style={{ width: "auto", margin: "15px 0px" }}
+                        // style={{ display: "flex", justifyContent: "center" }}
+                      >
+                        <Card
+                          id={data._id}
+                          image={data.productPictures[0].avatar}
+                          name={data.name}
+                          rating={data.rating}
+                          noOfRatings={data.noOfRatings}
+                          price={data.price}
+                          slug={data.slug}
+                          discount={data.discount}
+                        />
+                      </div>
+                    );
+                  }): null}
                 </div>
               </div>
             </div>
