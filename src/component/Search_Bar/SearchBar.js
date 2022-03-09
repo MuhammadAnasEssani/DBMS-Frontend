@@ -34,7 +34,7 @@ export default function SearchBar() {
               {/* <Link to={`/search/query=${Searchvalue}`} > */}
               <AiOutlineSearch
                 onClick={() => {
-                  history.push(`/search=${Searchvalue}&filterBy=${SearchKey}`);
+                  history.push(`/search-products/${Searchvalue}`);
                 }}
               />
               {/* </Link> */}
