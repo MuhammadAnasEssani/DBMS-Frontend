@@ -9,6 +9,8 @@ import cookies from 'js-cookie'
 import Footer from "./component/Footer";
 import SearchBar from "./component/Search_Bar/SearchBar";
 import { updateCart } from "./store/actions";
+import EcommerceHeader from "./component/EcommerceHeader/EcommerceHeader";
+import Bannar from "./component/Bannar/Bannar";
 
 const languages = [
   {
@@ -42,6 +44,7 @@ function App() {
 
   return (
     <>
+        <EcommerceHeader />
         <Header lang={currentLanguage} />
         <SearchBar />
         <Routers />

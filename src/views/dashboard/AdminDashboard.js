@@ -7,23 +7,39 @@ import BannerMain from "../../component/BannerMain/BannerMain";
 import ShopServices from "../../component/ShopServices";
 import MainBanner from "../../component/MainBanner/MainBanner";
 import Notification from "../../component/notification/Notification";
-import { getDiscountedProduct, getFeaturedProduct } from "../../config/api/products";
+import {
+  getDiscountedProduct,
+  getFeaturedProduct,
+} from "../../config/api/products";
+import NoData from "../../component/No-Data/NoData";
+import CardSlider from "../../component/CardSlider/CardSlider";
+import ShopLoader from "../../component/ShopLoader/ShopLoader";
 import { IoIosFlash } from "react-icons/io";
 import { RiStarSFill } from "react-icons/ri";
 import Card from "../../component/Card";
 import { Link } from "react-router-dom";
+import { getOffers } from "../../config/api/offer";
+import { Skeleton } from "antd";
+import Bannar from "../../component/Bannar/Bannar";
 export default function AdminDashboard() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [discountedProducts, setDiscountedProducts] = useState([]);
+  const [offerLoader, setOfferLoader] = useState(true);
+  const [featureLoader, setFeatureLoader] = useState(true);
+  const [discountLoader, setDiscountLoader] = useState(true);
+  const [offers, setOffers] = useState([]);
   // const [shopLoader, setShopLoader] = useState(false);
-
+  const shopLoaderArray = [1, 2, 3, 4, 5, 6, 7, 8];
   const getFeaturedProducts = async () => {
     try {
       const res = await getFeaturedProduct();
       if (res.status == 200) {
         setFeaturedProducts(res.data.products);
+        setFeatureLoader(false);
+        return;
       } else {
         Notification("Featured Products", res.data.message, "Error");
+        return;
       }
     } catch (err) {
       Notification("Featured Products", "Something went wrong", "Error");
@@ -34,33 +50,62 @@ export default function AdminDashboard() {
       const res = await getDiscountedProduct();
       if (res.status == 200) {
         setDiscountedProducts(res.data.products);
+        setDiscountLoader(false);
+        return;
+        // setOfferLoader(false);
       } else {
         Notification("Discounted Products", res.data.message, "Error");
+        return;
       }
     } catch (err) {
       Notification("Discounted Products", "Something went wrong", "Error");
+    }
+  };
+  const getOffer = async () => {
+    try {
+      const res = await getOffers();
+      if (res.status == 200) {
+        setOffers(res.data.offers);
+        // console.log(offers)
+        setOfferLoader(false);
+        return;
+      } else {
+        Notification("Offers", "Something went wrong", "Error");
+        return;
+      }
+    } catch (err) {
+      Notification("Offers", "Something went wrong", "Error");
     }
   };
   useEffect(() => {
     // dispatch(getProductsBySlug(slug));
     getFeaturedProducts();
     getDiscountedProducts();
+    getOffer();
     // console.log(products)
   }, []);
 
   return (
     <>
       {/* <MainBanner /> */}
-      <BannerMain />
-      <section id="hero" className="hero d-flex align-items-center">
+      {/* <BannerMain /> */}
+      <Bannar />
+      {/* {offerLoader ? (
+        <ShopLoader title="Shops" />
+      ) : offers.length > 0 ? (
+        <CardSlider title="Shops" isloading={offerLoader} offers={offers} />
+      ) : (
+        <NoData title="Shops" />
+      )} */}
+      <section id="hero" className="hero d-flex align-items-center" style={{padding: "0px"}}>
         <div className="container" style={{ position: "relative" }}>
-          <div className="row" style={{margin: "25px 0px"}}>
+          <div className="row" style={{ margin: "25px 0px" }}>
             <div
               cursor="unset"
               class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 hKAarp epjUQS"
             >
               <div style={{ display: "flex", alignItems: "center" }}>
-                <IoIosFlash style={{ fontSize: "25px" }} />
+                {/* <IoIosFlash style={{ fontSize: "25px" }} /> */}
                 <h1 className="title">Feature Products</h1>
               </div>
               {featuredProducts.length > 9 && (
@@ -116,8 +161,24 @@ export default function AdminDashboard() {
                 </Link>
               )}
             </div>
-            <div className="row" style={{ justifyContent: "space-between" }}>
-              {featuredProducts.length > 0
+            <div className="row" >
+              {featureLoader
+                ? shopLoaderArray.map((data) => {
+                    return (
+                      <div
+                        className="justifyContentCenter"
+                        style={{ width: "auto", margin: "15px 0px" }}
+                        // style={{ display: "flex", justifyContent: "center" }}
+                        key={data}
+                      >
+                        <Skeleton.Input
+                          className={"shop_card_loader"}
+                          active={true}
+                        />
+                      </div>
+                    );
+                  })
+                : featuredProducts.length > 0
                 ? featuredProducts.slice(0, 9).map((data) => {
                     return (
                       <div
@@ -151,13 +212,13 @@ export default function AdminDashboard() {
               <NoData title="Flash Deals" />
             )} */}
           </div>
-          <div className="row" style={{margin: "25px 0px"}}>
+          <div className="row" style={{ margin: "25px 0px" }}>
             <div
               cursor="unset"
               class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 hKAarp epjUQS"
             >
               <div style={{ display: "flex", alignItems: "center" }}>
-                <IoIosFlash style={{ fontSize: "25px" }} />
+                {/* <IoIosFlash style={{ fontSize: "25px" }} /> */}
                 <h1 className="title">Top Discounts</h1>
               </div>
               {discountedProducts.length > 9 && (
@@ -213,8 +274,24 @@ export default function AdminDashboard() {
                 </Link>
               )}
             </div>
-            <div className="row" style={{ justifyContent: "space-between" }}>
-              {discountedProducts.length > 0
+            <div className="row" >
+              {discountLoader
+                ? shopLoaderArray.map((data) => {
+                    return (
+                      <div
+                        className="justifyContentCenter"
+                        style={{ width: "auto", margin: "15px 0px" }}
+                        // style={{ display: "flex", justifyContent: "center" }}
+                        key={data}
+                      >
+                        <Skeleton.Input
+                          className={"shop_card_loader"}
+                          active={true}
+                        />
+                      </div>
+                    );
+                  })
+                : discountedProducts.length > 0
                 ? discountedProducts.slice(0, 9).map((data) => {
                     return (
                       <div
@@ -250,7 +327,7 @@ export default function AdminDashboard() {
           </div>
         </div>
       </section>
-      <ShopServices />
+      {/* <ShopServices /> */}
     </>
   );
 }

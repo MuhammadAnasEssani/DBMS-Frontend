@@ -11,55 +11,11 @@ export default function SearchBar() {
   const [SearchKey, setSearchKey] = useState("Shop Name");
   const menu = (
     <Menu>
-      <Menu.Item>
-        <span
-          onClick={() => {
-            setSearchKey("Category");
-          }}
-        >
-          {t("Category")}
-        </span>
-      </Menu.Item>
-      <Menu.Item>
-        <span
-          onClick={() => {
-            setSearchKey("Description");
-          }}
-        >
-          {t("description")}
-        </span>
-      </Menu.Item>
-      <Menu.Item>
-        <span
-          onClick={() => {
-            setSearchKey("Shop Name");
-          }}
-        >
-          {t("shopName")}
-        </span>
-      </Menu.Item>
-      <Menu.Item>
-        <span
-          onClick={() => {
-            setSearchKey("Area");
-          }}
-        >
-          {t("area")}
-        </span>
-      </Menu.Item>
-      <Menu.Item>
-        <span
-          onClick={() => {
-            setSearchKey("City");
-          }}
-        >
-          {t("city")}
-        </span>
-      </Menu.Item>
+      
     </Menu>
   );
   return (
-    <div className="search" style={{ margin: "18px 0px 25px 0px" }}>
+    <div className="search" style={{ padding: "96px 0px 25px 0px",background: "#fff" }}>
       <div className="header-search">
         <div className="search-bar">
           <form action="">

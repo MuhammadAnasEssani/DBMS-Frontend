@@ -40,7 +40,7 @@ export default function ActivateAccount() {
       <div className="container">
         <div
           className="row sectionShadow"
-          style={{ maxWidth: "380px", marginLeft: "auto", marginRight: "auto" }}
+          style={{ maxWidth: "380px", marginLeft: "auto", marginRight: "auto",padding:"30px 40px 30px 40px", marginTop:"20px",marginBottom: "20px" }}
         >
           <h2>Verify Your Account</h2>
           <p>

@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import { getShop } from "../../config/api/shops";
 import Notification from "../../component/notification/Notification";
 import { Link } from "react-router-dom";
-
+import { Rate, Skeleton } from "antd";
 
 export default function Shops() {
   const [shops, setShops] = useState([]);
+  const [shopLoader, setShopLoader] = useState(true);
+  const shopLoaderArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const getShops = async () => {
     try {
       const res = await getShop();
-      // console.log(res)
       if (res.status == 200) {
         setShops(res.data.shops);
+        setShopLoader(false)
         return;
       } else {
         Notification("Shops", res.data.message, "Error");
@@ -33,7 +35,21 @@ export default function Shops() {
             All Shops
           </h2>
           <div spacing="6" class="GridStyle__StyledGrid-sc-1r6thsr-0 iLBSKL">
-            {shops.length > 0
+            {shopLoader
+              ? shopLoaderArray.map((shop) => {
+                  return (
+                    <div
+                      spacing="6"
+                      class="GridStyle__StyledGrid-sc-1r6thsr-0 dmobdU"
+                    >
+                      <Skeleton.Input
+                        className={"card_shop"}
+                        active={true}
+                      />
+                    </div>
+                  );
+                })
+              : shops.length > 0
               ? shops.map((shop) => {
                   return (
                     <div
@@ -54,7 +70,7 @@ export default function Shops() {
                             font-weight="600"
                             class="Typography-sc-1nbqu5-0 hyFUsi"
                           >
-                            Scarlett Beauty
+                            {shop.shopName}
                           </h3>
                           <div cursor="unset" class="Box-sc-15jsbqj-0 kDQKum">
                             <div
@@ -62,7 +78,13 @@ export default function Shops() {
                               value="5"
                               class="RatingStyle__StyledRating-sc-1e4cply-0 SUxBm"
                             >
-                              <svg
+                              <Rate
+                        disabled
+                        allowHalf
+                        value={shop.rating}
+                        style={{ fontSize: "17px" }}
+                      />
+                              {/* <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="24"
                                 height="24"
@@ -196,7 +218,7 @@ export default function Shops() {
                                   </linearGradient>
                                 </defs>
                                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                              </svg>
+                              </svg> */}
                             </div>
                           </div>
                           <div
@@ -291,10 +313,7 @@ export default function Shops() {
                             size="64"
                             class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 RElpU"
                           >
-                            <img
-                              src={shop.avatar}
-                              alt="avatar"
-                            />
+                            <img src={shop.avatar} alt="avatar" />
                           </div>
                           <Link to={`/shop/${shop._id}`}>
                             <button class="IconButton-sc-6b71ah-0 fhZElw">

@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import LOGO from "../../images/e-commerce-logo-1.png";
 
 const Footer = () => {
   return (
@@ -13,7 +15,7 @@ const Footer = () => {
 						{/* <!-- Single Widget --> */}
 						<div class="single-footer about">
 							<div class="logo">
-								<a href="index.html"><img src="images/logo2.png" alt="#"/></a>
+								<Link to="/"><img src={LOGO} alt="#"/></Link>
 							</div>
 							<p class="text">Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue,  magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.</p>
 							<p class="call">Got Question? Call us 24/7<span><a href="tel:123456789">+0123 456 789</a></span></p>
@@ -24,7 +26,7 @@ const Footer = () => {
 						{/* <!-- Single Widget --> */}
 						<div class="single-footer links">
 							<h4>Information</h4>
-							<ul>
+							<ul style={{paddingLeft: "0px"}}>
 								<li><a href="#">About Us</a></li>
 								<li><a href="#">Faq</a></li>
 								<li><a href="#">Terms & Conditions</a></li>
@@ -38,7 +40,7 @@ const Footer = () => {
 						{/* <!-- Single Widget --> */}
 						<div class="single-footer links">
 							<h4>Customer Service</h4>
-							<ul>
+							<ul style={{paddingLeft: "0px"}}>
 								<li><a href="#">Payment Methods</a></li>
 								<li><a href="#">Money-back</a></li>
 								<li><a href="#">Returns</a></li>
@@ -54,7 +56,7 @@ const Footer = () => {
 							<h4>Get In Tuch</h4>
 							{/* <!-- Single Widget --> */}
 							<div class="contact">
-								<ul>
+								<ul style={{paddingLeft: "0px"}}>
 									<li>NO. 342 - London Oxford Street.</li>
 									<li>012 United Kingdom.</li>
 									<li>info@eshop.com</li>
@@ -62,7 +64,7 @@ const Footer = () => {
 								</ul>
 							</div>
 							{/* <!-- End Single Widget --> */}
-							<ul>
+							<ul style={{paddingLeft: "0px"}}>
 								<li><a href="#"><i class="ti-facebook"></i></a></li>
 								<li><a href="#"><i class="ti-twitter"></i></a></li>
 								<li><a href="#"><i class="ti-flickr"></i></a></li>
@@ -86,7 +88,7 @@ const Footer = () => {
 						</div>
 						<div class="col-lg-6 col-12">
 							<div class="right">
-								<img src="images/payments.png" alt="#"/>
+								{/* <img src="images/payments.png" alt="#"/> */}
 							</div>
 						</div>
 					</div>

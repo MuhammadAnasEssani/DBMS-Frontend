@@ -6,23 +6,25 @@ import { Rate } from "antd";
 import { getFeaturedProduct, getProducts } from "../../config/api/products";
 import { Link, useParams } from "react-router-dom";
 import Notification from "../../component/notification/Notification";
-
+import { Skeleton } from "antd";
 export default function FeaturedProducts() {
   const shops = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState(false)
-  const { slug } = useParams();
-
+  const [productLoader, setProductLoader] = useState(true);
+  const shopLoaderArray = [1, 2, 3, 4,5,6,7,8,9];
   const getProduct = async() => {
       try{
         const res = await getFeaturedProduct();
         // console.log(res)
         if(res.status == 200){
-
             setProducts(res.data.products)
+            setProductLoader(false)
+            return
         }else{
             Notification("Featured Products", res.data.message, "Error");
-        }
+            return
+          }
       }catch(err){
         Notification("Featured Products", "Something went wrong", "Error");
       }
@@ -34,7 +36,7 @@ export default function FeaturedProducts() {
   }, []);
   return (
     <>
-      <section id="hero" className="hero d-flex align-items-center">
+      <section id="hero" className="hero d-flex">
         {/* <Drawer
      className='drawerr'
               placement="left"
@@ -382,12 +384,26 @@ export default function FeaturedProducts() {
                 <div
                   className="row"
                   style={{
-                    justifyContent: "space-between",
+                    // justifyContent: "space-between",
                     overflow: "auto",
                     height: "80vh",
                   }}
                 >
-                  {products.length > 0 ? products.map((data) => {
+                  {productLoader ? shopLoaderArray.map((data) => {
+                  return (
+                    <div
+                    className="justifyContentCenter"
+                    style={{ width: "auto", margin: "15px 0px" }}
+                      // style={{ display: "flex", justifyContent: "center" }}
+                      key={data}
+                    >
+                    <Skeleton.Input
+                      className={"shop_card_loader"}
+                      active={true}
+                    />
+                    </div>
+                  );
+                })  : products.length > 0 ? products.map((data) => {
                     return (
                       <div
                         className="justifyContentCenter"

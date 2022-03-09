@@ -61,7 +61,7 @@ const BannerMain = () => {
 
   return (
     <div>
-      <section class="small-banner section">
+      <section class="small-banner section" >
         <div class="container-fluid">
           <div class="row">
             <div>

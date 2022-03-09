@@ -7,6 +7,7 @@ import { getProducts, getProductsByShop } from "../../config/api/products";
 import { Link, useParams } from "react-router-dom";
 import Notification from "../../component/notification/Notification";
 import { getShopDetail } from "../../config/api/shops";
+import { Skeleton } from "antd";
 
 export default function ShopPage() {
   const shops = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -14,43 +15,51 @@ export default function ShopPage() {
   const [filter, setFilter] = useState(false);
   const [products, setProducts] = useState([]);
   const { shopId } = useParams();
+  const shopLoaderArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [productLoader, setProductLoader] = useState(true);
+  const [shopLoader, setShopLoader] = useState(true);
 
   const getShop = async () => {
     try {
       const res = await getShopDetail(shopId);
       if (res.status == 200) {
         setShop(res.data.shop);
+        setShopLoader(false)
+        return;
       } else {
         Notification("Shop Detail", res.data.message, "Error");
+        return;
       }
     } catch (err) {
       Notification("Shop Detail", "Something went wrong", "Error");
     }
   };
-  const getProduct = async() => {
-    try{
+  const getProduct = async () => {
+    try {
       const res = await getProductsByShop(shopId);
       // console.log(res)
-      if(res.status == 200){
-
-          setProducts(res.data.products)
-      }else{
-          Notification("Shop Products", "Something went wrong", "Error");
+      if (res.status == 200) {
+        setProducts(res.data.products);
+        setProductLoader(false);
+        return;
+      } else {
+        Notification("Shop Products", "Something went wrong", "Error");
+        return;
       }
-    }catch(err){
+    } catch (err) {
       Notification("Shop Products", "Something went wrong", "Error");
     }
-}
+  };
   useEffect(() => {
     // dispatch(getProductsBySlug(slug));
     getShop();
     getProduct();
     // console.log(products)
   }, []);
-  // console.log(shop)
+  console.log(shop)
   return (
     <>
-      <section id="hero" className="hero d-flex align-items-center">
+      <section id="hero" className="hero d-flex">
         {/* <Drawer
      className='drawerr'
               placement="left"
@@ -72,7 +81,12 @@ export default function ShopPage() {
               <h5 className="elevation-title">Searching For Mobile</h5>
             </div>
           </div>
-          {shop != "" ? (
+          {shopLoader ? 
+              <Skeleton.Input
+                              className={"shop_bannar_loader"}
+                              active={true}
+                            />
+               : shop != "" ? (
             <div
               overflow="hidden"
               cursor="unset"
@@ -112,7 +126,7 @@ export default function ShopPage() {
                         color="gray.100"
                         class="Typography-sc-1nbqu5-0 ldugQD"
                       >
-                        Scarlett Beauty
+                        {shop.shopName}
                       </h3>
                     </div>
                     <div
@@ -294,7 +308,13 @@ export default function ShopPage() {
                           value="5"
                           class="RatingStyle__StyledRating-sc-1e4cply-0 SUxBm"
                         >
-                          <svg
+                          <Rate
+                        disabled
+                        allowHalf
+                        value={shop.rating}
+                        style={{ fontSize: "17px" }}
+                      />
+                          {/* <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
@@ -413,7 +433,7 @@ export default function ShopPage() {
                               </linearGradient>
                             </defs>
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                          </svg>
+                          </svg> */}
                         </div>
                         <span
                           font-size="12px"
@@ -421,7 +441,7 @@ export default function ShopPage() {
                           display="block"
                           class="Typography-sc-1nbqu5-0 fMbDON"
                         >
-                          (45)
+                          ({shop.noOfRatings})
                         </span>
                       </div>
                       <div
@@ -429,7 +449,7 @@ export default function ShopPage() {
                         cursor="unset"
                         class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 izutlq NgAVk"
                       >
-                        <div
+                        {/* <div
                           defaultcolor="currentColor"
                           mt="5px"
                           variant="medium"
@@ -452,16 +472,17 @@ export default function ShopPage() {
                               ></path>
                             </svg>
                           </div>
-                        </div>
+                        </div> */}
                         <span
                           font-size="14px"
                           color="text.muted"
                           class="Typography-sc-1nbqu5-0 fEPyMj"
+                          style={{marginLeft: "0px"}}
                         >
-                          845 N. Stonybrook Ave. Tonawanda, NY 14210, Denmark
+                          {shop.description}
                         </span>
                       </div>
-                      <div
+                      {/* <div
                         color="text.muted"
                         cursor="unset"
                         class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 ibqUbl gQSTOL"
@@ -508,7 +529,7 @@ export default function ShopPage() {
                         >
                           (613) 343-9004
                         </span>
-                      </div>
+                      </div> */}
                     </div>
                     <a href="mailto:scarletbeauty@xmail.com">
                       <button color="primary" class="Button-l2616d-0 iQsGLa">
@@ -851,31 +872,49 @@ export default function ShopPage() {
                 <div
                   className="row"
                   style={{
-                    justifyContent: "space-between",
+                    // justifyContent: "space-between",
                     overflow: "auto",
                     height: "80vh",
                   }}
                 >
-                  {products.length > 0 ? products.map((data) => {
-                    return (
-                      <div
-                        className="justifyContentCenter"
-                        style={{ width: "auto", margin: "15px 0px" }}
-                        // style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <Card
-                          id={data._id}
-                          image={data.productPictures[0].avatar}
-                          name={data.name}
-                          rating={data.rating}
-                          noOfRatings={data.noOfRatings}
-                          price={data.price}
-                          slug={data.slug}
-                          discount={data.discount}
-                        />
-                      </div>
-                    );
-                  }): null}
+                  {productLoader
+                    ? shopLoaderArray.map((data) => {
+                        return (
+                          <div
+                            className="justifyContentCenter"
+                            style={{ width: "auto", margin: "15px 0px" }}
+                            // style={{ display: "flex", justifyContent: "center" }}
+                            key={data}
+                          >
+                            <Skeleton.Input
+                              className={"shop_card_loader"}
+                              active={true}
+                            />
+                          </div>
+                        );
+                      })
+                    : products.length > 0
+                    ? products.map((data) => {
+                        return (
+                          <div
+                            className="justifyContentCenter"
+                            style={{ width: "auto", margin: "15px 0px" }}
+                            // style={{ display: "flex", justifyContent: "center" }}
+                          >
+                            <Card
+                              id={data._id}
+                              image={data.productPictures[0].avatar}
+                              name={data.name}
+                              rating={data.rating}
+                              noOfRatings={data.noOfRatings}
+                              price={data.price}
+                              slug={data.slug}
+                              discount={data.discount}
+                            />
+                          </div>
+                        );
+                      })
+                    : null}
                 </div>
               </div>
             </div>

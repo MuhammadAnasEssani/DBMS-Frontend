@@ -6,22 +6,28 @@ import { Rate } from "antd";
 import { getProducts, getProductsByOffer } from "../../config/api/products";
 import { Link, useParams } from "react-router-dom";
 import Notification from "../../component/notification/Notification";
+import { Skeleton } from "antd";
 
 export default function OfferPage() {
   const shops = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState(false)
   const { offerId } = useParams();
+  const shopLoaderArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [productLoader, setProductLoader] = useState(true);
 
   const getProduct = async() => {
+    setProductLoader(true)
       try{
         const res = await getProductsByOffer(offerId);
         // console.log(res)
         if(res.status == 200){
-
             setProducts(res.data.products)
+            setProductLoader(false)
+            return
         }else{
             Notification("Products", "Something went wrong", "Error");
+            return
         }
       }catch(err){
         Notification("Products", "Something went wrong", "Error");
@@ -389,26 +395,44 @@ export default function OfferPage() {
                     height: "80vh",
                   }}
                 >
-                  {products.length > 0 ? products.map((data) => {
-                    return (
-                      <div
-                        className="justifyContentCenter"
-                        style={{ width: "auto", margin: "15px 0px" }}
-                        // style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <Card
-                          id={data._id}
-                          image={data.productPictures[0].avatar}
-                          name={data.name}
-                          rating={data.rating}
-                          noOfRatings={data.noOfRatings}
-                          price={data.price}
-                          slug={data.slug}
-                          discount={data.discount}
-                        />
-                      </div>
-                    );
-                  }): null}
+                  {productLoader
+                    ? shopLoaderArray.map((data) => {
+                        return (
+                          <div
+                            className="justifyContentCenter"
+                            style={{ width: "auto", margin: "15px 0px" }}
+                            // style={{ display: "flex", justifyContent: "center" }}
+                            key={data}
+                          >
+                            <Skeleton.Input
+                              className={"shop_card_loader"}
+                              active={true}
+                            />
+                          </div>
+                        );
+                      })
+                    : products.length > 0
+                    ? products.map((data) => {
+                        return (
+                          <div
+                            className="justifyContentCenter"
+                            style={{ width: "auto", margin: "15px 0px" }}
+                            // style={{ display: "flex", justifyContent: "center" }}
+                          >
+                            <Card
+                              id={data._id}
+                              image={data.productPictures[0].avatar}
+                              name={data.name}
+                              rating={data.rating}
+                              noOfRatings={data.noOfRatings}
+                              price={data.price}
+                              slug={data.slug}
+                              discount={data.discount}
+                            />
+                          </div>
+                        );
+                      })
+                    : null}
                 </div>
               </div>
             </div>

@@ -22,9 +22,9 @@ export default function Order() {
     useEffect(() => {
       {auth.authenticate && fetchOrders()}
     }, [auth.authenticate]);
-    console.log(orders)
+    // console.log(orders)
   return (
-    <section id="hero" className="d-flex align-items-center">
+    <section id="hero" className="d-flex " style={{padding: "35px 0px", minHeight: "80vh"}}>
     <div className="container container-marginss" >
       <div cursor="unset" class="Box-sc-15jsbqj-0 eeqMb">
         <div
