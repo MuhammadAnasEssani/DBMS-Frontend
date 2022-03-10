@@ -16,15 +16,6 @@ export default function Header(props) {
       <header id="header" className="header hidden-mobile" >
         <div className="container-fluid container-xl d-flex align-items-center justify-content-between">
           <div className="logo d-flex align-items-center">
-            {/* <div className="logo">
-              <Link to="/">
-                <img
-                  src={LOGO}
-                  alt=""
-                  style={{ width: "59px", marginRight: "10px" }}
-                />
-              </Link>
-            </div> */}
             <div className="categories-header-alignment">
               <MdDashboardCustomize className="category-header-icon" />
               <div>
