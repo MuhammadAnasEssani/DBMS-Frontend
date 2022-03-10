@@ -6,6 +6,8 @@ import { store } from "..";
 import axios from "../../config/helper/axios";
 // import { store } from "../store";
 import { cartConstants } from "./contants";
+import Notification from "../../component/notification/Notification";
+
 
 const getCartItems = () => {
   return async (dispatch) => {
@@ -99,10 +101,12 @@ export const addToCart = (product, newQty = 1) => {
       };
       const res = await axios.post(`/user/cart/addtocart`, payload);
       if (res.status === 201) {
+        Notification("Cart", "Product added to cart successfully", "Success");
         dispatch(getCartItems());
       }
     } else {
       localStorage.setItem("cart", JSON.stringify(cartItems));
+      Notification("Cart", "Product added to cart successfully", "Success");
     }
     dispatch({
       type: cartConstants.ADD_TO_CART_SUCCESS,

@@ -395,12 +395,11 @@ export default function SearchProducts() {
               </div>
               <div className="col-xl-9 col-lg-9 col-md-9">
                 <div
-                  className="row"
-                  style={{
-                    // justifyContent: "space-between",
-                    overflow: "auto",
-                    height: "80vh",
-                  }}
+                  className="row products-section"
+                  // style={{
+                  //   overflow: "auto",
+                  //   height: "80vh",
+                  // }}
                 >
                   {productLoader
                     ? shopLoaderArray.map((data) => {

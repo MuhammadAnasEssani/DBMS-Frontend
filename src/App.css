@@ -573,6 +573,18 @@ tr th {
   width: 100%;
   height: 700px;
 }
+.invoiceStatusLoader {
+  width: 100%;
+  height: 200px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.invoiceOrdersLoader {
+  width: 100%;
+  height: 250px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
 @media (max-width: 1500px) {
   .map_loader {
     width: 470px;

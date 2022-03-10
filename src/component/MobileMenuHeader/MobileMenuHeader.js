@@ -7,11 +7,15 @@ export default function MobileMenuHeader() {
     for (let category of categories) {
       myCategories.push(
         category.children.length > 0 ? (
-          <SubMenu key={category.id} title={category.name}>
+          <SubMenu key={category.id} title={category.name} onClick={() => {
+            history.push(`/${category.slug}?cid=${category._id}&type=${category.type}`)
+          }}>
             {renderCategories(category.children)}
           </SubMenu>
         ) : (
-          <Menu.Item key={category.id}>{category.name}</Menu.Item>
+          <Menu.Item key={category.id} onClick={() => {
+            history.push(`/${category.slug}?cid=${category._id}&type=${category.type}`)
+          }}>{category.name}</Menu.Item>
         )
       );
     }
