@@ -66,11 +66,17 @@ export default function EcommerceHeader() {
     for (let category of categories) {
       myCategories.push(
         category.children.length > 0 ? (
-          <SubMenu key={category.id} title={category.name}>
+          <SubMenu key={category.id} title={category.name} onClick={() => {
+            setFilter(false)
+            history.push(`/${category.slug}?cid=${category._id}&type=${category.type}`)
+          }}>
             {renderCategories(category.children)}
           </SubMenu>
         ) : (
-          <Menu.Item key={category.id}>{category.name}</Menu.Item>
+          <Menu.Item key={category.id} onClick={() => {
+            setFilter(false)
+            history.push(`/${category.slug}?cid=${category._id}&type=${category.type}`)
+          }}>{category.name}</Menu.Item>
         )
       );
     }
@@ -351,7 +357,7 @@ export default function EcommerceHeader() {
                     // onClick={handleSignin}
                   >
                     <>
-                      <span>Signin</span>
+                      {signup ? <span>Signup</span>  : <span>Signin</span>}
                       <i className="bi bi-arrow-right arrow_right"></i>
                     </>
                   </button>
@@ -413,7 +419,7 @@ export default function EcommerceHeader() {
       </Modal>
       <Drawer placement="right" onClose={onClose} visible={visible}>
         {/* <AdminNav /> */}
-        <Cart />
+        <Cart close={onClose}/>
       </Drawer>
       <div class="SickyStyle__StyledSticky-sc-tdyipr-0 gAWxBn">
         <header class="HeaderStyle__StyledHeader-sc-1iz07og-0 eXggWe">
@@ -547,11 +553,11 @@ export default function EcommerceHeader() {
               cursor="unset"
             >
               <div className="header-icons">
-                {/* <Dropdown overlay={userMenu} placement="bottomLeft"> */}
-                  <div className="header-icon">
+                <Dropdown overlay={userMenu} placement="bottomLeft">
+                  <div className="header-icon mobile-icon">
                     <AiOutlineUser />
                   </div>
-                {/* </Dropdown> */}
+                </Dropdown>
                 {auth.token != null ? (
                   <div className="header-icon" onClick={logout}>
                     <RiLogoutCircleLine />

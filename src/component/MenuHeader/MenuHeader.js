@@ -19,6 +19,9 @@ export default function MenuHeader() {
       }
         // console.log(res)
     }
+    const truncate = (string, n) => {
+      return string?.length > n ? string.substr(0, n-1) + '..' : string
+    }
     const renderCategories = (categories) => {
         let myCategories = [];
         for (let category of categories) {
@@ -29,7 +32,8 @@ export default function MenuHeader() {
                 <Link
                   to={`/${category.slug}?cid=${category._id}&type=${category.type}`}
                 >
-                  {category.name}
+                  {/* {category.name} */}
+                  {truncate(category.name,12)}
                 </Link>
                 {/* <RiArrowRightSLine /> */}
                 </>

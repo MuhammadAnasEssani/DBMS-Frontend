@@ -685,7 +685,7 @@ section {
   font-weight: 600;
     font-size: 14px;
     margin-bottom: 16px;
-    margin-top: 0px;s
+    margin-top: 0px;
 }
 .header-catorgies-icon {
   display: flex;
@@ -694,7 +694,8 @@ section {
   align-items: center;
   width: 44px;
   font-size: 25px;
-  background-color: #f3f3f3;
+  background: rgb(233, 69, 96);
+  /* background-color: #f3f3f3; */
   /* background: rgb(252, 175, 23); */
   border-radius: 10px;
 }
@@ -722,7 +723,7 @@ section {
   top: 11px;
 }
 .search-bar span svg {
-  color: #f3f3f3;
+      color: rgb(233, 69, 96);
   font-size: 25px;
 }
 #header-search-bar {
@@ -3010,8 +3011,8 @@ opacity: 0;
   }
   .btn[type="submit"] {
     /* background-color: #58595b; */
-    margin-left: 3%;
-    margin-top: 8%;
+    /* margin-left: 3%;
+    margin-top: 8%; */
     font-weight: 500;
   }
   .marignP {
@@ -4413,7 +4414,7 @@ hr {
 .shop.checkout {
 	padding: 0;
 	background: #fff;
-	padding-top: 100px;
+	/* padding-top: 100px; */
 	padding-bottom: 50px;
 }
 .shop.checkout .checkout-form {
@@ -5241,6 +5242,13 @@ hr {
 .gIIbjc {
     display: none;
 }
+.eYpJXz {
+  box-shadow: none;
+  cursor: unset;
+  padding: 2rem 0.5rem;
+  margin-bottom: 30px;
+  border-radius: 8px;
+}
 }
 .jvUCMA {
   display: flex;
@@ -5384,9 +5392,9 @@ hr {
   transition: all 0.3s ease;
     visibility: visible;
     z-index: 9999;
-    left: 12px;
+    left: 10px;
     top: 94px;
-    width: 367px;
+    width: 94%;
 }
 .elevation {
   background-color: rgb(255, 255, 255);
@@ -6548,8 +6556,52 @@ hr {
 }
 @media only screen and (max-width: 900px){
 .kcHWGX .title {
-    font-size: 32px;
+    font-size: 30px;
 }
+}
+.mobile-icon {
+  display: none;
+}
+.products-section {
+  overflow: auto;
+    height: 80vh;
+}
+@media only screen and (max-width: 768px){
+.gGleOi {
+  margin-bottom: 1.35rem;
+  color: rgb(15, 52, 96);
+  padding-left: 11px;
+  padding-right: 11px;
+}
+.products-section {
+  overflow: auto;
+    height: auto;
+}
+.mobile-icon {
+  display: flex;
+}
+.bRMjZL {
+    display: flex;
+    width: unset;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    outline: none;
+    cursor: pointer;
+    font-weight: 600;
+    background: rgb(233, 69, 96);
+    transition: all 150ms ease-in-out 0s;
+    line-height: 1;
+    border: none;
+    color: rgb(255, 255, 255);
+    height: 40px;
+    font-size: 14px;
+    border-radius: 5px;
+    margin-left: 11px !important;
+  margin-right: 11px !important;
+}
+
 }
 .nav-link {
   display: block;

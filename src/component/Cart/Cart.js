@@ -4,8 +4,10 @@ import { RiStarSFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, getCartItems, removeCartItem } from "../../store/actions";
 import { Link } from "react-router-dom";
+import Notification from "../../component/notification/Notification";
 
-export default function Cart() {
+export default function Cart(props) {
+  const { close } = props;
   const cart = useSelector((state) => state.cart);
   const auth = useSelector((state) => state.auth);
   const [cartItems, setCartItems] = useState(cart.cartItems);
@@ -50,19 +52,21 @@ export default function Cart() {
               id={cartItems[key]._id}
               increment={onQuantityIncrement}
               decrement={onQuantityDecrement}
-              remove = {onRemoveCartItem}
+              remove={onRemoveCartItem}
             />
           </div>
         ))}
-        <Link to={Object.keys(cart.cartItems).length != 0 && "/checkout"}>
-        <button color="primary" class="Button-l2616d-0 hlOtvl" >
-          <div font-weight="600" class="Typography-sc-1nbqu5-0 hcjNSe">
-            {`Checkout Now ($${Object.keys(cart.cartItems).reduce((totalPrice, key) => {
-            const { price, qty } = cart.cartItems[key];
-            return totalPrice + price * qty;
-          }, 0)})`}
-          </div>
-        </button>
+        <Link to={Object.keys(cart.cartItems).length != 0 && "/checkout"} onClick={() => {
+          Object.keys(cart.cartItems).length != 0 && close()
+        }}>
+          <button color="primary" class="Button-l2616d-0 hlOtvl" >
+            <div font-weight="600" class="Typography-sc-1nbqu5-0 hcjNSe">
+              {`Checkout Now ($${Object.keys(cart.cartItems).reduce((totalPrice, key) => {
+                const { price, qty } = cart.cartItems[key];
+                return totalPrice + price * qty;
+              }, 0)})`}
+            </div>
+          </button>
         </Link>
       </div>
     </>
