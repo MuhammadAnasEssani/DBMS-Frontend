@@ -1,23 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { cartConstants } from '../../store/actions/contants';
+import { cartConstants } from "../../store/actions/contants";
 import Notification from "../../component/notification/Notification";
-import { addOrder } from '../../config/api/order';
-import { useHistory } from 'react-router-dom';
+import { addOrder } from "../../config/api/order";
+import { useHistory } from "react-router-dom";
 import { LoadingOutlined } from "@ant-design/icons";
+import {
+  CountryDropdown,
+  RegionDropdown,
+  CountryRegionData,
+} from "react-country-region-selector";
 
 export default function Checkout() {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
-  const [name, setName] = useState("")
-  const [mobileNumber, setMobileNumber] = useState("")
-  const [pinCode, setPinCode] = useState("")
-  const [address, setAddress] = useState("")
-  const [cityDistrictTown, setCityDistrictTown] = useState("")
-  const [state, setState] = useState("")
-  const [country, setCountry] = useState("")
-  const [payment, setPayment] = useState("")
+  const [name, setName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [pinCode, setPinCode] = useState("");
+  const [address, setAddress] = useState("");
+  const [cityDistrictTown, setCityDistrictTown] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
+  const [payment, setPayment] = useState("");
   const [loading, setLoading] = useState(false);
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
   const history = useHistory();
@@ -52,7 +57,8 @@ export default function Checkout() {
       paymentType: payment,
     };
     // console.log(payload)
-    setLoading(true)
+    // console.log(payload)
+    setLoading(true);
     try {
       if (Object.keys(cart.cartItems).length != 0) {
         const res = await addOrder(payload);
@@ -61,20 +67,20 @@ export default function Checkout() {
             type: cartConstants.RESET_CART,
           });
           Notification("Order Department", res.data.message, "Success");
-          history.push(`/invoice/${res.data.orderId}`)
-          setLoading(false)
-          return
-        }else {
-          setLoading(false)
+          history.push(`/invoice/${res.data.orderId}`);
+          setLoading(false);
+          return;
+        } else {
+          setLoading(false);
           Notification("Order Department", res.data.message, "Error");
-          return
+          return;
         }
       } else {
-        setLoading(false)
+        setLoading(false);
         Notification("Order Department", "Your cart is empty", "Error");
       }
     } catch (err) {
-      setLoading(false)
+      setLoading(false);
       Notification("Order Department", "Something went wrong", "Error");
     }
   };
@@ -89,7 +95,7 @@ export default function Checkout() {
                 <h2>Make Your Checkout Here</h2>
                 <p>Please register in order to checkout more quickly</p>
                 {/* <!-- Form --> */}
-                <form onSubmit={handleCheckout} >
+                <form onSubmit={handleCheckout}>
                   <div class="row">
                     <div class="col-lg-8 col-12">
                       <div class="row">
@@ -114,7 +120,7 @@ export default function Checkout() {
                                 color: "#333",
                                 border: "none",
                                 background: "#F6F7FB",
-                                margin: "15px 0px"
+                                margin: "15px 0px",
                               }}
                             />
                             {/* </Form.Item> */}
@@ -164,7 +170,7 @@ export default function Checkout() {
                                 color: "#333",
                                 border: "none",
                                 background: "#F6F7FB",
-                                margin: "15px 0px"
+                                margin: "15px 0px",
                               }}
                             />
                             {/* </Form.Item> */}
@@ -179,7 +185,7 @@ export default function Checkout() {
                               Country<span>*</span>
                             </label>
                             {/* <Form.Item name="country"> */}
-                            <select
+                            {/* <select
                               required
                               id="country"
                               required
@@ -474,8 +480,22 @@ export default function Checkout() {
                               <option value="YE">Yemen</option>
                               <option value="ZM">Zambia</option>
                               <option value="ZW">Zimbabwe</option>
-                            </select>
-                            {/* </Form.Item> */}
+                            </select> */}
+                            <CountryDropdown
+                            required
+                            style={{
+                              width: "100%",
+                              height: "45px",
+                              lineHeight: "50px",
+                              padding: "0px 20px",
+                              color: "#333",
+                              border: "none",
+                              background: "#F6F7FB",
+                              margin: "15px 0px"
+                            }}
+                              value={country}
+                              onChange={(val) => setCountry(val)}
+                            />
                           </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12">
@@ -486,8 +506,24 @@ export default function Checkout() {
                             <label>
                               State / Divition<span>*</span>
                             </label>
+                            <RegionDropdown
+                            required
+                            style={{
+                              width: "100%",
+                              height: "45px",
+                              lineHeight: "50px",
+                              padding: "0px 20px",
+                              color: "#333",
+                              border: "none",
+                              background: "#F6F7FB",
+                              margin: "15px 0px"
+                            }}
+                              country={country}
+                              value={state}
+                              onChange={(val) => setState(val)}
+                            />
                             {/* <Form.Item name="state"> */}
-                            <select
+                            {/* <select
                               required
                               id="state-province"
                               required="required"
@@ -512,7 +548,7 @@ export default function Checkout() {
                               <option value="San Diego">San Diego</option>
                               <option value="Dallas">Dallas</option>
                               <option value="Charlotte">Charlotte</option>
-                            </select>
+                            </select> */}
                             {/* </Form.Item> */}
                           </div>
                         </div>
@@ -524,11 +560,10 @@ export default function Checkout() {
                             <label>
                               City<span>*</span>
                             </label>
-                            {/* <Form.Item name="cityDistrictTown"> */}
-                            <select
+                            <input
                               required
-                              id="state-province"
-                              required="required"
+                              type="text"
+                              placeholder=""
                               value={cityDistrictTown}
                               onChange={(e) => setCityDistrictTown(e.target.value)}
                               style={{
@@ -539,7 +574,27 @@ export default function Checkout() {
                                 color: "#333",
                                 border: "none",
                                 background: "#F6F7FB",
-                                margin: "15px 0px"
+                                margin: "15px 0px",
+                              }}
+                            />
+                            {/* <Form.Item name="cityDistrictTown"> */}
+                            {/* <select
+                              required
+                              id="state-province"
+                              required="required"
+                              value={cityDistrictTown}
+                              onChange={(e) =>
+                                setCityDistrictTown(e.target.value)
+                              }
+                              style={{
+                                width: "100%",
+                                height: "45px",
+                                lineHeight: "50px",
+                                padding: "0px 20px",
+                                color: "#333",
+                                border: "none",
+                                background: "#F6F7FB",
+                                margin: "15px 0px",
                               }}
                             >
                               <option value="">None</option>
@@ -550,7 +605,7 @@ export default function Checkout() {
                               <option value="San Diego">San Diego</option>
                               <option value="Dallas">Dallas</option>
                               <option value="Charlotte">Charlotte</option>
-                            </select>
+                            </select> */}
                             {/* </Form.Item> */}
                           </div>
                         </div>
@@ -567,7 +622,7 @@ export default function Checkout() {
                               placeholder=""
                               value={pinCode}
                               onChange={(e) => setPinCode(e.target.value)}
-                              required
+                             
                               style={{
                                 width: "100%",
                                 height: "45px",
@@ -576,7 +631,7 @@ export default function Checkout() {
                                 color: "#333",
                                 border: "none",
                                 background: "#F6F7FB",
-                                margin: "15px 0px"
+                                margin: "15px 0px",
                               }}
                             />
                             {/* </Form.Item> */}
@@ -595,7 +650,7 @@ export default function Checkout() {
                               placeholder=""
                               value={address}
                               onChange={(e) => setAddress(e.target.value)}
-                              required
+                              
                               style={{
                                 width: "100%",
                                 height: "45px",
@@ -605,7 +660,7 @@ export default function Checkout() {
                                 border: "none",
                                 background: "#F6F7FB",
                                 height: "100px",
-                                margin: "15px 0px"
+                                margin: "15px 0px",
                               }}
                             />
                             {/* </Form.Item> */}
@@ -687,7 +742,8 @@ export default function Checkout() {
                               <li>
                                 Sub Total
                                 <span>
-                                ${Object.keys(cart.cartItems).reduce(
+                                  $
+                                  {Object.keys(cart.cartItems).reduce(
                                     (totalPrice, key) => {
                                       const { price, qty } =
                                         cart.cartItems[key];
@@ -701,14 +757,18 @@ export default function Checkout() {
                                 (+) Shipping<span>$00.00</span>
                               </li>
                               <li class="last">
-                                Total<span>${Object.keys(cart.cartItems).reduce(
+                                Total
+                                <span>
+                                  $
+                                  {Object.keys(cart.cartItems).reduce(
                                     (totalPrice, key) => {
                                       const { price, qty } =
                                         cart.cartItems[key];
                                       return totalPrice + price * qty;
                                     },
                                     0
-                                  )}</span>
+                                  )}
+                                </span>
                               </li>
                             </ul>
                           </div>
@@ -736,7 +796,7 @@ export default function Checkout() {
                                 color: "#333",
                                 border: "none",
                                 background: "#F6F7FB",
-                                margin: "15px 0px"
+                                margin: "15px 0px",
                               }}
                             >
                               <option value="">None</option>
@@ -760,7 +820,10 @@ export default function Checkout() {
 							<!-- Payment Method Widget --> */}
                         <div class="single-widget payement">
                           <div class="content">
-                            <img src="assets/images/payment-method.png" alt="#" />
+                            <img
+                              src="assets/images/payment-method.png"
+                              alt="#"
+                            />
                           </div>
                         </div>
                         {/* <!--/ End Payment Method Widget -->
@@ -769,16 +832,23 @@ export default function Checkout() {
                           <div class="content">
                             <div
                               class="button"
-                            // style={{ background: "#333333" }}
+                              // style={{ background: "#333333" }}
                             >
                               {/* <Form.Item> */}
-                              {loading ? <button className="btn btn-get-started" >
-                                <>
-                                  <Spin indicator={antIcon} />
-                                </>
-                              </button> : <button className="btn btn-get-started" type="submit">
-                                Proceed To Checkout
-                              </button>}
+                              {loading ? (
+                                <button className="btn btn-get-started">
+                                  <>
+                                    <Spin indicator={antIcon} />
+                                  </>
+                                </button>
+                              ) : (
+                                <button
+                                  className="btn btn-get-started"
+                                  type="submit"
+                                >
+                                  Proceed To Checkout
+                                </button>
+                              )}
                               {/* </Form.Item> */}
                             </div>
                           </div>
@@ -796,5 +866,5 @@ export default function Checkout() {
       </section>
       {/* <!--/ End Checkout --> */}
     </div>
-  )
+  );
 }

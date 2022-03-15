@@ -34,7 +34,7 @@ function App() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   useEffect(() => {
-    {auth.authenticate && dispatch(updateCart());}
+  dispatch(updateCart())
   }, [auth.authenticate]);
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import { getProductDetail } from "../../config/api/products";
 import Notification from "../../component/notification/Notification";
 import { BsHeart } from "react-icons/bs";
 import { RiStarSFill } from "react-icons/ri";
-import { addToCart } from "../../store/actions";
+import { addToCart, addToCartFromProductDetail } from "../../store/actions";
 import { useDispatch } from "react-redux";
 import { getProductRatings } from "../../config/api/rating";
 import { Rate, Skeleton } from "antd";
@@ -191,9 +191,9 @@ export default function ProductDetailPage() {
                   type="button"
                   class="btn"
                   onClick={() => {
-                    const { _id, name, price, createdBy } = productDetail;
+                    const { _id, name, price,discount, createdBy,quantity } = productDetail;
                     const img = productDetail.productPictures[0].avatar;
-                    dispatch(addToCart({ _id, name, price, img, createdBy }));
+                    dispatch(addToCartFromProductDetail({ _id, name, price, img,discount, createdBy,quantity }));
                   }}
                 >
                   Add to Cart <i class="fas fa-shopping-cart"></i>

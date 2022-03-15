@@ -6,7 +6,7 @@ import { AiOutlineSearch, AiOutlineLogin, AiOutlineUser } from "react-icons/ai";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { useHistory, Link } from "react-router-dom";
-import { authConstants } from "../../store/actions/contants";
+import { authConstants, cartConstants } from "../../store/actions/contants";
 import Cart from "../Cart/Cart";
 import { userSignin, userSignup } from "../../config/api/auth";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -153,6 +153,7 @@ export default function EcommerceHeader() {
   const logout = () => {
     localStorage.clear();
     dispatch({ type: authConstants.LOGOUT_SUCCESS });
+    dispatch({ type: cartConstants.RESET_CART });
     Notification("Logout", "Logout Successfully", "Success");
   };
   const userMenu = (
@@ -187,6 +188,7 @@ export default function EcommerceHeader() {
     removeStyle();
     getAllCategories();
   }, [removeStyle(), pathName, auth.authenticate]);
+  // console.log(localStorage.getItem("cart"))
   return (
     <>
     <div style={{ position: "relative" }}>

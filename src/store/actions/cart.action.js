@@ -8,7 +8,6 @@ import axios from "../../config/helper/axios";
 import { cartConstants } from "./contants";
 import Notification from "../../component/notification/Notification";
 
-
 const getCartItems = () => {
   return async (dispatch) => {
     try {
@@ -75,14 +74,16 @@ const getCartItems = () => {
 // };
 
 export const addToCart = (product, newQty = 1) => {
+  // console.log(product)
+  // console.log(newQty)
   return async (dispatch) => {
     const {
       cart: { cartItems },
       auth,
     } = store.getState();
     const qty = cartItems[product._id]
-      ? parseInt(cartItems[product._id].qty + newQty)
-      : 1;
+      ? parseInt(newQty)
+      : newQty;
     cartItems[product._id] = {
       ...product,
       qty,
@@ -95,7 +96,53 @@ export const addToCart = (product, newQty = 1) => {
           {
             product: product._id,
             quantity: qty,
-            productVendor: product.createdBy
+            productVendor: product.createdBy,
+            discount: product.discount,
+          },
+        ],
+      };
+      const res = await axios.post(`/user/cart/addtocart`, payload);
+      if (res.status === 201) {
+        Notification("Cart", "Cart Updated Successfully", "Success");
+        dispatch(getCartItems());
+        return
+      }
+    } else {
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+      Notification("Cart", "Cart Updated Successfully", "Success");
+    }
+    dispatch({
+      type: cartConstants.ADD_TO_CART_SUCCESS,
+      payload: { cartItems },
+    });
+  };
+};
+export const addToCartFromProductDetail = (product, newQty = 1) => {
+  // console.log(product)
+  // console.log(newQty)
+  return async (dispatch) => {
+    const {
+      cart: { cartItems },
+      auth,
+    } = store.getState();
+    if(cartItems[product._id]){
+      Notification("Cart", "You Already have this item in your cart", "Success");
+    }else {
+      const qty = 1;
+    cartItems[product._id] = {
+      ...product,
+      qty,
+    };
+
+    if (auth.authenticate) {
+      dispatch({ type: cartConstants.ADD_TO_CART_REQUEST });
+      const payload = {
+        cartItems: [
+          {
+            product: product._id,
+            quantity: qty,
+            productVendor: product.createdBy,
+            discount: product.discount,
           },
         ],
       };
@@ -103,6 +150,7 @@ export const addToCart = (product, newQty = 1) => {
       if (res.status === 201) {
         Notification("Cart", "Product added to cart successfully", "Success");
         dispatch(getCartItems());
+        return
       }
     } else {
       localStorage.setItem("cart", JSON.stringify(cartItems));
@@ -112,6 +160,8 @@ export const addToCart = (product, newQty = 1) => {
       type: cartConstants.ADD_TO_CART_SUCCESS,
       payload: { cartItems },
     });
+
+    }
   };
 };
 
@@ -142,7 +192,7 @@ export const updateCart = () => {
     let cartItems = localStorage.getItem("cart")
       ? JSON.parse(localStorage.getItem("cart"))
       : null;
-
+    // console.log(localStorage.getItem("cart"));
     if (auth.authenticate) {
       localStorage.removeItem("cart");
       dispatch(getCartItems());
@@ -152,7 +202,8 @@ export const updateCart = () => {
             return {
               quantity: cartItems[key].qty,
               product: cartItems[key]._id,
-              productVendor: cartItems[key].createdBy
+              productVendor: cartItems[key].createdBy,
+              discount: cartItems[key].discount,
             };
           }),
         };

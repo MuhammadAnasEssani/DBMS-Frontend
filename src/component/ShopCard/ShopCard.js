@@ -5,13 +5,14 @@ import { ImCross  } from "react-icons/im";
 import { useSelector } from "react-redux";
 
 export default function ShopCard(props) {
-  const { name, price ,quantity,image,increment,decrement,id, remove } = props;
+  const { name, price ,quantity,discount,image,increment,decrement,id, remove,countInStock,error } = props;
   const auth = useSelector((state) => state.auth);
+  // console.log(error)
   return (
     <div
       id="withOutCard"
       className="shopCard"
-      // style={{position: "reletive"}}
+      // style={error ? {background: "red"} : {background: "#fff"}}
     >
       <div
         className="align-items-center align-self-center"
@@ -26,13 +27,18 @@ export default function ShopCard(props) {
           <div style={{color: "rgb(125, 135, 156)"}}>{price*quantity}</div>
         </div>
         <div className="col-lg-2 col-2" style={{marginTop: "10px"}}>
-          <AiOutlinePlusCircle style={{fontSize: "24px",cursor: "pointer"}} onClick={()=> {
+          {/* <AiOutlinePlusCircle style={{fontSize: "24px",cursor: "pointer"}} onClick={()=> {
             increment(id)
           }}/>
           <div style={{paddingLeft: '8px'}}>{quantity}</div>
           <AiOutlineMinusCircle style={{fontSize: "24px",cursor: "pointer"}} onClick={()=> {
           {quantity > 1 && decrement(id)}
-          }}/>
+          }}/> */}
+          <select value={quantity} onChange={(e) => increment(id,e.target.value)}>
+                      {[...Array(countInStock).keys()].map(x =>
+                        <option key={x + 1} value={x + 1}>{x + 1}</option>
+                      )}
+                    </select>
         </div>
         {auth.authenticate &&  <div style={{position: "absolute", top: "2px", right: "23px"}}>
         <ImCross style={{cursor: "pointer"}} onClick={()=> {
@@ -40,6 +46,9 @@ export default function ShopCard(props) {
           }}/>
         </div>}
       </div>
+      {error && <div>
+        <p style={{color : "red"}}>{`We have only ${countInStock} pieces in our stock plz update your cart`}</p>
+      </div>}
     </div>
   );
 }
