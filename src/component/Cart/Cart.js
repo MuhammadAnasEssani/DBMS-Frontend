@@ -3,7 +3,7 @@ import ShopCard from "../ShopCard/ShopCard";
 import { RiStarSFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, getCartItems, removeCartItem } from "../../store/actions";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Notification from "../../component/notification/Notification";
 
 export default function Cart(props) {
@@ -12,6 +12,7 @@ export default function Cart(props) {
   const auth = useSelector((state) => state.auth);
   const [cartItems, setCartItems] = useState(cart.cartItems);
   const [Error, setError] = useState(false);
+  const history = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,6 +42,17 @@ export default function Cart(props) {
     // console.log("Helllo")
     dispatch(removeCartItem({ productId: _id }));
   };
+  const handleProceed = () => {
+    if(Error){
+      Notification("Cart", "Plz Check Your Cart I Think We are Somewhere Out Of Stock", "Error")
+    } else {
+      if(!auth.authenticate) {
+        
+      }else {
+
+      }
+    }
+  }
   return (
     <>
       <div className="col-lg-12 slider">
@@ -170,10 +182,10 @@ export default function Cart(props) {
               </div> */}
               </div>
           </div>
-        <Link to={(Object.keys(cart.cartItems).length != 0 && !Error) && "/checkout"} onClick={() => {
+        {/* <Link to={(Object.keys(cart.cartItems).length != 0 && !Error) && "/checkout"} onClick={() => {
           Error ? Notification("Cart", "Plz Check Your Cart I Think We are Somewhere Out Of Stock", "Error") : Object.keys(cart.cartItems).length != 0 && close()
-        }}>
-          <button color="primary" class="Button-l2616d-0 hlOtvl" >
+        }}> */}
+          <button color="primary" class="Button-l2616d-0 hlOtvl" onClick={handleProceed}>
             <div font-weight="600" class="Typography-sc-1nbqu5-0 hcjNSe">
               {`Checkout Now ($${Object.keys(cart.cartItems).reduce((totalPrice, key) => {
                 // console.log(cart.cartItems)
@@ -182,7 +194,7 @@ export default function Cart(props) {
               }, 0)})`}
             </div>
           </button>
-        </Link>
+        {/* </Link> */}
       </div>
     </>
   );

@@ -6,13 +6,15 @@ import NoImageArabic from "../../images/No-image-arabic.jpg";
 import "./style.css";
 import Card from "../Card";
 import { RiStarSFill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+
+import { Link, useHistory } from "react-router-dom";
 // import { BaseUrl } from "../../config/api/_Domain";
 
 export default function CardSlider(props) {
   const { title, offers, isloading } = props;
   const { t } = useTranslation();
   const shopLoaderArray = [1, 2, 3, 4, 5];
+  const history = useHistory();
   const settings = {
     dots: false,
     infinite: false,
@@ -44,57 +46,94 @@ export default function CardSlider(props) {
   return (
     <div className="col-lg-12 slider">
       <section class="small-banner section">
-      {/* <h1 className="title">{title}</h1> */}
-      {/* <div className={t("lang") == "ar" ? "teamx_slider" : "teamx"} dir="rtl"> */}
-      {t("lang") == "ar" ? (
-        <Slider {...settings}>
-          {offers.length > 0
-            ? offers.map((offer) => {
-                return (
-                  <div>
-                    <div class="col-lg-12 col-md-12 col-12">
-                      <div class="single-banner">
-                        <img src={offer.avatar} alt="#" />
-                        <div class="content">
+        {/* <h1 className="title">{title}</h1> */}
+        {/* <div className={t("lang") == "ar" ? "teamx_slider" : "teamx"} dir="rtl"> */}
+        {t("lang") == "ar" ? (
+          <Slider {...settings}>
+            {offers.length > 0
+              ? offers.map((offer) => {
+                  return (
+                    <div>
+                      <div class="col-lg-12 col-md-12 col-12">
+                        <div class="single-banner">
+                          <img src={offer.avatar} alt="#" />
+                          {/* <div class="content">
                           <p>{offer.title}</p>
                           <h3>
                             {offer.description}
-                            {/* Summer travel <br /> collection */}
                           </h3>
                           <Link to={`product/${offer._id}`}>Discover Now</Link>
+                        </div> */}
+                          <div>
+                            <h1 class="title">
+                              50% Off For Your First Shopping
+                            </h1>
+                            <div
+                              color="secondary.main"
+                              class="Typography-sc-1nbqu5-0 gGleOi"
+                            >
+                              Lorem ipsum dolor sit amet, consectetur adipiscing
+                              elit. Quis lobortis consequat eu, quam etiam at
+                              quis ut convallis.
+                            </div>
+                            <button
+                              class="Button-sc-l2616d-0 bRMjZL button-link"
+                              color="primary"
+                            >
+                              Visit Collections
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })
-            : null}
-        </Slider>
-      ) : (
-        <Slider {...settings}>
-          {offers.length > 0
-            ? offers.map((offer) => {
-                return (
-                  <div>
-                    <div class="col-lg-12 col-md-12 col-12">
-                      <div class="single-banner">
-                        <img src={offer.avatar} alt="#" />
-                        <div class="content">
-                          <p>{offer.title}</p>
-                          <h3>
-                            {offer.description}
-                            {/* Summer travel <br /> collection */}
-                          </h3>
-                          <Link to={`product/${offer._id}`}>Discover Now</Link>
+                  );
+                })
+              : null}
+          </Slider>
+        ) : (
+          <Slider {...settings}>
+            {offers.length > 0
+              ? offers.map((offer) => {
+                  return (
+                    <div>
+                      <div class="col-lg-12 col-md-12 col-12">
+                        <div class="single-banner">
+                          <img src={offer.avatar} alt="#" />
+                          {/* <div class="content">
+                            <p>{offer.title}</p>
+                            <h3>
+                              {offer.description}
+                            </h3>
+                            <Link to={`product/${offer._id}`}>
+                              Discover Now
+                            </Link>
+                          </div> */}
+                          <div class="content">
+                            <h1 class="title limit-text">{offer.title}</h1>
+                            <div
+                              color="secondary.main"
+                              class="Typography-sc-1nbqu5-0 gGleOi limit-text-two"
+                            >
+                              {offer.description}
+                            </div>
+                            <button
+                              class="Button-sc-l2616d-0 bRMjZL button-link"
+                              color="primary"
+                              onClick={() => {
+                                history.push(`product/${offer._id}`);
+                              }}
+                            >
+                              Visit Collections
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })
-            : null}
-        </Slider>
-      )}
+                  );
+                })
+              : null}
+          </Slider>
+        )}
       </section>
       {/* </div> */}
     </div>

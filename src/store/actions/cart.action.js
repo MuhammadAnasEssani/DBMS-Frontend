@@ -111,6 +111,7 @@ export const addToCart = (product, newQty = 1) => {
       localStorage.setItem("cart", JSON.stringify(cartItems));
       Notification("Cart", "Cart Updated Successfully", "Success");
     }
+    // console.log(cartItems)
     dispatch({
       type: cartConstants.ADD_TO_CART_SUCCESS,
       payload: { cartItems },
@@ -192,7 +193,7 @@ export const updateCart = () => {
     let cartItems = localStorage.getItem("cart")
       ? JSON.parse(localStorage.getItem("cart"))
       : null;
-    // console.log(localStorage.getItem("cart"));
+    // console.log(cartItems);
     if (auth.authenticate) {
       localStorage.removeItem("cart");
       dispatch(getCartItems());
@@ -215,7 +216,9 @@ export const updateCart = () => {
         }
       }
     } else {
+      // console.log("Hello")
       if (cartItems) {
+        // console.log("Helloo")
         dispatch({
           type: cartConstants.ADD_TO_CART_SUCCESS,
           payload: { cartItems },

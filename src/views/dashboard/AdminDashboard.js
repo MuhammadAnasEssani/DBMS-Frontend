@@ -90,13 +90,13 @@ export default function AdminDashboard() {
       {/* <MainBanner /> */}
       {/* <BannerMain /> */}
       <Bannar />
-      {/* {offerLoader ? (
+      {offerLoader ? (
         <ShopLoader title="Shops" />
       ) : offers.length > 0 ? (
         <CardSlider title="Shops" isloading={offerLoader} offers={offers} />
       ) : (
         <NoData title="Shops" />
-      )} */}
+      )}
       <section id="hero" className="hero d-flex align-items-center" style={{padding: "0px"}}>
         <div className="container" style={{ position: "relative" }}>
           <div className="row" style={{ margin: "25px 0px" }}>

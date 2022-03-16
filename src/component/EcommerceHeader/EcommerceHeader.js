@@ -15,7 +15,8 @@ import LOGO from "../../images/e-commerce-logo-1.png";
 import Notification from "../../component/notification/Notification";
 import { MdDashboardCustomize, MdKeyboardArrowDown } from "react-icons/md";
 import { getCategories } from "../../config/api/categories";
-
+import { addToCart, getCartItems, removeCartItem } from "../../store/actions";
+import ShopCard from "../ShopCard/ShopCard";
 
 export default function EcommerceHeader() {
   const auth = useSelector((state) => state.auth);
@@ -29,10 +30,15 @@ export default function EcommerceHeader() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const cart = useSelector((state) => state.cart);
   const [password, setPassword] = useState("");
   const [cpassword, setCPassword] = useState("");
   const [categories, setCategories] = useState([]);
   const [Searchvalue, setValue] = useState("");
+  const [cartItems, setCartItems] = useState(cart.cartItems);
+  // const [cartItems, setCartItems] = useState(cart.cartItems);
+
+  const [Error, setError] = useState(false);
   const { SubMenu } = Menu;
   const removeStyle = () => {
     setTimeout(() => {
@@ -43,7 +49,6 @@ export default function EcommerceHeader() {
     setVisible(false);
     removeStyle();
   };
-  const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const pathName = window.location.pathname;
   const getAllCategories = async () => {
@@ -66,17 +71,30 @@ export default function EcommerceHeader() {
     for (let category of categories) {
       myCategories.push(
         category.children.length > 0 ? (
-          <SubMenu key={category.id} title={category.name} onClick={() => {
-            setFilter(false)
-            history.push(`/${category.slug}?cid=${category._id}&type=${category.type}`)
-          }}>
+          <SubMenu
+            key={category.id}
+            title={category.name}
+            onClick={() => {
+              setFilter(false);
+              history.push(
+                `/${category.slug}?cid=${category._id}&type=${category.type}`
+              );
+            }}
+          >
             {renderCategories(category.children)}
           </SubMenu>
         ) : (
-          <Menu.Item key={category.id} onClick={() => {
-            setFilter(false)
-            history.push(`/${category.slug}?cid=${category._id}&type=${category.type}`)
-          }}>{category.name}</Menu.Item>
+          <Menu.Item
+            key={category.id}
+            onClick={() => {
+              setFilter(false);
+              history.push(
+                `/${category.slug}?cid=${category._id}&type=${category.type}`
+              );
+            }}
+          >
+            {category.name}
+          </Menu.Item>
         )
       );
     }
@@ -151,6 +169,7 @@ export default function EcommerceHeader() {
     }
   };
   const logout = () => {
+    // debugger;
     localStorage.clear();
     dispatch({ type: authConstants.LOGOUT_SUCCESS });
     dispatch({ type: cartConstants.RESET_CART });
@@ -188,10 +207,100 @@ export default function EcommerceHeader() {
     removeStyle();
     getAllCategories();
   }, [removeStyle(), pathName, auth.authenticate]);
+  useEffect(() => {
+    setCartItems(cart.cartItems);
+    // dispatch({ type: cartConstants.RESET_CART });
+  }, [cart.cartItems]);
+
+  useEffect(() => {
+    if (auth.authenticate) {
+      dispatch(getCartItems());
+      return;
+    }
+    {
+      Object.keys(cartItems).map((key, index) =>
+        cartItems[key].qty > cartItems[key].quantity
+          ? setError(true)
+          : setError(false)
+      );
+    }
+  }, [auth.authenticate]);
+  // console.log(cartItems)
+  const onQuantityIncrement = (_id, qty) => {
+    // console.log(qty)
+    const { name, price, img, quantity } = cartItems[_id];
+    dispatch(addToCart({ _id, name, price, img, quantity }, qty));
+  };
+
+  const onQuantityDecrement = (_id) => {
+    const { name, price, img } = cartItems[_id];
+    dispatch(addToCart({ _id, name, price, img }, -1));
+  };
+  const onRemoveCartItem = (_id) => {
+    // console.log("Helllo")
+    dispatch(removeCartItem({ productId: _id }));
+  };
+  const proceed = () => {
+    history.push("/checkout");
+    onClose();
+  };
+  const handleProceed = () => {
+    // debugger
+    if (Error) {
+      Notification(
+        "Cart",
+        "Plz Check Your Cart I Think We are Somewhere Out Of Stock",
+        "Error"
+      );
+    } else {
+      if (!auth.authenticate) {
+        setAuthVisible(true);
+      } else {
+        dispatch(getCartItems()).then(() => {
+          // console.log(cart.cartItems);
+          // const cart = useSelector((state) => state.cart);
+          {
+            let flag = false;
+            Object.keys(cart.cartItems).map((key, index) => {
+              // console.log(cartItems[key].qty > cartItems[key].quantity)
+              if (cart.cartItems[key].qty > cart.cartItems[key].quantity) {
+                Notification(
+                  "Cart",
+                  "Plz Check Your Cart I Think We are Somewhere Out Of Stock",
+                  "Error"
+                );
+                setError(true)
+                return flag = false
+              }
+              // cartItems[key].qty > cartItems[key].quantity
+              //   ? setError(true)
+              //   : null
+              return flag = true
+            })
+            if(flag){
+              proceed()
+            }
+          }
+        });
+        // .then(()=> {
+        //   console.log(Error);
+        //   if (Error) {
+        //     Notification(
+        //       "Cart",
+        //       "Plz Check Your Cart I Think We are Somewhere Out Of Stock",
+        //       "Error"
+        //     );
+        //   } else {
+        //     proceed();
+        //   }
+        // })
+      }
+    }
+  };
   // console.log(localStorage.getItem("cart"))
   return (
     <>
-    <div style={{ position: "relative" }}>
+      <div style={{ position: "relative" }}>
         <div
           className={
             filter
@@ -359,7 +468,7 @@ export default function EcommerceHeader() {
                     // onClick={handleSignin}
                   >
                     <>
-                      {signup ? <span>Signup</span>  : <span>Signin</span>}
+                      {signup ? <span>Signup</span> : <span>Signin</span>}
                       <i className="bi bi-arrow-right arrow_right"></i>
                     </>
                   </button>
@@ -421,7 +530,176 @@ export default function EcommerceHeader() {
       </Modal>
       <Drawer placement="right" onClose={onClose} visible={visible}>
         {/* <AdminNav /> */}
-        <Cart close={onClose}/>
+        {/* <Cart close={onClose}/> */}
+        <>
+          <div className="col-lg-12 slider">
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <h1 className="title">Cart</h1>
+            </div>
+            {Object.keys(cartItems).map((key, index) => (
+              // cartItems[key].qty > cartItems[key].quantity && setError(true),
+              <div style={{ margin: "13px 0px" }}>
+                <ShopCard
+                  name={cartItems[key].name}
+                  image={cartItems[key].img}
+                  price={cartItems[key].price}
+                  quantity={cartItems[key].qty}
+                  discount={cartItems[key].discount}
+                  id={cartItems[key]._id}
+                  increment={onQuantityIncrement}
+                  decrement={onQuantityDecrement}
+                  remove={onRemoveCartItem}
+                  countInStock={cartItems[key].quantity}
+                  error={
+                    cartItems[key].qty > cartItems[key].quantity ? true : false
+                  }
+                />
+              </div>
+            ))}
+            <div
+              spacing="6"
+              class="GridStyle__StyledGrid-sc-1r6thsr-0 jpWNT"
+              style={{ width: "100%" }}
+            >
+              <div
+                cursor="unset"
+                class="Box-sc-15jsbqj-0 Card-sc-1rfvr4b-0 iMpeuc cLWlen"
+                style={{ padding: "0px" }}
+              >
+                <h5
+                  font-weight="600"
+                  font-size="16px"
+                  class="Typography-sc-1nbqu5-0 fVBXki"
+                >
+                  Total Summary
+                </h5>
+                <div
+                  cursor="unset"
+                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
+                >
+                  <div
+                    font-size="14px"
+                    color="text.hint"
+                    class="Typography-sc-1nbqu5-0 huVebp"
+                  >
+                    Subtotal:
+                  </div>
+                  <h6
+                    font-weight="600"
+                    font-size="14px"
+                    class="Typography-sc-1nbqu5-0 JPPAF"
+                  >
+                    {`$${Object.keys(cart.cartItems).reduce(
+                      (totalPrice, key) => {
+                        const { price, qty, discount } = cart.cartItems[key];
+                        return totalPrice + price * qty;
+                      },
+                      0
+                    )}`}
+                  </h6>
+                </div>
+                <div
+                  cursor="unset"
+                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
+                >
+                  <div
+                    font-size="14px"
+                    color="text.hint"
+                    class="Typography-sc-1nbqu5-0 huVebp"
+                  >
+                    Shipping fee:
+                  </div>
+                  <h6
+                    font-weight="600"
+                    font-size="14px"
+                    class="Typography-sc-1nbqu5-0 JPPAF"
+                  >
+                    $0
+                  </h6>
+                </div>
+                <div
+                  cursor="unset"
+                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
+                >
+                  <div
+                    font-size="14px"
+                    color="text.hint"
+                    class="Typography-sc-1nbqu5-0 huVebp"
+                  >
+                    Discount:
+                  </div>
+                  <h6
+                    font-weight="600"
+                    font-size="14px"
+                    class="Typography-sc-1nbqu5-0 JPPAF"
+                  >
+                    {`-$${Object.keys(cart.cartItems).reduce(
+                      (totalPrice, key) => {
+                        const { price, qty, discount } = cart.cartItems[key];
+                        return totalPrice + ((price * discount) / 100) * qty;
+                      },
+                      0
+                    )}`}
+                  </h6>
+                </div>
+                <div class="Divider-sc-119puxu-0 fQOiUI"></div>
+                <div
+                  cursor="unset"
+                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 ipwhLL hwmPhx"
+                >
+                  <h6
+                    font-weight="600"
+                    font-size="14px"
+                    class="Typography-sc-1nbqu5-0 JPPAF"
+                  >
+                    Total
+                  </h6>
+                  <h6
+                    font-weight="600"
+                    font-size="14px"
+                    class="Typography-sc-1nbqu5-0 JPPAF"
+                  >
+                    {`$${Object.keys(cart.cartItems).reduce(
+                      (totalPrice, key) => {
+                        // console.log(cart.cartItems)
+                        const { price, qty, discount } = cart.cartItems[key];
+                        return (
+                          totalPrice + (price - (price * discount) / 100) * qty
+                        );
+                      },
+                      0
+                    )}`}
+                  </h6>
+                </div>
+                {/* <div font-size="14px" class="Typography-sc-1nbqu5-0 gVliBE">
+                Paid by Credit/Debit Card
+              </div> */}
+              </div>
+            </div>
+            {/* <Link to={(Object.keys(cart.cartItems).length != 0 && !Error) && "/checkout"} onClick={() => {
+          Error ? Notification("Cart", "Plz Check Your Cart I Think We are Somewhere Out Of Stock", "Error") : Object.keys(cart.cartItems).length != 0 && close()
+        }}> */}
+            <button
+              color="primary"
+              class="Button-l2616d-0 hlOtvl"
+              onClick={handleProceed}
+            >
+              <div font-weight="600" class="Typography-sc-1nbqu5-0 hcjNSe">
+                {`Checkout Now ($${Object.keys(cart.cartItems).reduce(
+                  (totalPrice, key) => {
+                    // console.log(cart.cartItems)
+                    const { price, qty, discount } = cart.cartItems[key];
+                    return (
+                      totalPrice + (price - (price * discount) / 100) * qty
+                    );
+                  },
+                  0
+                )})`}
+              </div>
+            </button>
+            {/* </Link> */}
+          </div>
+        </>
       </Drawer>
       <div class="SickyStyle__StyledSticky-sc-tdyipr-0 gAWxBn">
         <header class="HeaderStyle__StyledHeader-sc-1iz07og-0 eXggWe">
@@ -436,7 +714,7 @@ export default function EcommerceHeader() {
             >
               <Link to="/">
                 <img
-                // style={{width: "72px"}}
+                  // style={{width: "72px"}}
                   src={LOGO}
                   alt="logo"
                   display="block"
@@ -444,14 +722,14 @@ export default function EcommerceHeader() {
                 />
               </Link>
               <div
-              className="categories-header-mobile"
-              onClick={() => {
-                filter ? setFilter(false) : setFilter(true);
-              }}
-            >
-              <MdDashboardCustomize className="category-header-icon" />
-              <MdKeyboardArrowDown className="category-header-icon" />
-            </div>
+                className="categories-header-mobile"
+                onClick={() => {
+                  filter ? setFilter(false) : setFilter(true);
+                }}
+              >
+                <MdDashboardCustomize className="category-header-icon" />
+                <MdKeyboardArrowDown className="category-header-icon" />
+              </div>
             </div>
             <div
               cursor="unset"
@@ -465,7 +743,7 @@ export default function EcommerceHeader() {
                     defaultcolor="currentColor"
                   >
                     <div>
-                    {/* <Link to={`/search-products/${Searchvalue}`}> */}
+                      {/* <Link to={`/search-products/${Searchvalue}`}> */}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -475,9 +753,9 @@ export default function EcommerceHeader() {
                         class="injected-svg"
                         data-src="/assets/images/icons/search.svg"
                         xlink="http://www.w3.org/1999/xlink"
-                        style={{cursor: "pointer"}}
-                        onClick={()=> {
-                            history.push(`/search-products/${Searchvalue}`)
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          history.push(`/search-products/${Searchvalue}`);
                         }}
                       >
                         <path
