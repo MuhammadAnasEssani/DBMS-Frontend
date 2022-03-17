@@ -93,6 +93,8 @@ export default function SearchProducts() {
       const res = await getSearchedProducts(data, model, modell);
       if (res.status == 200) {
         setProducts(res.data.products);
+        setFilter(false)
+        // filter ? setFilter(false) : setFilter(true)
         setProductLoader(false);
         return;
       } else {
