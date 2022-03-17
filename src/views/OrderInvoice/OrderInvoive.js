@@ -37,14 +37,14 @@ export default function OrderInvoive() {
       // console.log(res)
       if (res.status == 201) {
         Notification("Feedback", res.data.message, "Success");
-        setComent("")
-        setValue(0)
-        setRatingVisible(false)
+        setComent("");
+        setValue(0);
+        setRatingVisible(false);
         // setMainLoading(false)
-        return
+        return;
       } else {
         Notification("Feedback", res.data.message, "Error");
-        return
+        return;
       }
     } catch (error) {
       Notification("Feedback", "Something went wrong", "Error");
@@ -61,7 +61,7 @@ export default function OrderInvoive() {
       const res = await getOrderDetail(payload);
       if (res.status === 200) {
         setOrderDetail(res.data.order);
-        setMainLoading(false)
+        setMainLoading(false);
         return;
       } else {
         Notification("Invoice", "Something went wrong", "Error");
@@ -77,7 +77,7 @@ export default function OrderInvoive() {
       auth.authenticate && fetchOrderDetail();
     }
   }, [auth.authenticate]);
-  return  (
+  return (
     <>
       <Modal
         title="Feedback"
@@ -135,8 +135,8 @@ export default function OrderInvoive() {
                       <Spin indicator={antIcon} />
                     </>
                   </button>
-                ) : (
-                  (coment != "" && value != 0) ? <button
+                ) : coment != "" && value != 0 ? (
+                  <button
                     style={{ border: "none" }}
                     type="submit"
                     id="buttonHover"
@@ -147,13 +147,15 @@ export default function OrderInvoive() {
                       padding: "15px 40px",
                     }}
                     onClick={handleAddReviews}
-                  // onClick={handleSignin}
+                    // onClick={handleSignin}
                   >
                     <>
                       <span>Submit</span>
                       <i className="bi bi-arrow-right arrow_right"></i>
                     </>
-                  </button> : <button
+                  </button>
+                ) : (
+                  <button
                     style={{ border: "none" }}
                     id="buttonHover"
                     className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
@@ -162,9 +164,9 @@ export default function OrderInvoive() {
                       borderRadius: "15px",
                       padding: "15px 40px",
                       // background: "black"
-                      backgroundColor: "rgb(218, 225, 231)"
+                      backgroundColor: "rgb(218, 225, 231)",
                     }}
-                  // onClick={handleSignin}
+                    // onClick={handleSignin}
                   >
                     <>
                       <span>Submit</span>
@@ -179,7 +181,6 @@ export default function OrderInvoive() {
         </div>
       </Modal>
       <div className="container container-margins">
-
         <div cursor="unset" class="Box-sc-15jsbqj-0 eeqMb">
           <div
             cursor="unset"
@@ -222,10 +223,9 @@ export default function OrderInvoive() {
             </button>
           </div>
         </div>
-        {mainloading ? <Skeleton.Input
-          className={"invoiceStatusLoader"}
-          active={true}
-        /> :
+        {mainloading ? (
+          <Skeleton.Input className={"invoiceStatusLoader"} active={true} />
+        ) : (
           <div
             cursor="unset"
             class="Box-sc-15jsbqj-0 Card-sc-1rfvr4b-0 eYpJXz cjaefE"
@@ -290,7 +290,7 @@ export default function OrderInvoive() {
                       color="success.main"
                       // color="gray.white"
                       class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 iMFHjT"
-                    // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
+                      // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
                     >
                       <span>
                         <div
@@ -340,7 +340,7 @@ export default function OrderInvoive() {
                     ? "Box-sc-15jsbqj-0 gbwuDb"
                     : "Box-sc-15jsbqj-0 kYfptl"
                 }
-              // class="Box-sc-15jsbqj-0 gbwuDb"
+                // class="Box-sc-15jsbqj-0 gbwuDb"
               ></div>
               <div cursor="unset" class="Box-sc-15jsbqj-0 hXORQp">
                 <div
@@ -389,7 +389,7 @@ export default function OrderInvoive() {
                       color="success.main"
                       // color="gray.white"
                       class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 iMFHjT"
-                    // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
+                      // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
                     >
                       <span>
                         <div
@@ -439,7 +439,7 @@ export default function OrderInvoive() {
                     ? "Box-sc-15jsbqj-0 gbwuDb"
                     : "Box-sc-15jsbqj-0 kYfptl"
                 }
-              // class="Box-sc-15jsbqj-0 kYfptl"
+                // class="Box-sc-15jsbqj-0 kYfptl"
               ></div>
               <div cursor="unset" class="Box-sc-15jsbqj-0 hXORQp">
                 <div
@@ -500,7 +500,7 @@ export default function OrderInvoive() {
                       color="success.main"
                       // color="gray.white"
                       class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 iMFHjT"
-                    // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
+                      // className={orderDetail.orderStatus[2].isCompleted ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR" :"AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"}
                     >
                       <span>
                         <div
@@ -551,11 +551,11 @@ export default function OrderInvoive() {
                 Estimated Delivery Date <b>4th October</b>
               </div>
             </div>
-          </div>}
-        {mainloading ? <Skeleton.Input
-          className={"invoiceOrdersLoader"}
-          active={true}
-        /> :
+          </div>
+        )}
+        {mainloading ? (
+          <Skeleton.Input className={"invoiceOrdersLoader"} active={true} />
+        ) : (
           <div
             overflow="hidden"
             cursor="unset"
@@ -682,194 +682,195 @@ export default function OrderInvoive() {
                 );
               })}
             </div>
-          </div>}
+          </div>
+        )}
 
         <div spacing="6" class="GridStyle__StyledGrid-sc-1r6thsr-0 iLBSKL">
           <div spacing="6" class="GridStyle__StyledGrid-sc-1r6thsr-0 jpWNT">
-          {mainloading ?  <Skeleton.Input
-          className={"invoiceOrdersLoader"}
-          active={true}
-        /> :
-            <div
-              cursor="unset"
-              class="Box-sc-15jsbqj-0 Card-sc-1rfvr4b-0 iMpeuc cLWlen"
-            >
-              <h5
-                font-weight="600"
-                font-size="16px"
-                class="Typography-sc-1nbqu5-0 fVBXki"
+            {mainloading ? (
+              <Skeleton.Input className={"invoiceOrdersLoader"} active={true} />
+            ) : (
+              <div
+                cursor="unset"
+                class="Box-sc-15jsbqj-0 Card-sc-1rfvr4b-0 iMpeuc cLWlen"
               >
-                Shipping Address
-              </h5>
-              <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
-                {orderDetail.address.address}
-              </p>
-              <div className="row" style={{ marginBottom: "10px" }}>
-                <div className="col-lg-4">
-                  <h5
-                    font-weight="600"
-                    font-size="16px"
-                    class="Typography-sc-1nbqu5-0 fVBXki"
-                  >
-                    Country
-                  </h5>
-                  <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
-                    {orderDetail.address.country}
-                  </p>
+                <h5
+                  font-weight="600"
+                  font-size="16px"
+                  class="Typography-sc-1nbqu5-0 fVBXki"
+                >
+                  Shipping Address
+                </h5>
+                <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
+                  {orderDetail.address.address}
+                </p>
+                <div className="row" style={{ marginBottom: "10px" }}>
+                  <div className="col-lg-4">
+                    <h5
+                      font-weight="600"
+                      font-size="16px"
+                      class="Typography-sc-1nbqu5-0 fVBXki"
+                    >
+                      Country
+                    </h5>
+                    <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
+                      {orderDetail.address.country}
+                    </p>
+                  </div>
+                  <div className="col-lg-4">
+                    <h5
+                      font-weight="600"
+                      font-size="16px"
+                      class="Typography-sc-1nbqu5-0 fVBXki"
+                    >
+                      State
+                    </h5>
+                    <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
+                      {orderDetail.address.state}
+                    </p>
+                  </div>
+                  <div className="col-lg-4">
+                    <h5
+                      font-weight="600"
+                      font-size="16px"
+                      class="Typography-sc-1nbqu5-0 fVBXki"
+                    >
+                      City
+                    </h5>
+                    <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
+                      {orderDetail.address.cityDistrictTown}
+                    </p>
+                  </div>
                 </div>
-                <div className="col-lg-4">
-                  <h5
-                    font-weight="600"
-                    font-size="16px"
-                    class="Typography-sc-1nbqu5-0 fVBXki"
-                  >
-                    State
-                  </h5>
-                  <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
-                    {orderDetail.address.state}
-                  </p>
-                </div>
-                <div className="col-lg-4">
-                  <h5
-                    font-weight="600"
-                    font-size="16px"
-                    class="Typography-sc-1nbqu5-0 fVBXki"
-                  >
-                    City
-                  </h5>
-                  <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
-                    {orderDetail.address.cityDistrictTown}
-                  </p>
+                <div className="row" style={{ marginBottom: "10px" }}>
+                  <div className="col-lg-6">
+                    <h5
+                      font-weight="600"
+                      font-size="16px"
+                      class="Typography-sc-1nbqu5-0 fVBXki"
+                    >
+                      Mobile Number
+                    </h5>
+                    <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
+                      {orderDetail.address.mobileNumber}
+                    </p>
+                  </div>
+                  <div className="col-lg-6">
+                    <h5
+                      font-weight="600"
+                      font-size="16px"
+                      class="Typography-sc-1nbqu5-0 fVBXki"
+                    >
+                      Postal Code
+                    </h5>
+                    <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
+                      {orderDetail.address.pinCode}
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div className="row" style={{ marginBottom: "10px" }}>
-                <div className="col-lg-6">
-                  <h5
-                    font-weight="600"
-                    font-size="16px"
-                    class="Typography-sc-1nbqu5-0 fVBXki"
-                  >
-                    Mobile Number
-                  </h5>
-                  <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
-                    {orderDetail.address.mobileNumber}
-                  </p>
-                </div>
-                <div className="col-lg-6">
-                  <h5
-                    font-weight="600"
-                    font-size="16px"
-                    class="Typography-sc-1nbqu5-0 fVBXki"
-                  >
-                    Postal Code
-                  </h5>
-                  <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
-                    {orderDetail.address.pinCode}
-                  </p>
-                </div>
-              </div>
-            </div>}
+            )}
           </div>
           <div spacing="6" class="GridStyle__StyledGrid-sc-1r6thsr-0 jpWNT">
-          {mainloading ?  <Skeleton.Input
-          className={"invoiceOrdersLoader"}
-          active={true}
-        /> :
-            <div
-              cursor="unset"
-              class="Box-sc-15jsbqj-0 Card-sc-1rfvr4b-0 iMpeuc cLWlen"
-            >
-              <h5
-                font-weight="600"
-                font-size="16px"
-                class="Typography-sc-1nbqu5-0 fVBXki"
-              >
-                Total Summary
-              </h5>
+            {mainloading ? (
+              <Skeleton.Input className={"invoiceOrdersLoader"} active={true} />
+            ) : (
               <div
                 cursor="unset"
-                class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
+                class="Box-sc-15jsbqj-0 Card-sc-1rfvr4b-0 iMpeuc cLWlen"
               >
+                <h5
+                  font-weight="600"
+                  font-size="16px"
+                  class="Typography-sc-1nbqu5-0 fVBXki"
+                >
+                  Total Summary
+                </h5>
                 <div
-                  font-size="14px"
-                  color="text.hint"
-                  class="Typography-sc-1nbqu5-0 huVebp"
+                  cursor="unset"
+                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
                 >
-                  Subtotal:
+                  <div
+                    font-size="14px"
+                    color="text.hint"
+                    class="Typography-sc-1nbqu5-0 huVebp"
+                  >
+                    Subtotal:
+                  </div>
+                  <h6
+                    font-weight="600"
+                    font-size="14px"
+                    class="Typography-sc-1nbqu5-0 JPPAF"
+                  >
+                    ${orderDetail.totalAmount}
+                  </h6>
                 </div>
-                <h6
-                  font-weight="600"
-                  font-size="14px"
-                  class="Typography-sc-1nbqu5-0 JPPAF"
-                >
-                  ${orderDetail.totalAmount}
-                </h6>
-              </div>
-              <div
-                cursor="unset"
-                class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
-              >
                 <div
-                  font-size="14px"
-                  color="text.hint"
-                  class="Typography-sc-1nbqu5-0 huVebp"
+                  cursor="unset"
+                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
                 >
-                  Shipping fee:
+                  <div
+                    font-size="14px"
+                    color="text.hint"
+                    class="Typography-sc-1nbqu5-0 huVebp"
+                  >
+                    Shipping fee:
+                  </div>
+                  <h6
+                    font-weight="600"
+                    font-size="14px"
+                    class="Typography-sc-1nbqu5-0 JPPAF"
+                  >
+                    $0
+                  </h6>
                 </div>
-                <h6
-                  font-weight="600"
-                  font-size="14px"
-                  class="Typography-sc-1nbqu5-0 JPPAF"
-                >
-                  $0
-                </h6>
-              </div>
-              <div
-                cursor="unset"
-                class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
-              >
                 <div
-                  font-size="14px"
-                  color="text.hint"
-                  class="Typography-sc-1nbqu5-0 huVebp"
+                  cursor="unset"
+                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
                 >
-                  Discount:
+                  <div
+                    font-size="14px"
+                    color="text.hint"
+                    class="Typography-sc-1nbqu5-0 huVebp"
+                  >
+                    Discount:
+                  </div>
+                  <h6
+                    font-weight="600"
+                    font-size="14px"
+                    class="Typography-sc-1nbqu5-0 JPPAF"
+                  >
+                    -$0
+                  </h6>
                 </div>
-                <h6
-                  font-weight="600"
-                  font-size="14px"
-                  class="Typography-sc-1nbqu5-0 JPPAF"
+                <div class="Divider-sc-119puxu-0 fQOiUI"></div>
+                <div
+                  cursor="unset"
+                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 ipwhLL hwmPhx"
                 >
-                  -$0
-                </h6>
-              </div>
-              <div class="Divider-sc-119puxu-0 fQOiUI"></div>
-              <div
-                cursor="unset"
-                class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 ipwhLL hwmPhx"
-              >
-                <h6
-                  font-weight="600"
-                  font-size="14px"
-                  class="Typography-sc-1nbqu5-0 JPPAF"
-                >
-                  Total
-                </h6>
-                <h6
-                  font-weight="600"
-                  font-size="14px"
-                  class="Typography-sc-1nbqu5-0 JPPAF"
-                >
-                  ${orderDetail.totalAmount}
-                </h6>
-              </div>
-              {/* <div font-size="14px" class="Typography-sc-1nbqu5-0 gVliBE">
+                  <h6
+                    font-weight="600"
+                    font-size="14px"
+                    class="Typography-sc-1nbqu5-0 JPPAF"
+                  >
+                    Total
+                  </h6>
+                  <h6
+                    font-weight="600"
+                    font-size="14px"
+                    class="Typography-sc-1nbqu5-0 JPPAF"
+                  >
+                    ${orderDetail.totalAmount}
+                  </h6>
+                </div>
+                {/* <div font-size="14px" class="Typography-sc-1nbqu5-0 gVliBE">
                 Paid by Credit/Debit Card
               </div> */}
-            </div>}
+              </div>
+            )}
           </div>
         </div>
       </div>
     </>
-  ) 
+  );
 }

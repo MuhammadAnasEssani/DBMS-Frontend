@@ -28,11 +28,17 @@ export default function AdminDashboard() {
   const [featureLoader, setFeatureLoader] = useState(true);
   const [discountLoader, setDiscountLoader] = useState(true);
   const [offers, setOffers] = useState([]);
+  const [Lowest, setLowest] = useState(Number.NEGATIVE_INFINITY);
+  const [Highest, setHighest] = useState(Number.POSITIVE_INFINITY);
   // const [shopLoader, setShopLoader] = useState(false);
   const shopLoaderArray = [1, 2, 3, 4, 5, 6, 7, 8];
   const getFeaturedProducts = async () => {
+    const model = {
+      lower: Lowest,
+      higher: Highest,
+    };
     try {
-      const res = await getFeaturedProduct();
+      const res = await getFeaturedProduct(model);
       if (res.status == 200) {
         setFeaturedProducts(res.data.products);
         setFeatureLoader(false);
@@ -46,8 +52,12 @@ export default function AdminDashboard() {
     }
   };
   const getDiscountedProducts = async () => {
+    const model = {
+      lower: Lowest,
+      higher: Highest,
+    };
     try {
-      const res = await getDiscountedProduct();
+      const res = await getDiscountedProduct(model);
       if (res.status == 200) {
         setDiscountedProducts(res.data.products);
         setDiscountLoader(false);

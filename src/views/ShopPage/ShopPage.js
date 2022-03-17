@@ -7,7 +7,8 @@ import { getProducts, getProductsByShop } from "../../config/api/products";
 import { Link, useParams } from "react-router-dom";
 import Notification from "../../component/notification/Notification";
 import { getShopDetail } from "../../config/api/shops";
-import { Skeleton } from "antd";
+import { Skeleton, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 export default function ShopPage() {
   const shops = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -18,13 +19,22 @@ export default function ShopPage() {
   const shopLoaderArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [productLoader, setProductLoader] = useState(true);
   const [shopLoader, setShopLoader] = useState(true);
+  const [Lowest, setLowest] = useState(0);
+  const [Highest, setHighest] = useState(100000000000000000000);
+  const [lowestValue, setLowestValue] = useState(0);
+  const [highestValue, setHighestValue] = useState(0);
+  const [filterOnSale, setFilterOnSale] = useState(false);
+  const [filterInStock, setFilterInStock] = useState(false);
+  const [filterFeatured, setFilterFeatured] = useState(false);
+  const [filterRating, setFilterRating] = useState([]);
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
   const getShop = async () => {
     try {
       const res = await getShopDetail(shopId);
       if (res.status == 200) {
         setShop(res.data.shop);
-        setShopLoader(false)
+        setShopLoader(false);
         return;
       } else {
         Notification("Shop Detail", res.data.message, "Error");
@@ -35,9 +45,67 @@ export default function ShopPage() {
     }
   };
   const getProduct = async () => {
+    const model = {
+      lower: Lowest,
+      higher: Highest,
+    };
+    const modell = {};
+    // filterOnSale &&
+    setProductLoader(true);
     try {
-      const res = await getProductsByShop(shopId);
+      const res = await getProductsByShop(shopId, model, modell);
       // console.log(res)
+      if (res.status == 200) {
+        setProducts(res.data.products);
+        var lowest = Number.POSITIVE_INFINITY;
+        var highest = Number.NEGATIVE_INFINITY;
+        var tmp;
+        for (var i = res.data.products.length - 1; i >= 0; i--) {
+          tmp = res.data.products[i].price;
+          if (tmp < lowest) {
+            lowest = tmp;
+            setLowest(tmp);
+            setLowestValue(tmp);
+          }
+          if (tmp > highest) {
+            highest = tmp;
+            setHighest(tmp);
+            setHighestValue(tmp);
+          }
+        }
+        setProductLoader(false);
+        return;
+      } else {
+        Notification("Shop Products", "Something went wrong", "Error");
+        return;
+      }
+    } catch (err) {
+      Notification("Shop Products", "Something went wrong", "Error");
+    }
+  };
+  const getProductForFilter = async (e) => {
+    e.preventDefault();
+    const model = {
+      lower: Lowest,
+      higher: Highest,
+    };
+    const modell = {};
+    if (filterOnSale) {
+      modell.sale = true;
+    }
+    if (filterInStock) {
+      modell.stock = true;
+    }
+    if (filterFeatured) {
+      modell.feature = true;
+    }
+    if(filterRating.length > 0) {
+      modell.rating = filterRating
+    }
+    // console.log(filterRating)
+    setProductLoader(true);
+    try {
+      const res = await getProductsByShop(shopId, model, modell);
       if (res.status == 200) {
         setProducts(res.data.products);
         setProductLoader(false);
@@ -56,7 +124,7 @@ export default function ShopPage() {
     getProduct();
     // console.log(products)
   }, []);
-  console.log(shop)
+  // console.log(filterRating.filter((item) => item.rating == 2))
   return (
     <>
       <section id="hero" className="hero d-flex">
@@ -81,12 +149,9 @@ export default function ShopPage() {
               <h5 className="elevation-title">Searching For Mobile</h5>
             </div>
           </div>
-          {shopLoader ? 
-              <Skeleton.Input
-                              className={"shop_bannar_loader"}
-                              active={true}
-                            />
-               : shop != "" ? (
+          {shopLoader ? (
+            <Skeleton.Input className={"shop_bannar_loader"} active={true} />
+          ) : shop != "" ? (
             <div
               overflow="hidden"
               cursor="unset"
@@ -309,11 +374,11 @@ export default function ShopPage() {
                           class="RatingStyle__StyledRating-sc-1e4cply-0 SUxBm"
                         >
                           <Rate
-                        disabled
-                        allowHalf
-                        value={shop.rating}
-                        style={{ fontSize: "17px" }}
-                      />
+                            disabled
+                            allowHalf
+                            value={shop.rating}
+                            style={{ fontSize: "17px" }}
+                          />
                           {/* <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -477,7 +542,7 @@ export default function ShopPage() {
                           font-size="14px"
                           color="text.muted"
                           class="Typography-sc-1nbqu5-0 fEPyMj"
-                          style={{marginLeft: "0px"}}
+                          style={{ marginLeft: "0px" }}
                         >
                           {shop.description}
                         </span>
@@ -552,320 +617,291 @@ export default function ShopPage() {
               >
                 <div className="side-bar">
                   <h6 className="sidebar-titles">Price Range</h6>
-                  <div
-                    cursor="unset"
-                    class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 dtrmfl dJThAn"
-                  >
+                  <form onSubmit={getProductForFilter}>
                     <div
-                      placeholder="0"
-                      class="TextFieldStyle__TextFieldWrapper-h6a756-1 eWddYu"
+                      cursor="unset"
+                      class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 dtrmfl dJThAn"
                     >
-                      <div cursor="unset" class="Box-sc-15jsbqj-0 hXORQp">
-                        <input
-                          placeholder="0"
-                          type="number"
-                          color="default"
-                          class="TextFieldStyle__SyledTextField-h6a756-0 eNEDcO"
-                          id="0.08794384869135508"
-                        />
+                      <div
+                        placeholder="0"
+                        class="TextFieldStyle__TextFieldWrapper-h6a756-1 eWddYu"
+                      >
+                        <div cursor="unset" class="Box-sc-15jsbqj-0 hXORQp">
+                          <input
+                            placeholder="0"
+                            type="number"
+                            color="default"
+                            class="TextFieldStyle__SyledTextField-h6a756-0 eNEDcO"
+                            id="0.08794384869135508"
+                            onChange={(e) => {
+                              setLowest(e.target.value);
+                            }}
+                            value={Lowest}
+                            min={lowestValue}
+                            max={Highest}
+                          />
+                        </div>
+                      </div>
+                      <h5
+                        font-weight="600"
+                        font-size="16px"
+                        color="text.muted"
+                        class="Typography-sc-1nbqu5-0 geDPRR"
+                      >
+                        -
+                      </h5>
+                      <div
+                        placeholder="250"
+                        class="TextFieldStyle__TextFieldWrapper-h6a756-1 eWddYu"
+                      >
+                        <div cursor="unset" class="Box-sc-15jsbqj-0 hXORQp">
+                          <input
+                            placeholder="250"
+                            type="number"
+                            color="default"
+                            class="TextFieldStyle__SyledTextField-h6a756-0 eNEDcO"
+                            id="0.4472294549448321"
+                            onChange={(e) => {
+                              setHighest(e.target.value);
+                            }}
+                            value={Highest}
+                            min={Lowest}
+                            max={highestValue}
+                          />
+                        </div>
                       </div>
                     </div>
-                    <h5
-                      font-weight="600"
-                      font-size="16px"
-                      color="text.muted"
-                      class="Typography-sc-1nbqu5-0 geDPRR"
-                    >
-                      -
-                    </h5>
-                    <div
-                      placeholder="250"
-                      class="TextFieldStyle__TextFieldWrapper-h6a756-1 eWddYu"
-                    >
-                      <div cursor="unset" class="Box-sc-15jsbqj-0 hXORQp">
-                        <input
-                          placeholder="250"
-                          type="number"
-                          color="default"
-                          class="TextFieldStyle__SyledTextField-h6a756-0 eNEDcO"
-                          id="0.4472294549448321"
-                        />
-                      </div>
+                    <div className="col-lg-12 text-center">
+                      {productLoader ? (
+                        <button
+                          class="Button-sc-l2616d-0 bRMjZL button-link"
+                          color="primary"
+                          type="submit"
+                          style={{ width: "100%", marginTop: "12px" }}
+                        >
+                          <>
+                            <Spin indicator={antIcon} />
+                          </>
+                        </button>
+                      ) : (
+                        <button
+                          class="Button-sc-l2616d-0 bRMjZL button-link"
+                          color="primary"
+                          type="submit"
+                          style={{ width: "100%", marginTop: "12px" }}
+                        >
+                          <>
+                            <span>Filter</span>
+                            {/* <i className="bi bi-arrow-right arrow_right"></i> */}
+                          </>
+                        </button>
+                      )}
                     </div>
-                  </div>
-                  <div class="Divider-sc-119puxu-0 kdZOfo"></div>
-                  <h6 className="sidebar-titles">Brands</h6>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <span
-                        font-size="14px"
-                        color="inherit"
-                        class="Typography-sc-1nbqu5-0 grIwdh"
-                      >
-                        Maccs
-                      </span>
-                    </label>
-                  </div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <span
-                        font-size="14px"
-                        color="inherit"
-                        class="Typography-sc-1nbqu5-0 grIwdh"
-                      >
-                        Maccs
-                      </span>
-                    </label>
-                  </div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <span
-                        font-size="14px"
-                        color="inherit"
-                        class="Typography-sc-1nbqu5-0 grIwdh"
-                      >
-                        Maccs
-                      </span>
-                    </label>
-                  </div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <span
-                        font-size="14px"
-                        color="inherit"
-                        class="Typography-sc-1nbqu5-0 grIwdh"
-                      >
-                        Maccs
-                      </span>
-                    </label>
-                  </div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <span
-                        font-size="14px"
-                        color="inherit"
-                        class="Typography-sc-1nbqu5-0 grIwdh"
-                      >
-                        Maccs
-                      </span>
-                    </label>
-                  </div>
-                  <div class="Divider-sc-119puxu-0 kdZOfo"></div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <span
-                        font-size="14px"
-                        color="inherit"
-                        class="Typography-sc-1nbqu5-0 grIwdh"
-                      >
-                        On Sale
-                      </span>
-                    </label>
-                  </div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <span
-                        font-size="14px"
-                        color="inherit"
-                        class="Typography-sc-1nbqu5-0 grIwdh"
-                      >
-                        In Stock
-                      </span>
-                    </label>
-                  </div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <span
-                        font-size="14px"
-                        color="inherit"
-                        class="Typography-sc-1nbqu5-0 grIwdh"
-                      >
-                        Featured
-                      </span>
-                    </label>
-                  </div>
-                  <div class="Divider-sc-119puxu-0 kdZOfo"></div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <Rate allowHalf value={5} />
-                    </label>
-                  </div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <Rate allowHalf value={4} />
-                    </label>
-                  </div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <Rate allowHalf value={3} />
-                    </label>
-                  </div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <Rate allowHalf value={2} />
-                    </label>
-                  </div>
-                  <div
-                    color="undefined.main"
-                    class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
-                  >
-                    <input
-                      type="checkbox"
-                      name="Maccs"
-                      color="secondary"
-                      size="18"
-                      class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
-                      value="Maccs"
-                      id="0.8918393257508421"
-                    />
-                    <label for="0.8918393257508421">
-                      <Rate allowHalf value={1} />
-                    </label>
-                  </div>
+                    <div class="Divider-sc-119puxu-0 kdZOfo"></div>
+                    <div
+                      color="undefined.main"
+                      class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
+                    >
+                      <input
+                        type="checkbox"
+                        name="Maccs"
+                        color="secondary"
+                        size="18"
+                        class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
+                        value="Maccs"
+                        id="0.8918393257508421"
+                        checked={filterOnSale ? "checked" : null}
+                        onChange={() => {
+                          filterOnSale
+                            ? setFilterOnSale(false)
+                            : setFilterOnSale(true);
+                        }}
+                      />
+                      <label for="0.8918393257508421">
+                        <span
+                          font-size="14px"
+                          color="inherit"
+                          class="Typography-sc-1nbqu5-0 grIwdh"
+                        >
+                          On Sale
+                        </span>
+                      </label>
+                    </div>
+                    <div
+                      color="undefined.main"
+                      class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
+                    >
+                      <input
+                        type="checkbox"
+                        name="Maccs"
+                        color="secondary"
+                        size="18"
+                        class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
+                        value="Maccs"
+                        id="0.8918393257508421"
+                        checked={filterInStock ? "checked" : null}
+                        onChange={() => {
+                          filterOnSale
+                            ? setFilterInStock(false)
+                            : setFilterInStock(true);
+                        }}
+                      />
+                      <label for="0.8918393257508421">
+                        <span
+                          font-size="14px"
+                          color="inherit"
+                          class="Typography-sc-1nbqu5-0 grIwdh"
+                        >
+                          In Stock
+                        </span>
+                      </label>
+                    </div>
+                    <div
+                      color="undefined.main"
+                      class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
+                    >
+                      <input
+                        type="checkbox"
+                        name="Maccs"
+                        color="secondary"
+                        size="18"
+                        class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
+                        value="Maccs"
+                        id="0.8918393257508421"
+                        checked={filterFeatured ? "checked" : null}
+                        onChange={() => {
+                          filterFeatured
+                            ? setFilterFeatured(false)
+                            : setFilterFeatured(true);
+                        }}
+                      />
+                      <label for="0.8918393257508421">
+                        <span
+                          font-size="14px"
+                          color="inherit"
+                          class="Typography-sc-1nbqu5-0 grIwdh"
+                        >
+                          Featured
+                        </span>
+                      </label>
+                    </div>
+                    <div class="Divider-sc-119puxu-0 kdZOfo"></div>
+                    <div
+                      color="undefined.main"
+                      class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
+                    >
+                      <input
+                        type="checkbox"
+                        name="Maccs"
+                        color="secondary"
+                        size="18"
+                        class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
+                        value="Maccs"
+                        id="0.8918393257508421"
+                        checked={filterRating.filter((item) => item.rating == 5).length > 0 ? "checked" : null}
+                        onChange={() => {
+                          filterRating.filter((item) => item.rating == 5).length > 0 
+                            ? setFilterRating(filterRating.filter((item) => item.rating != 5))
+                            : filterRating.push({rating: 5})
+                        }}
+                      />
+                      <label for="0.8918393257508421">
+                        <Rate allowHalf value={5} />
+                      </label>
+                    </div>
+                    <div
+                      color="undefined.main"
+                      class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
+                    >
+                      <input
+                        type="checkbox"
+                        name="Maccs"
+                        color="secondary"
+                        size="18"
+                        class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
+                        value="Maccs"
+                        id="0.8918393257508421"
+                        checked={filterRating.filter((item) => item.rating == 4).length > 0 ? "checked" : null}
+                        onChange={() => {
+                          filterRating.filter((item) => item.rating == 4).length > 0 
+                          ? setFilterRating(filterRating.filter((item) => item.rating != 4))
+                          : filterRating.push({rating: 4})
+                        }}
+                      />
+                      <label for="0.8918393257508421">
+                        <Rate allowHalf value={4} />
+                      </label>
+                    </div>
+                    <div
+                      color="undefined.main"
+                      class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
+                    >
+                      <input
+                        type="checkbox"
+                        name="Maccs"
+                        color="secondary"
+                        size="18"
+                        class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
+                        value="Maccs"
+                        id="0.8918393257508421"
+                        checked={filterRating.filter((item) => item.rating == 3).length > 0 ? "checked" : null}
+                        onChange={() => {
+                          filterRating.filter((item) => item.rating == 3).length > 0 
+                          ? setFilterRating(filterRating.filter((item) => item.rating != 3))
+                          : filterRating.push({rating: 3})
+                        }}
+                      />
+                      <label for="0.8918393257508421">
+                        <Rate allowHalf value={3} />
+                      </label>
+                    </div>
+                    <div
+                      color="undefined.main"
+                      class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
+                    >
+                      <input
+                        type="checkbox"
+                        name="Maccs"
+                        color="secondary"
+                        size="18"
+                        class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
+                        value="Maccs"
+                        id="0.8918393257508421"
+                        checked={filterRating.filter((item) => item.rating == 2).length > 0 ? "checked" : null}
+                        onChange={() => {
+                          filterRating.filter((item) => item.rating == 2).length > 0 
+                          ? setFilterRating(filterRating.filter((item) => item.rating != 2))
+                          : filterRating.push({rating: 2})
+                        }}
+                      />
+                      <label for="0.8918393257508421">
+                        <Rate allowHalf value={2} />
+                      </label>
+                    </div>
+                    <div
+                      color="undefined.main"
+                      class="CheckBox__Wrapper-sc-1go6jlo-1 hkaOyo"
+                    >
+                      <input
+                        type="checkbox"
+                        name="Maccs"
+                        color="secondary"
+                        size="18"
+                        class="CheckBox__SyledCheckBox-sc-1go6jlo-0 gOojgn"
+                        value="Maccs"
+                        id="0.8918393257508421"
+                        checked={filterRating.filter((item) => item.rating == 1).length > 0 ? "checked" : null}
+                        onChange={() => {
+                          filterRating.filter((item) => item.rating == 1).length > 0 
+                          ? setFilterRating(filterRating.filter((item) => item.rating != 1))
+                          : filterRating.push({rating: 1})
+                        }}
+                      />
+                      <label for="0.8918393257508421">
+                        <Rate allowHalf value={1} />
+                      </label>
+                    </div>
+                  </form>
                 </div>
               </div>
               <div className="col-xl-9 col-lg-9 col-md-9">
