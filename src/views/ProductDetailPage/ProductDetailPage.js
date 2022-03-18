@@ -16,6 +16,8 @@ export default function ProductDetailPage() {
   const [isloading, setisloading] = useState(true);
   const [addToWishList, setAddToWishList] = useState(true);
   const [visible, setVisible] = useState(false);
+  const [colour, setColour] = useState("");
+  const [size, setSize] = useState("");
   const loaderArray = [1, 2, 3, 4, 5];
   const dispatch = useDispatch();
   const getProductDetails = async () => {
@@ -23,11 +25,11 @@ export default function ProductDetailPage() {
       const res = await getProductDetail(productId);
       if (res.status == 200) {
         setProductDetail(res.data.product);
-        setProductDetailLoader(false)
-        return
+        setProductDetailLoader(false);
+        return;
       } else {
         Notification("Product Detail", "Something went wrong", "Error");
-        return
+        return;
       }
     } catch (err) {
       Notification("Product Detail", "Something went wrong", "Error");
@@ -76,12 +78,31 @@ export default function ProductDetailPage() {
   //     var img = document.getElementById("productDescImg");
   //     img.src = key.target.src;
   //   };
+  const handleAddToCart = (e) => {
+    e.preventDefault()
+    const { _id, name, price, discount, createdBy, quantity } = productDetail;
+    const img = productDetail.productPictures[0].avatar;
+    dispatch(
+      addToCartFromProductDetail({
+        _id,
+        name,
+        price,
+        img,
+        discount,
+        createdBy,
+        quantity,
+        colour,
+        size
+      })
+    );
+    // }}
+  };
   useEffect(() => {
     getProductDetails();
     getProductRating();
   }, []);
   // console.log(productRatings);
-  // console.log(productDetail);
+  console.log(productDetail);
   return (
     <>
       {productDetailLoader ? (
@@ -168,38 +189,144 @@ export default function ProductDetailPage() {
                 <h2>about this item: </h2>
                 <p>{productDetail.description}</p>
                 <ul>
+                  {productDetail.colours && (
+                    <li>
+                      Color:{" "}
+                      {productDetail.colours.map((colour) => {
+                        return (
+                          <span
+                            style={{
+                              background: "#c5bfbf",
+                              padding: "2px 7px",
+                              borderRadius: "10px",
+                              margin: "0px 6px 0px 0",
+                            }}
+                          >
+                            {colour.text}
+                          </span>
+                        );
+                      })}
+                    </li>
+                  )}
                   <li>
-                    Color: <span>Black</span>
+                    Available:{" "}
+                    {productDetail.quantity > 0 ? (
+                      <span>in stock</span>
+                    ) : (
+                      <span>out of stock</span>
+                    )}
                   </li>
                   <li>
-                    Available: <span>in stock</span>
+                    Category: <span>{productDetail.category.name}</span>
                   </li>
-                  <li>
-                    Category: <span>Shoes</span>
-                  </li>
-                  <li>
+                  {/* <li>
                     Shipping Area: <span>All over the world</span>
                   </li>
                   <li>
                     Shipping Fee: <span>Free</span>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
-
-              <div class="purchase-info">
-                <button
-                  type="button"
-                  class="btn"
-                  onClick={() => {
-                    const { _id, name, price,discount, createdBy,quantity } = productDetail;
-                    const img = productDetail.productPictures[0].avatar;
-                    dispatch(addToCartFromProductDetail({ _id, name, price, img,discount, createdBy,quantity }));
-                  }}
-                >
-                  Add to Cart <i class="fas fa-shopping-cart"></i>
-                </button>
-              </div>
-
+              <form onSubmit={handleAddToCart}>
+                {productDetail.colours.length > 0 && (
+                  <div class="content">
+                    <label>
+                      Select Colour<span>*</span>
+                    </label>
+                    {/* <Form.Item name="payment"> */}
+                    <select
+                      required
+                      id="state-province"
+                      value={colour}
+                      onChange={(e) => setColour(e.target.value)}
+                      style={{
+                        width: "100%",
+                        height: "45px",
+                        lineHeight: "50px",
+                        padding: "0px 20px",
+                        color: "#333",
+                        border: "none",
+                        // background: "#F6F7FB",
+                        margin: "15px 0px",
+                      }}
+                    >
+                      <option value="">None</option>
+                      {productDetail.colours.map((colour) => {
+                        return (
+                          <option key={colour.text} value={colour.text}>
+                            {colour.text}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                )}
+                {productDetail.sizes.length > 0 && (
+                  <div class="content">
+                    <label>
+                      Select Size<span>*</span>
+                    </label>
+                    {/* <Form.Item name="payment"> */}
+                    <select
+                      required
+                      id="state-province"
+                      value={size}
+                      onChange={(e) => setSize(e.target.value)}
+                      style={{
+                        width: "100%",
+                        height: "45px",
+                        lineHeight: "50px",
+                        padding: "0px 20px",
+                        color: "#333",
+                        border: "none",
+                        // background: "#F6F7FB",
+                        margin: "15px 0px",
+                      }}
+                    >
+                      <option value="">None</option>
+                      {productDetail.sizes.map((size) => {
+                        return (
+                          <option key={size.text} value={size.text}>
+                            {size.text}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                )}
+                {productDetail.quantity > 0 && (
+                  <div class="purchase-info">
+                    <button
+                      type="submit"
+                      class="btn"
+                      // onClick={() => {
+                      //   const {
+                      //     _id,
+                      //     name,
+                      //     price,
+                      //     discount,
+                      //     createdBy,
+                      //     quantity,
+                      //   } = productDetail;
+                      //   const img = productDetail.productPictures[0].avatar;
+                      //   dispatch(
+                      //     addToCartFromProductDetail({
+                      //       _id,
+                      //       name,
+                      //       price,
+                      //       img,
+                      //       discount,
+                      //       createdBy,
+                      //       quantity,
+                      //     })
+                      //   );
+                      // }}
+                    >
+                      Add to Cart <i class="fas fa-shopping-cart"></i>
+                    </button>
+                  </div>
+                )}
+              </form>
               <div class="social-links">
                 <p>Share At: </p>
                 <a href="#">
