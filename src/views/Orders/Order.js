@@ -136,9 +136,19 @@ export default function Order() {
                     >
                       {
                         data.orderStatus[
-                          data.orderStatus.findIndex((status) => {
-                            return status.isCompleted == false;
-                          }) - 1
+                          data.orderStatus.findIndex(
+                            (status) => {
+                              return (
+                                status.isCompleted == false
+                              );
+                            }
+                          ) != -1 ? data.orderStatus.findIndex(
+                            (status) => {
+                              return (
+                                status.isCompleted == false
+                              );
+                            }
+                          ) - 1 : 3
                         ].type
                       }
                     </span>
