@@ -8,7 +8,7 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 import { useHistory, Link } from "react-router-dom";
 import { authConstants, cartConstants } from "../../store/actions/contants";
 import Cart from "../Cart/Cart";
-import { userSignin, userSignup } from "../../config/api/auth";
+import { userForgotPassword, userSignin, userSignup } from "../../config/api/auth";
 import { LoadingOutlined } from "@ant-design/icons";
 import $ from "jquery";
 import LOGO from "../../images/e-commerce-logo-1.png";
@@ -25,6 +25,7 @@ export default function EcommerceHeader() {
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
   const history = useHistory();
   const [authVisible, setAuthVisible] = useState("");
+  const [forgotVisible, setForgotVisible] = useState("");
   const [signup, setSignup] = useState(false);
   const [loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState("");
@@ -168,6 +169,30 @@ export default function EcommerceHeader() {
       Notification("Login", "Something went wrong", "Error");
     }
   };
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const users = {
+        email,
+      };
+      const res = await userForgotPassword(users);
+      if (res.status === 201) {
+        Notification("Forgot Password", res.data.message, "Success");
+        setLoading(false);
+        setEmail("");
+        setForgotVisible(false);
+        return;
+      } else {
+        Notification("Forgot Password", res.data.message, "Error");
+        setLoading(false);
+        return;
+      }
+    } catch {
+      setLoading(false);
+      Notification("Forgot Password", "Something went wrong", "Error");
+    }
+  }
   const logout = () => {
     // debugger;
     localStorage.clear();
@@ -319,6 +344,71 @@ export default function EcommerceHeader() {
         </div>
       </div>
       <Modal
+        title="Forgot Password"
+        centered
+        visible={forgotVisible}
+        onCancel={() => {
+          {
+             setForgotVisible(false);
+          }
+        }}
+        width={400}
+      >
+        <div className="col-lg-12">
+          <form onSubmit={handleForgotPassword}>
+            <div className="col-lg-12">
+              <div className="col-lg-12">
+                <label className="labeltext">Email</label>
+                <input
+                  required
+                  type="email"
+                  placeholder="john@yahoo.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="FormInput"
+                  style={{ borderRadius: "10px" }}
+                />
+              </div>
+              <div className="col-lg-12 text-center">
+                {loading ? (
+                  <button
+                    style={{ border: "none" }}
+                    id="buttonHover"
+                    className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
+                    style={{
+                      width: "100%",
+                      borderRadius: "15px",
+                      padding: "15px 40px",
+                    }}
+                  >
+                    <>
+                      <Spin indicator={antIcon} />
+                    </>
+                  </button>
+                ) : (
+                  <button
+                    style={{ border: "none" }}
+                    type="submit"
+                    id="buttonHover"
+                    className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
+                    style={{
+                      width: "100%",
+                      borderRadius: "15px",
+                      padding: "15px 40px",
+                    }}
+                  >
+                    <>
+                      <span>Send</span>
+                      <i className="bi bi-arrow-right arrow_right"></i>
+                    </>
+                  </button>
+                )}
+              </div>
+            </div>
+          </form>
+        </div>
+      </Modal>
+      <Modal
         title="Login"
         centered
         visible={authVisible}
@@ -409,18 +499,23 @@ export default function EcommerceHeader() {
                   justifyContent: "space-between",
                 }}
               >
-                <Link
+                <span
                   // to="/forgot-password"
+                  onClick={() => {
+                    setAuthVisible(false)
+                    setForgotVisible(true);
+                  }}
                   className="col-lg-5 col-12"
                   style={{
                     textDecoration: "underline",
                     color: "#333",
                     fontSize: 14,
                     fontWeight: 500,
+                    cursor: "pointer"
                   }}
                 >
                   Forgot password
-                </Link>
+                </span>
                 <a
                   // target="_blank"
                   // href="https://portal.uaqbusiness.com/Account/Login?ReturnUrl=%2F"

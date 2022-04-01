@@ -20,4 +20,15 @@ function userSignin(user) {
       }).then((res) => res)
 }
 
-export { userSignup, userActivation, userSignin };
+function userForgotPassword(user) {
+    return axios.post("/forgot-password", {
+        ...user,
+      }).then((res) => res)
+}
+function resetPassword(model) {
+    return axios.post("/reset-password", {
+        ...model,
+      }).then((res) => res)
+}
+
+export { userSignup, userActivation, userSignin , userForgotPassword ,resetPassword };

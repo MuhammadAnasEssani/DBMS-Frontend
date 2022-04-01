@@ -10,6 +10,7 @@ import OrderInvoive from "../../views/OrderInvoice/OrderInvoive";
 import Order from "../../views/Orders/Order";
 import ProductDetailPage from "../../views/ProductDetailPage/ProductDetailPage";
 import ProductPage from "../../views/ProductPage/ProductPage";
+import ResetPassword from "../../views/ResetPassword/ResetPassword";
 import SearchProducts from "../../views/SearchProducts/SearchProducts";
 import ShopPage from "../../views/ShopPage/ShopPage";
 import Shops from "../../views/Shops/Shops";
@@ -59,6 +60,11 @@ const routes = [
     path: "/shops",
     title: "Shops",
     component: () => <Shops />,
+  },
+  {
+    path: "/resetpassword/:token",
+    title: "Invoice",
+    component: () => <ResetPassword />,
   },
   {
     path: "/invoice/:orderId",

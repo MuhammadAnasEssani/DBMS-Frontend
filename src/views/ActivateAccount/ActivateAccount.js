@@ -18,7 +18,6 @@ export default function ActivateAccount() {
             Notification("Activation", res.data.message, "Success")
             history.push("/");
             return
-
         }else {
             Notification("Activation", res.data.message, "Error")
             return
