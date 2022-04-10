@@ -885,7 +885,7 @@ section {
   left: 281px;
     right: auto;
   /* left: 0; */
-  right: 0;
+  right: 281px;
   opacity: 0;
   visibility: hidden;
   border-top: 1px solid #cecece;
@@ -6328,7 +6328,7 @@ hr {
 .gpBtzH .search-field {
   flex: 1 1 0px;
   padding-left: 3rem;
-  padding-right: 11.5rem;
+  padding-right: 7.5rem;
   height: 44px;
   border-radius: 300px;
 }

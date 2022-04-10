@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Menu, Dropdown, Form, Spin, Space, Drawer } from "antd";
 import { Modal } from "antd";
-import { AiOutlineSearch, AiOutlineLogin, AiOutlineUser } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineLogin, AiOutlineUser,AiOutlineGlobal } from "react-icons/ai";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { RiLogoutCircleLine } from "react-icons/ri";
+
 import { useHistory, Link } from "react-router-dom";
 import { authConstants, cartConstants } from "../../store/actions/contants";
 import Cart from "../Cart/Cart";
@@ -17,8 +18,28 @@ import { MdDashboardCustomize, MdKeyboardArrowDown } from "react-icons/md";
 import { getCategories } from "../../config/api/categories";
 import { addToCart, getCartItems, removeCartItem } from "../../store/actions";
 import ShopCard from "../ShopCard/ShopCard";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
+import cookies from "js-cookie";
+
+const languages = [
+  {
+    code: "en",
+    name: "English",
+    country_code: "gb",
+  },
+  {
+    code: "ar",
+    name: "العربية",
+    dir: "rtl",
+    country_code: "sa",
+  },
+];
 
 export default function EcommerceHeader() {
+  const currentLanguageCode = cookies.get("i18next") || "en";
+  const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
+  const { t } = useTranslation();
   const auth = useSelector((state) => state.auth);
   const [filter, setFilter] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -200,6 +221,24 @@ export default function EcommerceHeader() {
     dispatch({ type: cartConstants.RESET_CART });
     Notification("Logout", "Logout Successfully", "Success");
   };
+  const languageMenu = (
+    <Menu>
+        <Menu.Item
+         onClick={() => {
+          i18next.changeLanguage("en");
+        }}
+        >
+          <span>{t("sidebar.languages.english")}</span>
+        </Menu.Item>
+      <Menu.Item
+        onClick={() => {
+          i18next.changeLanguage("ar");
+        }}
+      >
+        <span>{t("sidebar.languages.arabic")}</span>
+      </Menu.Item>
+    </Menu>
+  );
   const userMenu = (
     <Menu>
       {auth.authenticate && (
@@ -250,6 +289,10 @@ export default function EcommerceHeader() {
       );
     }
   }, [auth.authenticate]);
+  useEffect(() => {
+    document.body.dir = currentLanguage.dir || "ltr";
+    document.title = t("app_title");
+  }, [currentLanguage, t]);
   // console.log(cartItems)
   const onQuantityIncrement = (_id, qty) => {
     // console.log(qty)
@@ -876,7 +919,7 @@ export default function EcommerceHeader() {
                     <div cursor="unset" class="Box-sc-15jsbqj-0 hXjvFQ">
                       <input
                         class="TextFieldStyle__SyledTextField-sc-h6a756-0 Lznse search-field"
-                        placeholder="Search and hit enter..."
+                        placeholder={t("search")}
                         color="default"
                         id="0.9317837622580987"
                         value={Searchvalue}
@@ -893,7 +936,7 @@ export default function EcommerceHeader() {
                       class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 dNNxsU hccqyr dropdown-handler"
                       cursor="unset"
                     >
-                      <span>All Categories</span>
+                      <span>{t("category")}</span>
                       <div
                         variant="small"
                         defaultcolor="currentColor"
@@ -975,6 +1018,11 @@ export default function EcommerceHeader() {
                     </span>
                   </div>
                 </div>
+                <Dropdown overlay={languageMenu} placement="bottomLeft">
+                  <div className="header-icon">
+                    <AiOutlineGlobal />
+                  </div>
+                </Dropdown>
               </div>
               {/* <button class="IconButton-sc-6b71ah-0 eWiIvS">
                 <div

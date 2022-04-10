@@ -1,6 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Bannar() {
+  const { t } = useTranslation();
+
   return (
     <>
       <div cursor="unset" class="Box-sc-15jsbqj-0 fBAsTk">
@@ -42,7 +45,7 @@ export default function Bannar() {
                     >
                       <div class="CarouselCardStyle__StyledCarouselCard1-sc-fyxdra-0 kcHWGX">
                         <div>
-                          <h1 class="title">50% Off For Your First Shopping</h1>
+                          <h1 class="title">{t("mainBannarTitle")}</h1>
                           <div
                             color="secondary.main"
                             class="Typography-sc-1nbqu5-0 gGleOi"
@@ -55,7 +58,7 @@ export default function Bannar() {
                             class="Button-sc-l2616d-0 bRMjZL button-link"
                             color="primary"
                           >
-                            Visit Collections
+                            {t("visitCollection")}
                           </button>
                         </div>
                         <div class="image-holder">

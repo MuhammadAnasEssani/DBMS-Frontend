@@ -4,10 +4,11 @@ import { MdDashboardCustomize, MdKeyboardArrowDown } from "react-icons/md";
 
 import MenuHeader from "../MenuHeader/MenuHeader";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 export default function Header(props) {
   const auth = useSelector((state) => state.auth);
-
+  const { t } = useTranslation();
 
   // console.log(categories)
   return (
@@ -19,7 +20,7 @@ export default function Header(props) {
             <div className="categories-header-alignment">
               <MdDashboardCustomize className="category-header-icon" />
               <div>
-                <h3 className="categories-header">Categories</h3>
+                <h3 className="categories-header">{t("category")}</h3>
               </div>
               <MdKeyboardArrowDown className="category-header-icon" />
               <MenuHeader />
@@ -40,7 +41,7 @@ export default function Header(props) {
                 font-size="16px"
                 class="Typography-sc-1nbqu5-0 iuwOpT nav-link"
               >
-              My Orders
+              {t("myOrders")}
               </span>
             </Link>}
             <Link
@@ -51,7 +52,7 @@ export default function Header(props) {
                 font-size="16px"
                 class="Typography-sc-1nbqu5-0 iuwOpT nav-link"
               >
-                All Shops
+                {t("shops")}
               </span>
             </Link>
           </div>

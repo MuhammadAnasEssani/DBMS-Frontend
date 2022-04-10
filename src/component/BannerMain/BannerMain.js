@@ -57,7 +57,7 @@ const BannerMain = () => {
       },
     ],
   };
-  // console.log(offers);
+  console.log(offers);
 
   return (
     <div>
