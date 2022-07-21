@@ -1,16 +1,12 @@
-import React, { useState } from "react";
-import { Spin } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { cartConstants } from "../../store/actions/contants";
+import React, {useEffect, useState} from "react";
+import {Spin} from "antd";
+import {useDispatch, useSelector} from "react-redux";
 import Notification from "../../component/notification/Notification";
-import { addOrder } from "../../config/api/order";
-import { useHistory } from "react-router-dom";
-import { LoadingOutlined } from "@ant-design/icons";
-import {
-  CountryDropdown,
-  RegionDropdown,
-  CountryRegionData,
-} from "react-country-region-selector";
+import {addOrder} from "../../config/api/order";
+import {useHistory} from "react-router-dom";
+import {LoadingOutlined} from "@ant-design/icons";
+import {CountryDropdown, RegionDropdown,} from "react-country-region-selector";
+import {getCartItems} from "../../config/api/cart";
 
 export default function Checkout() {
   const cart = useSelector((state) => state.cart);
@@ -24,50 +20,41 @@ export default function Checkout() {
   const [country, setCountry] = useState("");
   const [payment, setPayment] = useState("");
   const [loading, setLoading] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
   const history = useHistory();
   const handleCheckout = async (e) => {
     e.preventDefault();
-    const totalAmount = Object.keys(cart.cartItems).reduce(
-      (totalPrice, key) => {
-        const { price, qty } = cart.cartItems[key];
-        return totalPrice + price * qty;
-      },
-      0
-    );
-    const items = Object.keys(cart.cartItems).map((key) => ({
-      productVendor: cart.cartItems[key].createdBy,
-      productId: key,
-      payablePrice: cart.cartItems[key].price,
-      purchasedQty: cart.cartItems[key].qty,
+
+    const order_items = cartItems.map((data) => ({
+      product_vendor_id: data.product_vendor_id,
+      product_id: data.product_id,
+      payable_price: data.payable_price,
+      purchased_qty: data.qty,
     }));
     const payload = {
-      totalAmount,
-      items,
-      address: {
+      order_items,
+      user_address: {
         name: name,
-        mobileNumber: mobileNumber,
-        pinCode: pinCode,
+        mobile_number: mobileNumber,
+        pin_code: pinCode,
         address: address,
-        cityDistrictTown: cityDistrictTown,
+        city: cityDistrictTown,
         state: state,
         country: country,
-      },
-      paymentStatus: "pending",
-      paymentType: payment,
+      }
     };
     // console.log(payload)
     // console.log(payload)
     setLoading(true);
     try {
-      if (Object.keys(cart.cartItems).length != 0) {
+      if (cartItems.length != 0) {
         const res = await addOrder(payload);
+        console.log(res)
         if (res.status === 201) {
-          dispatch({
-            type: cartConstants.RESET_CART,
-          });
+
           Notification("Order Department", res.data.message, "Success");
-          history.push(`/invoice/${res.data.orderId}`);
+          history.push(`/invoice/${res.data.data.id}`);
           setLoading(false);
           return;
         } else {
@@ -84,6 +71,23 @@ export default function Checkout() {
       Notification("Order Department", "Something went wrong", "Error");
     }
   };
+  const getCartItem = async () => {
+    try {
+      const res = await getCartItems();
+      if (res.status == 200) {
+        setCartItems(res.data.data);
+        return;
+      } else {
+        Notification("Cart", res.data.message, "Error");
+        return;
+      }
+    } catch (err) {
+      Notification("Cart", "Something went wrong", "Error");
+    }
+  };
+  useEffect(()=> {
+    getCartItem()
+  })
   return (
     <div>
       {/* <!-- Start Checkout --> */}

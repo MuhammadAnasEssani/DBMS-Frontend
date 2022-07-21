@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { getShop } from "../../config/api/shops";
+import React, {useEffect, useState} from "react";
+import {getShop} from "../../config/api/shops";
 import Notification from "../../component/notification/Notification";
-import { Link } from "react-router-dom";
-import { Rate, Skeleton } from "antd";
+import {Link} from "react-router-dom";
+import {Rate, Skeleton} from "antd";
 
 export default function Shops() {
   const [shops, setShops] = useState([]);
@@ -12,7 +12,7 @@ export default function Shops() {
     try {
       const res = await getShop();
       if (res.status == 200) {
-        setShops(res.data.shops);
+        setShops(res.data.data);
         setShopLoader(false)
         return;
       } else {
@@ -70,7 +70,7 @@ export default function Shops() {
                             font-weight="600"
                             class="Typography-sc-1nbqu5-0 hyFUsi"
                           >
-                            {shop.shopName}
+                            {shop.shop_name}
                           </h3>
                           <div cursor="unset" class="Box-sc-15jsbqj-0 kDQKum">
                             <div
@@ -81,7 +81,7 @@ export default function Shops() {
                               <Rate
                         disabled
                         allowHalf
-                        value={shop.rating}
+                        value={4}
                         style={{ fontSize: "17px" }}
                       />
                               {/* <svg
@@ -254,7 +254,7 @@ export default function Shops() {
                               color="white"
                               class="Typography-sc-1nbqu5-0 iwNRTV"
                             >
-                              {shop.description}
+                              {shop.shop_description}
                             </span>
                           </div>
                           <div
@@ -313,9 +313,9 @@ export default function Shops() {
                             size="64"
                             class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 RElpU"
                           >
-                            <img src={shop.avatar} alt="avatar" />
+                            <img src={`http://localhost:3333/uploads/shop/${shop.avatar}`} alt="avatar" />
                           </div>
-                          <Link to={`/shop/${shop._id}`}>
+                          <Link to={`/shop/${shop.id}`}>
                             <button class="IconButton-sc-6b71ah-0 fhZElw">
                               <div
                                 defaultcolor="auto"

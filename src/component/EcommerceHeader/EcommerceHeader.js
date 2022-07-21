@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Menu, Dropdown, Form, Spin, Space, Drawer } from "antd";
-import { Modal } from "antd";
-import { AiOutlineSearch, AiOutlineLogin, AiOutlineUser,AiOutlineGlobal } from "react-icons/ai";
-import { IoBagCheckOutline } from "react-icons/io5";
-import { RiLogoutCircleLine } from "react-icons/ri";
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {Drawer, Dropdown, Menu, Modal, Spin} from "antd";
+import {AiOutlineLogin, AiOutlineUser} from "react-icons/ai";
+import {IoBagCheckOutline} from "react-icons/io5";
+import {RiLogoutCircleLine} from "react-icons/ri";
 
-import { useHistory, Link } from "react-router-dom";
-import { authConstants, cartConstants } from "../../store/actions/contants";
+import {Link, useHistory} from "react-router-dom";
+import {authConstants, cartConstants} from "../../store/actions/contants";
 import Cart from "../Cart/Cart";
-import { userForgotPassword, userSignin, userSignup } from "../../config/api/auth";
-import { LoadingOutlined } from "@ant-design/icons";
+import {userForgotPassword, userSignin, userSignup} from "../../config/api/auth";
+import {LoadingOutlined} from "@ant-design/icons";
 import $ from "jquery";
 import LOGO from "../../images/e-commerce-logo-1.png";
 import Notification from "../../component/notification/Notification";
-import { MdDashboardCustomize, MdKeyboardArrowDown } from "react-icons/md";
-import { getCategories } from "../../config/api/categories";
-import { addToCart, getCartItems, removeCartItem } from "../../store/actions";
+import {MdDashboardCustomize, MdKeyboardArrowDown} from "react-icons/md";
+import {getCategories} from "../../config/api/categories";
+import {getCartItems} from "../../config/api/cart";
 import ShopCard from "../ShopCard/ShopCard";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import i18next from "i18next";
 import cookies from "js-cookie";
 
@@ -57,7 +56,7 @@ export default function EcommerceHeader() {
   const [cpassword, setCPassword] = useState("");
   const [categories, setCategories] = useState([]);
   const [Searchvalue, setValue] = useState("");
-  const [cartItems, setCartItems] = useState(cart.cartItems);
+  const [cartItems, setCartItems] = useState([]);
   // const [cartItems, setCartItems] = useState(cart.cartItems);
 
   const [Error, setError] = useState(false);
@@ -77,7 +76,7 @@ export default function EcommerceHeader() {
     try {
       const res = await getCategories();
       if (res.status == 200) {
-        setCategories(res.data.categoryList);
+        setCategories(res.data.data);
         return;
       } else {
         Notification("Categories", "Something went wrong", "Error");
@@ -92,32 +91,32 @@ export default function EcommerceHeader() {
     let myCategories = [];
     for (let category of categories) {
       myCategories.push(
-        category.children.length > 0 ? (
-          <SubMenu
-            key={category.id}
-            title={category.name}
-            onClick={() => {
-              setFilter(false);
-              history.push(
-                `/${category.slug}?cid=${category._id}&type=${category.type}`
-              );
-            }}
-          >
-            {renderCategories(category.children)}
-          </SubMenu>
-        ) : (
+          // category.children.length > 0 ? (
+          //   <SubMenu
+          //     key={category.id}
+          //     title={category.name}
+          //     onClick={() => {
+          //       setFilter(false);
+          //       history.push(
+          //         `/${category.slug}?cid=${category._id}&type=${category.type}`
+          //       );
+          //     }}
+          //   >
+          //     {renderCategories(category.children)}
+          //   </SubMenu>
+          // ) : (
           <Menu.Item
-            key={category.id}
-            onClick={() => {
-              setFilter(false);
-              history.push(
-                `/${category.slug}?cid=${category._id}&type=${category.type}`
-              );
-            }}
+              key={category.id}
+              onClick={() => {
+                setFilter(false);
+                history.push(
+                    `/${category.slug}?cid=${category._id}&type=${category.type}`
+                );
+              }}
           >
             {category.name}
           </Menu.Item>
-        )
+          // )
       );
     }
     return myCategories;
@@ -126,7 +125,7 @@ export default function EcommerceHeader() {
     e.preventDefault();
     setLoading(true);
     try {
-      const user = { firstName, lastName, email, password, cpassword };
+      const user = { first_name : firstName, last_name : lastName, email, password };
       const res = await userSignup(user);
       if (res.status === 201) {
         Notification("Signup", res.data.message, "Success");
@@ -164,7 +163,7 @@ export default function EcommerceHeader() {
       };
       const res = await userSignin(users);
       if (res.status === 200) {
-        const { token, user } = res.data;
+        const { token, user } = res.data.data;
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
         dispatch({
@@ -222,73 +221,86 @@ export default function EcommerceHeader() {
     Notification("Logout", "Logout Successfully", "Success");
   };
   const languageMenu = (
-    <Menu>
+      <Menu>
         <Menu.Item
-         onClick={() => {
-          i18next.changeLanguage("en");
-        }}
+            onClick={() => {
+              i18next.changeLanguage("en");
+            }}
         >
           <span>{t("sidebar.languages.english")}</span>
         </Menu.Item>
-      <Menu.Item
-        onClick={() => {
-          i18next.changeLanguage("ar");
-        }}
-      >
-        <span>{t("sidebar.languages.arabic")}</span>
-      </Menu.Item>
-    </Menu>
+        <Menu.Item
+            onClick={() => {
+              i18next.changeLanguage("ar");
+            }}
+        >
+          <span>{t("sidebar.languages.arabic")}</span>
+        </Menu.Item>
+      </Menu>
   );
   const userMenu = (
-    <Menu>
-      {auth.authenticate && (
+      <Menu>
+        {auth.authenticate && (
+            <Menu.Item
+                onClick={() => {
+                  history.push("/account/orders");
+                }}
+            >
+              <span>My Orders</span>
+            </Menu.Item>
+        )}
         <Menu.Item
-          onClick={() => {
-            history.push("/account/orders");
-          }}
+            onClick={() => {
+              history.push("/shops");
+            }}
         >
-          <span>My Orders</span>
+          <span>All Shops</span>
         </Menu.Item>
-      )}
-      <Menu.Item
-        onClick={() => {
-          history.push("/shops");
-        }}
-      >
-        <span>All Shops</span>
-      </Menu.Item>
-    </Menu>
+      </Menu>
   );
   useEffect(() => {
     {
       (pathName == "/checkout" ||
-        pathName.split("/")[1] == "invoice" ||
-        pathName == "/account/orders") &&
-        !auth.authenticate &&
-        setAuthVisible(true);
+          pathName.split("/")[1] == "invoice" ||
+          pathName == "/account/orders") &&
+      !auth.authenticate &&
+      setAuthVisible(true);
     }
     // {pathName.split("/")[1] == "invoice"}
     removeStyle();
     getAllCategories();
   }, [removeStyle(), pathName, auth.authenticate]);
-  useEffect(() => {
-    setCartItems(cart.cartItems);
-    // dispatch({ type: cartConstants.RESET_CART });
-  }, [cart.cartItems]);
-
+  // useEffect(() => {
+  //   setCartItems(cart.cartItems);
+  //   // dispatch({ type: cartConstants.RESET_CART });
+  // }, [cart.cartItems]);
+  const getCartItem = async () => {
+    try {
+      const res = await getCartItems();
+      if (res.status == 200) {
+        setCartItems(res.data.data);
+        return;
+      } else {
+        Notification("Shop Detail", res.data.message, "Error");
+        return;
+      }
+    } catch (err) {
+      Notification("Shop Detail", "Something went wrong", "Error");
+    }
+  };
   useEffect(() => {
     if (auth.authenticate) {
-      dispatch(getCartItems());
+      getCartItem()
       return;
     }
-    {
-      Object.keys(cartItems).map((key, index) =>
-        cartItems[key].qty > cartItems[key].quantity
-          ? setError(true)
-          : setError(false)
-      );
-    }
-  }, [auth.authenticate]);
+    // {
+    //   Object.keys(cartItems).map((key, index) =>
+    //       cartItems[key].qty > cartItems[key].quantity
+    //           ? setError(true)
+    //           : setError(false)
+    //   );
+    // }
+  }, [auth.authenticate,visible]);
   useEffect(() => {
     document.body.dir = currentLanguage.dir || "ltr";
     document.title = t("app_title");
@@ -297,16 +309,16 @@ export default function EcommerceHeader() {
   const onQuantityIncrement = (_id, qty) => {
     // console.log(qty)
     const { name, price, img, quantity } = cartItems[_id];
-    dispatch(addToCart({ _id, name, price, img, quantity }, qty));
+    // dispatch(addToCart({ _id, name, price, img, quantity }, qty));
   };
 
   const onQuantityDecrement = (_id) => {
     const { name, price, img } = cartItems[_id];
-    dispatch(addToCart({ _id, name, price, img }, -1));
+    // dispatch(addToCart({ _id, name, price, img }, -1));
   };
   const onRemoveCartItem = (_id) => {
     // console.log("Helllo")
-    dispatch(removeCartItem({ productId: _id }));
+    // dispatch(removeCartItem({ productId: _id }));
   };
   const proceed = () => {
     history.push("/checkout");
@@ -316,9 +328,9 @@ export default function EcommerceHeader() {
     // debugger
     if (Error) {
       Notification(
-        "Cart",
-        "Plz Check Your Cart I Think We are Somewhere Out Of Stock",
-        "Error"
+          "Cart",
+          "Plz Check Your Cart I Think We are Somewhere Out Of Stock",
+          "Error"
       );
     } else {
       if (!auth.authenticate) {
@@ -333,9 +345,9 @@ export default function EcommerceHeader() {
               // console.log(cartItems[key].qty > cartItems[key].quantity)
               if (cart.cartItems[key].qty > cart.cartItems[key].quantity) {
                 Notification(
-                  "Cart",
-                  "Plz Check Your Cart I Think We are Somewhere Out Of Stock",
-                  "Error"
+                    "Cart",
+                    "Plz Check Your Cart I Think We are Somewhere Out Of Stock",
+                    "Error"
                 );
                 setError(true)
                 return flag = false
@@ -367,664 +379,656 @@ export default function EcommerceHeader() {
   };
   // console.log(localStorage.getItem("cart"))
   return (
-    <>
-      <div style={{ position: "relative" }}>
-        <div
-          className={
-            filter
-              ? "col-xl-3 col-lg-3 col-md-3 col-12 mobile-categories filter-sidebar"
-              : "col-xl-3 col-lg-3 col-md-3 col-12 mobile-categories filter"
-          }
-        >
+      <>
+        <div style={{ position: "relative" }}>
           <div
-            className="side-bar"
-            style={{ height: "auto", maxHEight: "80vh" }}
+              className={
+                filter
+                    ? "col-xl-3 col-lg-3 col-md-3 col-12 mobile-categories filter-sidebar"
+                    : "col-xl-3 col-lg-3 col-md-3 col-12 mobile-categories filter"
+              }
           >
-            <Menu mode="inline">
-              {categories.length > 0 && renderCategories(categories)}
-            </Menu>
+            <div
+                className="side-bar"
+                style={{ height: "auto", maxHEight: "80vh" }}
+            >
+              <Menu mode="inline">
+                {categories.length > 0 && renderCategories(categories)}
+              </Menu>
+            </div>
           </div>
         </div>
-      </div>
-      <Modal
-        title="Forgot Password"
-        centered
-        visible={forgotVisible}
-        onCancel={() => {
-          {
-             setForgotVisible(false);
-          }
-        }}
-        width={400}
-      >
-        <div className="col-lg-12">
-          <form onSubmit={handleForgotPassword}>
-            <div className="col-lg-12">
+        <Modal
+            title="Forgot Password"
+            centered
+            visible={forgotVisible}
+            onCancel={() => {
+              {
+                setForgotVisible(false);
+              }
+            }}
+            width={400}
+        >
+          <div className="col-lg-12">
+            <form onSubmit={handleForgotPassword}>
               <div className="col-lg-12">
-                <label className="labeltext">Email</label>
-                <input
-                  required
-                  type="email"
-                  placeholder="john@yahoo.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="FormInput"
-                  style={{ borderRadius: "10px" }}
-                />
-              </div>
-              <div className="col-lg-12 text-center">
-                {loading ? (
-                  <button
-                    style={{ border: "none" }}
-                    id="buttonHover"
-                    className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
-                    style={{
-                      width: "100%",
-                      borderRadius: "15px",
-                      padding: "15px 40px",
-                    }}
-                  >
-                    <>
-                      <Spin indicator={antIcon} />
-                    </>
-                  </button>
-                ) : (
-                  <button
-                    style={{ border: "none" }}
-                    type="submit"
-                    id="buttonHover"
-                    className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
-                    style={{
-                      width: "100%",
-                      borderRadius: "15px",
-                      padding: "15px 40px",
-                    }}
-                  >
-                    <>
-                      <span>Send</span>
-                      <i className="bi bi-arrow-right arrow_right"></i>
-                    </>
-                  </button>
-                )}
-              </div>
-            </div>
-          </form>
-        </div>
-      </Modal>
-      <Modal
-        title="Login"
-        centered
-        visible={authVisible}
-        onCancel={() => {
-          {
-            pathName == "/checkout" || pathName.split("/")[1] == "invoice"
-              ? auth.authenticate && setAuthVisible(false)
-              : setAuthVisible(false);
-          }
-        }}
-        width={400}
-      >
-        <div className="col-lg-12">
-          <form onSubmit={signup ? handleSignup : handleSignin}>
-            <div className="col-lg-12">
-              <div className="row">
-                {signup && (
-                  <div className="col-lg-6">
-                    <label className="labeltext">First Name</label>
-                    <input
-                      required
-                      type="text"
-                      placeholder="First Name"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="FormInput"
-                      style={{ borderRadius: "10px" }}
-                    />
-                  </div>
-                )}
-                {signup && (
-                  <div className="col-lg-6">
-                    <label className="labeltext">Last Name</label>
-                    <input
-                      required
-                      type="text"
-                      placeholder="Last Name"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="FormInput"
-                      style={{ borderRadius: "10px" }}
-                    />
-                  </div>
-                )}
-              </div>
-              <div className="col-lg-12">
-                <label className="labeltext">Email</label>
-                <input
-                  required
-                  type="email"
-                  placeholder="john@yahoo.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="FormInput"
-                  style={{ borderRadius: "10px" }}
-                />
-              </div>
-              <div className="col-lg-12">
-                <label className="labeltext">Password</label>
-                <input
-                  required
-                  type="password"
-                  placeholder="*********"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="FormInput"
-                  style={{ borderRadius: "10px" }}
-                />
-              </div>
-              {signup && (
                 <div className="col-lg-12">
-                  <label className="labeltext">Confirm Password</label>
+                  <label className="labeltext">Email</label>
                   <input
-                    required
-                    type="password"
-                    placeholder="*********"
-                    value={cpassword}
-                    onChange={(e) => setCPassword(e.target.value)}
-                    className="FormInput"
-                    style={{ borderRadius: "10px" }}
+                      required
+                      type="email"
+                      placeholder="john@yahoo.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="FormInput"
+                      style={{ borderRadius: "10px" }}
                   />
                 </div>
-              )}
-              <div
-                className="col-lg-12 row"
-                style={{
-                  margin: "0px",
-                  justifyContent: "space-between",
-                }}
-              >
+                <div className="col-lg-12 text-center">
+                  {loading ? (
+                      <button
+                          style={{ border: "none" }}
+                          id="buttonHover"
+                          className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
+                          style={{
+                            width: "100%",
+                            borderRadius: "15px",
+                            padding: "15px 40px",
+                          }}
+                      >
+                        <>
+                          <Spin indicator={antIcon} />
+                        </>
+                      </button>
+                  ) : (
+                      <button
+                          style={{ border: "none" }}
+                          type="submit"
+                          id="buttonHover"
+                          className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
+                          style={{
+                            width: "100%",
+                            borderRadius: "15px",
+                            padding: "15px 40px",
+                          }}
+                      >
+                        <>
+                          <span>Send</span>
+                          <i className="bi bi-arrow-right arrow_right"></i>
+                        </>
+                      </button>
+                  )}
+                </div>
+              </div>
+            </form>
+          </div>
+        </Modal>
+        <Modal
+            title="Login"
+            centered
+            visible={authVisible}
+            onCancel={() => {
+              {
+                pathName == "/checkout" || pathName.split("/")[1] == "invoice"
+                    ? auth.authenticate && setAuthVisible(false)
+                    : setAuthVisible(false);
+              }
+            }}
+            width={400}
+        >
+          <div className="col-lg-12">
+            <form onSubmit={signup ? handleSignup : handleSignin}>
+              <div className="col-lg-12">
+                <div className="row">
+                  {signup && (
+                      <div className="col-lg-6">
+                        <label className="labeltext">First Name</label>
+                        <input
+                            required
+                            type="text"
+                            placeholder="First Name"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            className="FormInput"
+                            style={{ borderRadius: "10px" }}
+                        />
+                      </div>
+                  )}
+                  {signup && (
+                      <div className="col-lg-6">
+                        <label className="labeltext">Last Name</label>
+                        <input
+                            required
+                            type="text"
+                            placeholder="Last Name"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            className="FormInput"
+                            style={{ borderRadius: "10px" }}
+                        />
+                      </div>
+                  )}
+                </div>
+                <div className="col-lg-12">
+                  <label className="labeltext">Email</label>
+                  <input
+                      required
+                      type="email"
+                      placeholder="john@yahoo.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="FormInput"
+                      style={{ borderRadius: "10px" }}
+                  />
+                </div>
+                <div className="col-lg-12">
+                  <label className="labeltext">Password</label>
+                  <input
+                      required
+                      type="password"
+                      placeholder="*********"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="FormInput"
+                      style={{ borderRadius: "10px" }}
+                  />
+                </div>
+                {signup && (
+                    <div className="col-lg-12">
+                      <label className="labeltext">Confirm Password</label>
+                      <input
+                          required
+                          type="password"
+                          placeholder="*********"
+                          value={cpassword}
+                          onChange={(e) => setCPassword(e.target.value)}
+                          className="FormInput"
+                          style={{ borderRadius: "10px" }}
+                      />
+                    </div>
+                )}
+                <div
+                    className="col-lg-12 row"
+                    style={{
+                      margin: "0px",
+                      justifyContent: "space-between",
+                    }}
+                >
                 <span
-                  // to="/forgot-password"
-                  onClick={() => {
-                    setAuthVisible(false)
-                    setForgotVisible(true);
-                  }}
-                  className="col-lg-5 col-12"
-                  style={{
-                    textDecoration: "underline",
-                    color: "#333",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    cursor: "pointer"
-                  }}
+                    // to="/forgot-password"
+                    onClick={() => {
+                      setAuthVisible(false)
+                      setForgotVisible(true);
+                    }}
+                    className="col-lg-5 col-12"
+                    style={{
+                      textDecoration: "underline",
+                      color: "#333",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      cursor: "pointer"
+                    }}
                 >
                   Forgot password
                 </span>
-                <a
-                  // target="_blank"
-                  // href="https://portal.uaqbusiness.com/Account/Login?ReturnUrl=%2F"
-                  className="col-lg-7 col-12"
-                  style={{
-                    textDecoration: "underline",
-                    color: "#333",
-                    fontSize: 14,
-                    fontWeight: 500,
-                    textAlign: "end",
-                  }}
-                >
-                  Become a seller
-                </a>
-              </div>
-              <div className="col-lg-12 text-center">
-                {/* <Form.Item> */}
-                {loading ? (
-                  <button
-                    style={{ border: "none" }}
-                    type="submit"
-                    id="buttonHover"
-                    className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
-                    style={{
-                      width: "100%",
-                      borderRadius: "15px",
-                      padding: "15px 40px",
-                    }}
-                  >
-                    <>
-                      <Spin indicator={antIcon} />
-                    </>
-                  </button>
-                ) : (
-                  <button
-                    style={{ border: "none" }}
-                    type="submit"
-                    id="buttonHover"
-                    className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
-                    style={{
-                      width: "100%",
-                      borderRadius: "15px",
-                      padding: "15px 40px",
-                    }}
-                    // onClick={handleSignin}
-                  >
-                    <>
-                      {signup ? <span>Signup</span> : <span>Signin</span>}
-                      <i className="bi bi-arrow-right arrow_right"></i>
-                    </>
-                  </button>
-                )}
-                {/* </Form.Item> */}
-              </div>
-              {signup ? (
-                <div className="col-lg-12">
-                  <p className="mt-5 text-center">
-                    Already have an account
-                    <span
+                  <a
                       // target="_blank"
-                      // href="https://portal.uaqbusiness.com/en-US/Account/Register"
-                      // to="/signup"
-                      className=""
+                      // href="https://portal.uaqbusiness.com/Account/Login?ReturnUrl=%2F"
+                      className="col-lg-7 col-12"
                       style={{
+                        textDecoration: "underline",
                         color: "#333",
                         fontSize: 14,
                         fontWeight: 500,
-                        color: "rgb(125, 135, 156)",
-                        cursor: "pointer",
+                        textAlign: "end",
                       }}
-                      onClick={() => {
-                        setSignup(false);
-                      }}
-                    >
+                  >
+                    Become a seller
+                  </a>
+                </div>
+                <div className="col-lg-12 text-center">
+                  {/* <Form.Item> */}
+                  {loading ? (
+                      <button
+                          style={{ border: "none" }}
+                          type="submit"
+                          id="buttonHover"
+                          className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
+                          style={{
+                            width: "100%",
+                            borderRadius: "15px",
+                            padding: "15px 40px",
+                          }}
+                      >
+                        <>
+                          <Spin indicator={antIcon} />
+                        </>
+                      </button>
+                  ) : (
+                      <button
+                          style={{ border: "none" }}
+                          type="submit"
+                          id="buttonHover"
+                          className="btn btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
+                          style={{
+                            width: "100%",
+                            borderRadius: "15px",
+                            padding: "15px 40px",
+                          }}
+                          // onClick={handleSignin}
+                      >
+                        <>
+                          {signup ? <span>Signup</span> : <span>Signin</span>}
+                          <i className="bi bi-arrow-right arrow_right"></i>
+                        </>
+                      </button>
+                  )}
+                  {/* </Form.Item> */}
+                </div>
+                {signup ? (
+                    <div className="col-lg-12">
+                      <p className="mt-5 text-center">
+                        Already have an account
+                        <span
+                            // target="_blank"
+                            // href="https://portal.uaqbusiness.com/en-US/Account/Register"
+                            // to="/signup"
+                            className=""
+                            style={{
+                              color: "#333",
+                              fontSize: 14,
+                              fontWeight: 500,
+                              color: "rgb(125, 135, 156)",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              setSignup(false);
+                            }}
+                        >
                       &nbsp;Signin Now
                     </span>
-                  </p>
-                </div>
-              ) : (
-                <div className="col-lg-12">
-                  <p className="mt-5 text-center">
-                    Dont have an account?
-                    <span
-                      // target="_blank"
-                      // href="https://portal.uaqbusiness.com/en-US/Account/Register"
-                      // to="/signup"
-                      className=""
-                      style={{
-                        color: "#333",
-                        fontSize: 14,
-                        fontWeight: 500,
-                        color: "rgb(125, 135, 156)",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        setSignup(true);
-                      }}
-                    >
+                      </p>
+                    </div>
+                ) : (
+                    <div className="col-lg-12">
+                      <p className="mt-5 text-center">
+                        Dont have an account?
+                        <span
+                            // target="_blank"
+                            // href="https://portal.uaqbusiness.com/en-US/Account/Register"
+                            // to="/signup"
+                            className=""
+                            style={{
+                              color: "#333",
+                              fontSize: 14,
+                              fontWeight: 500,
+                              color: "rgb(125, 135, 156)",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              setSignup(true);
+                            }}
+                        >
                       &nbsp;Signup Now
                     </span>
-                  </p>
-                </div>
-              )}
-            </div>
-          </form>
-        </div>
-      </Modal>
-      <Drawer placement="right" onClose={onClose} visible={visible}>
-        {/* <AdminNav /> */}
-        {/* <Cart close={onClose}/> */}
-        <>
-          <div className="col-lg-12 slider">
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <h1 className="title">Cart</h1>
-            </div>
-            {Object.keys(cartItems).map((key, index) => (
-              // cartItems[key].qty > cartItems[key].quantity && setError(true),
-              <div style={{ margin: "13px 0px" }}>
-                <ShopCard
-                  name={cartItems[key].name}
-                  image={cartItems[key].img}
-                  price={cartItems[key].price}
-                  quantity={cartItems[key].qty}
-                  discount={cartItems[key].discount}
-                  id={cartItems[key]._id}
-                  increment={onQuantityIncrement}
-                  decrement={onQuantityDecrement}
-                  remove={onRemoveCartItem}
-                  countInStock={cartItems[key].quantity}
-                  error={
-                    cartItems[key].qty > cartItems[key].quantity ? true : false
-                  }
-                />
+                      </p>
+                    </div>
+                )}
               </div>
-            ))}
-            <div
-              spacing="6"
-              class="GridStyle__StyledGrid-sc-1r6thsr-0 jpWNT"
-              style={{ width: "100%" }}
-            >
+            </form>
+          </div>
+        </Modal>
+        <Drawer placement="right" onClose={onClose} visible={visible}>
+          {/* <AdminNav /> */}
+          {/* <Cart close={onClose}/> */}
+          <>
+            <div className="col-lg-12 slider">
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <h1 className="title">Cart</h1>
+              </div>
+              {cartItems.map((data, index) => (
+                  // cartItems[key].qty > cartItems[key].quantity && setError(true),
+                  <div style={{ margin: "13px 0px" }}>
+                    <ShopCard
+                        name={data.product.name}
+                        image={'abc'}
+                        price={data.product.price}
+                        quantity={data.qty}
+                        discount={data.product.discount}
+                        id={data._id}
+                        increment={onQuantityIncrement}
+                        decrement={onQuantityDecrement}
+                        remove={onRemoveCartItem}
+                        countInStock={data.product.quantity}
+                        error={
+                          data.qty > data.quantity ? true : false
+                        }
+                    />
+                  </div>
+              ))}
               <div
-                cursor="unset"
-                class="Box-sc-15jsbqj-0 Card-sc-1rfvr4b-0 iMpeuc cLWlen"
-                style={{ padding: "0px" }}
+                  spacing="6"
+                  class="GridStyle__StyledGrid-sc-1r6thsr-0 jpWNT"
+                  style={{ width: "100%" }}
               >
-                <h5
-                  font-weight="600"
-                  font-size="16px"
-                  class="Typography-sc-1nbqu5-0 fVBXki"
-                >
-                  Total Summary
-                </h5>
                 <div
-                  cursor="unset"
-                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
+                    cursor="unset"
+                    class="Box-sc-15jsbqj-0 Card-sc-1rfvr4b-0 iMpeuc cLWlen"
+                    style={{ padding: "0px" }}
                 >
+                  <h5
+                      font-weight="600"
+                      font-size="16px"
+                      class="Typography-sc-1nbqu5-0 fVBXki"
+                  >
+                    Total Summary
+                  </h5>
                   <div
-                    font-size="14px"
-                    color="text.hint"
-                    class="Typography-sc-1nbqu5-0 huVebp"
+                      cursor="unset"
+                      class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
                   >
-                    Subtotal:
+                    <div
+                        font-size="14px"
+                        color="text.hint"
+                        class="Typography-sc-1nbqu5-0 huVebp"
+                    >
+                      Subtotal:
+                    </div>
+                    <h6
+                        font-weight="600"
+                        font-size="14px"
+                        class="Typography-sc-1nbqu5-0 JPPAF"
+                    >
+                      {`$${cartItems.reduce(
+                          (totalPrice, data) => {
+                            return totalPrice + data.product.price * data.qty;
+                          },
+                          0
+                      )}`}
+                    </h6>
                   </div>
-                  <h6
-                    font-weight="600"
-                    font-size="14px"
-                    class="Typography-sc-1nbqu5-0 JPPAF"
-                  >
-                    {`$${Object.keys(cart.cartItems).reduce(
-                      (totalPrice, key) => {
-                        const { price, qty, discount } = cart.cartItems[key];
-                        return totalPrice + price * qty;
-                      },
-                      0
-                    )}`}
-                  </h6>
-                </div>
-                <div
-                  cursor="unset"
-                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
-                >
                   <div
-                    font-size="14px"
-                    color="text.hint"
-                    class="Typography-sc-1nbqu5-0 huVebp"
+                      cursor="unset"
+                      class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
                   >
-                    Shipping fee:
+                    <div
+                        font-size="14px"
+                        color="text.hint"
+                        class="Typography-sc-1nbqu5-0 huVebp"
+                    >
+                      Shipping fee:
+                    </div>
+                    <h6
+                        font-weight="600"
+                        font-size="14px"
+                        class="Typography-sc-1nbqu5-0 JPPAF"
+                    >
+                      $0
+                    </h6>
                   </div>
-                  <h6
-                    font-weight="600"
-                    font-size="14px"
-                    class="Typography-sc-1nbqu5-0 JPPAF"
-                  >
-                    $0
-                  </h6>
-                </div>
-                <div
-                  cursor="unset"
-                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
-                >
                   <div
-                    font-size="14px"
-                    color="text.hint"
-                    class="Typography-sc-1nbqu5-0 huVebp"
+                      cursor="unset"
+                      class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 wmShx jcxxrL"
                   >
-                    Discount:
+                    <div
+                        font-size="14px"
+                        color="text.hint"
+                        class="Typography-sc-1nbqu5-0 huVebp"
+                    >
+                      Discount:
+                    </div>
+                    <h6
+                        font-weight="600"
+                        font-size="14px"
+                        class="Typography-sc-1nbqu5-0 JPPAF"
+                    >
+                      {`-$${cartItems.reduce(
+                          (totalPrice, data) => {
+                            return totalPrice + ((data.product.price * data.product.discount) / 100) * data.qty;
+                          },
+                          0
+                      )}`}
+                    </h6>
                   </div>
-                  <h6
-                    font-weight="600"
-                    font-size="14px"
-                    class="Typography-sc-1nbqu5-0 JPPAF"
+                  <div class="Divider-sc-119puxu-0 fQOiUI"></div>
+                  <div
+                      cursor="unset"
+                      class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 ipwhLL hwmPhx"
                   >
-                    {`-$${Object.keys(cart.cartItems).reduce(
-                      (totalPrice, key) => {
-                        const { price, qty, discount } = cart.cartItems[key];
-                        return totalPrice + ((price * discount) / 100) * qty;
-                      },
-                      0
-                    )}`}
-                  </h6>
+                    <h6
+                        font-weight="600"
+                        font-size="14px"
+                        class="Typography-sc-1nbqu5-0 JPPAF"
+                    >
+                      Total
+                    </h6>
+                    <h6
+                        font-weight="600"
+                        font-size="14px"
+                        class="Typography-sc-1nbqu5-0 JPPAF"
+                    >
+                      {`$${cartItems.reduce(
+                          (totalPrice, data) => {
+                            return (
+                                totalPrice + (data.product.price - (data.product.price * data.product.discount) / 100) * data.qty
+                            );
+                          },
+                          0
+                      )}`}
+                    </h6>
+                  </div>
+                  {/* <div font-size="14px" class="Typography-sc-1nbqu5-0 gVliBE">
+                Paid by Credit/Debit Card
+              </div> */}
                 </div>
-                <div class="Divider-sc-119puxu-0 fQOiUI"></div>
-                <div
-                  cursor="unset"
-                  class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 ipwhLL hwmPhx"
-                >
-                  <h6
-                    font-weight="600"
-                    font-size="14px"
-                    class="Typography-sc-1nbqu5-0 JPPAF"
-                  >
-                    Total
-                  </h6>
-                  <h6
-                    font-weight="600"
-                    font-size="14px"
-                    class="Typography-sc-1nbqu5-0 JPPAF"
-                  >
-                    {`$${Object.keys(cart.cartItems).reduce(
-                      (totalPrice, key) => {
-                        // console.log(cart.cartItems)
-                        const { price, qty, discount } = cart.cartItems[key];
+              </div>
+              {/* <Link to={(Object.keys(cart.cartItems).length != 0 && !Error) && "/checkout"} onClick={() => {
+          Error ? Notification("Cart", "Plz Check Your Cart I Think We are Somewhere Out Of Stock", "Error") : Object.keys(cart.cartItems).length != 0 && close()
+        }}> */}
+              <button
+                  color="primary"
+                  class="Button-l2616d-0 hlOtvl"
+                  onClick={proceed}
+              >
+                <div font-weight="600" class="Typography-sc-1nbqu5-0 hcjNSe">
+                  {`Checkout Now ($${cartItems.reduce(
+                      (totalPrice, data) => {
                         return (
-                          totalPrice + (price - (price * discount) / 100) * qty
+                            totalPrice + (data.product.price - (data.product.price * data.product.discount) / 100) * data.qty
                         );
                       },
                       0
-                    )}`}
-                  </h6>
+                  )})`}
                 </div>
-                {/* <div font-size="14px" class="Typography-sc-1nbqu5-0 gVliBE">
-                Paid by Credit/Debit Card
-              </div> */}
-              </div>
+              </button>
+              {/* </Link> */}
             </div>
-            {/* <Link to={(Object.keys(cart.cartItems).length != 0 && !Error) && "/checkout"} onClick={() => {
-          Error ? Notification("Cart", "Plz Check Your Cart I Think We are Somewhere Out Of Stock", "Error") : Object.keys(cart.cartItems).length != 0 && close()
-        }}> */}
-            <button
-              color="primary"
-              class="Button-l2616d-0 hlOtvl"
-              onClick={handleProceed}
-            >
-              <div font-weight="600" class="Typography-sc-1nbqu5-0 hcjNSe">
-                {`Checkout Now ($${Object.keys(cart.cartItems).reduce(
-                  (totalPrice, key) => {
-                    // console.log(cart.cartItems)
-                    const { price, qty, discount } = cart.cartItems[key];
-                    return (
-                      totalPrice + (price - (price * discount) / 100) * qty
-                    );
-                  },
-                  0
-                )})`}
-              </div>
-            </button>
-            {/* </Link> */}
-          </div>
-        </>
-      </Drawer>
-      <div class="SickyStyle__StyledSticky-sc-tdyipr-0 gAWxBn">
-        <header class="HeaderStyle__StyledHeader-sc-1iz07og-0 eXggWe">
-          <div
-            display="flex"
-            height="100%"
-            class="Container-sc-1n5dyua-0 eDoFvF"
-          >
+          </>
+        </Drawer>
+        <div class="SickyStyle__StyledSticky-sc-tdyipr-0 gAWxBn">
+          <header class="HeaderStyle__StyledHeader-sc-1iz07og-0 eXggWe">
             <div
-              class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 jSmucx kenOTe logo"
-              cursor="unset"
+                display="flex"
+                height="100%"
+                class="Container-sc-1n5dyua-0 eDoFvF"
             >
-              <Link to="/">
-                <img
-                  // style={{width: "72px"}}
-                  src={LOGO}
-                  alt="logo"
-                  display="block"
-                  class="Image-sc-1tga9wa-0 ga-dZTE"
-                />
-              </Link>
               <div
-                className="categories-header-mobile"
-                onClick={() => {
-                  filter ? setFilter(false) : setFilter(true);
-                }}
+                  class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 jSmucx kenOTe logo"
+                  cursor="unset"
               >
-                <MdDashboardCustomize className="category-header-icon" />
-                <MdKeyboardArrowDown className="category-header-icon" />
+                <Link to="/">
+                  <img
+                      // style={{width: "72px"}}
+                      src={LOGO}
+                      alt="logo"
+                      display="block"
+                      class="Image-sc-1tga9wa-0 ga-dZTE"
+                  />
+                </Link>
+                <div
+                    className="categories-header-mobile"
+                    onClick={() => {
+                      filter ? setFilter(false) : setFilter(true);
+                    }}
+                >
+                  <MdDashboardCustomize className="category-header-icon" />
+                  <MdKeyboardArrowDown className="category-header-icon" />
+                </div>
               </div>
-            </div>
-            <div
-              cursor="unset"
-              class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 vndmm eznwtF"
-            >
-              <div cursor="unset" class="Box-sc-15jsbqj-0 jjfMKS">
-                <div class="SearchBoxStyle__StyledSearchBox-sc-4kf442-0 gpBtzH">
-                  <div
-                    class="IconStyle__StyledIcon-sc-18inybg-0 kuUBhu search-icon"
-                    variant="medium"
-                    defaultcolor="currentColor"
-                  >
-                    <div>
-                      {/* <Link to={`/search-products/${Searchvalue}`}> */}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        class="injected-svg"
-                        data-src="/assets/images/icons/search.svg"
-                        xlink="http://www.w3.org/1999/xlink"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          history.push(`/search-products/${Searchvalue}`);
-                        }}
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M9.16667 3.5C6.03705 3.5 3.5 6.03705 3.5 9.16667C3.5 12.2963 6.03705 14.8333 9.16667 14.8333C12.2963 14.8333 14.8333 12.2963 14.8333 9.16667C14.8333 6.03705 12.2963 3.5 9.16667 3.5ZM1.5 9.16667C1.5 4.93248 4.93248 1.5 9.16667 1.5C13.4009 1.5 16.8333 4.93248 16.8333 9.16667C16.8333 13.4009 13.4009 16.8333 9.16667 16.8333C4.93248 16.8333 1.5 13.4009 1.5 9.16667Z"
-                          fill="#7D879C"
-                        ></path>
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M13.1679 13.1679C13.5584 12.7774 14.1916 12.7774 14.5821 13.1679L18.2071 16.7929C18.5976 17.1834 18.5976 17.8166 18.2071 18.2071C17.8166 18.5976 17.1834 18.5976 16.7929 18.2071L13.1679 14.5821C12.7774 14.1916 12.7774 13.5584 13.1679 13.1679Z"
-                          fill="#7D879C"
-                        ></path>
-                      </svg>
-                      {/* </Link> */}
-                    </div>
-                  </div>
-                  <div
-                    placeholder="Search and hit enter..."
-                    class="TextFieldStyle__TextFieldWrapper-sc-h6a756-1 jpTETm"
-                  >
-                    <div cursor="unset" class="Box-sc-15jsbqj-0 hXjvFQ">
-                      <input
-                        class="TextFieldStyle__SyledTextField-sc-h6a756-0 Lznse search-field"
-                        placeholder={t("search")}
-                        color="default"
-                        id="0.9317837622580987"
-                        value={Searchvalue}
-                        onChange={(e) => setValue(e.target.value)}
-                        onKeyPress={onKeyUp}
-                      />
-                    </div>
-                  </div>
-                  <div
-                    direction="right"
-                    class="Menu__StyledMenu-sc-1yj7pzw-0 ekDXAL category-dropdown"
-                  >
+              <div
+                  cursor="unset"
+                  class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 vndmm eznwtF"
+              >
+                <div cursor="unset" class="Box-sc-15jsbqj-0 jjfMKS">
+                  <div class="SearchBoxStyle__StyledSearchBox-sc-4kf442-0 gpBtzH">
                     <div
-                      class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 dNNxsU hccqyr dropdown-handler"
-                      cursor="unset"
-                    >
-                      <span>{t("category")}</span>
-                      <div
-                        variant="small"
+                        class="IconStyle__StyledIcon-sc-18inybg-0 kuUBhu search-icon"
+                        variant="medium"
                         defaultcolor="currentColor"
-                        class="IconStyle__StyledIcon-sc-18inybg-0 fOXWXv"
-                      >
-                        <div>
-                          <svg
+                    >
+                      <div>
+                        {/* <Link to={`/search-products/${Searchvalue}`}> */}
+                        <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
                             fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            class="feather feather-chevron-down injected-svg"
-                            data-src="/assets/images/icons/chevron-down.svg"
+                            class="injected-svg"
+                            data-src="/assets/images/icons/search.svg"
                             xlink="http://www.w3.org/1999/xlink"
-                          >
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                          </svg>
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              history.push(`/search-products/${Searchvalue}`);
+                            }}
+                        >
+                          <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M9.16667 3.5C6.03705 3.5 3.5 6.03705 3.5 9.16667C3.5 12.2963 6.03705 14.8333 9.16667 14.8333C12.2963 14.8333 14.8333 12.2963 14.8333 9.16667C14.8333 6.03705 12.2963 3.5 9.16667 3.5ZM1.5 9.16667C1.5 4.93248 4.93248 1.5 9.16667 1.5C13.4009 1.5 16.8333 4.93248 16.8333 9.16667C16.8333 13.4009 13.4009 16.8333 9.16667 16.8333C4.93248 16.8333 1.5 13.4009 1.5 9.16667Z"
+                              fill="#7D879C"
+                          ></path>
+                          <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M13.1679 13.1679C13.5584 12.7774 14.1916 12.7774 14.5821 13.1679L18.2071 16.7929C18.5976 17.1834 18.5976 17.8166 18.2071 18.2071C17.8166 18.5976 17.1834 18.5976 16.7929 18.2071L13.1679 14.5821C12.7774 14.1916 12.7774 13.5584 13.1679 13.1679Z"
+                              fill="#7D879C"
+                          ></path>
+                        </svg>
+                        {/* </Link> */}
+                      </div>
+                    </div>
+                    <div
+                        placeholder="Search and hit enter..."
+                        class="TextFieldStyle__TextFieldWrapper-sc-h6a756-1 jpTETm"
+                    >
+                      <div cursor="unset" class="Box-sc-15jsbqj-0 hXjvFQ">
+                        <input
+                            class="TextFieldStyle__SyledTextField-sc-h6a756-0 Lznse search-field"
+                            placeholder={t("search")}
+                            color="default"
+                            id="0.9317837622580987"
+                            value={Searchvalue}
+                            onChange={(e) => setValue(e.target.value)}
+                            onKeyPress={onKeyUp}
+                        />
+                      </div>
+                    </div>
+                    <div
+                        direction="right"
+                        class="Menu__StyledMenu-sc-1yj7pzw-0 ekDXAL category-dropdown"
+                    >
+                      <div
+                          class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 dNNxsU hccqyr dropdown-handler"
+                          cursor="unset"
+                      >
+                        <span>{t("category")}</span>
+                        <div
+                            variant="small"
+                            defaultcolor="currentColor"
+                            class="IconStyle__StyledIcon-sc-18inybg-0 fOXWXv"
+                        >
+                          <div>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="feather feather-chevron-down injected-svg"
+                                data-src="/assets/images/icons/chevron-down.svg"
+                                xlink="http://www.w3.org/1999/xlink"
+                            >
+                              <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 dNNxsU hccqyr header-right"
-              cursor="unset"
-            >
-              <div className="header-icons">
-                <Dropdown overlay={userMenu} placement="bottomLeft">
-                  <div className="header-icon mobile-icon">
-                    <AiOutlineUser />
-                  </div>
-                </Dropdown>
-                {auth.token != null ? (
-                  <div className="header-icon" onClick={logout}>
-                    <RiLogoutCircleLine />
-                  </div>
-                ) : (
-                  <div
-                    className="header-icon"
-                    onClick={() => {
-                      authVisible
-                        ? pathName == "/checkout"
-                          ? auth.authenticate && setAuthVisible(false)
-                          : setAuthVisible(false)
-                        : setAuthVisible(true);
-                    }}
+              <div
+                  class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 dNNxsU hccqyr header-right"
+                  cursor="unset"
+              >
+                <div className="header-icons">
+                  <Dropdown overlay={userMenu} placement="bottomLeft">
+                    <div className="header-icon mobile-icon">
+                      <AiOutlineUser />
+                    </div>
+                  </Dropdown>
+                  {auth.token != null ? (
+                      <div className="header-icon" onClick={logout}>
+                        <RiLogoutCircleLine />
+                      </div>
+                  ) : (
+                      <div
+                          className="header-icon"
+                          onClick={() => {
+                            authVisible
+                                ? pathName == "/checkout"
+                                ? auth.authenticate && setAuthVisible(false)
+                                : setAuthVisible(false)
+                                : setAuthVisible(true);
+                          }}
+                      >
+                        <AiOutlineLogin />
+                      </div>
+                  )}
+                  {auth.authenticate && <div
+                      className="header-icon"
+                      onClick={() => {
+                        visible ? setVisible(false) : setVisible(true);
+                      }}
+                      style={{ position: "relative" }}
                   >
-                    <AiOutlineLogin />
-                  </div>
-                )}
-                <div
-                  className="header-icon"
-                  onClick={() => {
-                    visible ? setVisible(false) : setVisible(true);
-                  }}
-                  style={{ position: "relative" }}
-                >
-                  <IoBagCheckOutline />
-                  <div
-                    cursor="unset"
-                    class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 dlowzc iDDLYe"
-                  >
-                    <span
-                      font-size="10px"
-                      color="white"
-                      font-weight="600"
-                      class="Typography-sc-1nbqu5-0 YnhBG"
+                    <IoBagCheckOutline />
+                    <div
+                        cursor="unset"
+                        class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 dlowzc iDDLYe"
                     >
-                      {Object.keys(cart.cartItems).reduce((count, key) => {
-                        return count + 1;
-                      }, 0)}
+                    <span
+                        font-size="10px"
+                        color="white"
+                        font-weight="600"
+                        class="Typography-sc-1nbqu5-0 YnhBG"
+                    >
+                      {cartItems.length}
                     </span>
-                  </div>
+                    </div>
+                  </div>}
+                  {/*<Dropdown overlay={languageMenu} placement="bottomLeft">*/}
+                  {/*  <div className="header-icon">*/}
+                  {/*    <AiOutlineGlobal />*/}
+                  {/*  </div>*/}
+                  {/*</Dropdown>*/}
                 </div>
-                <Dropdown overlay={languageMenu} placement="bottomLeft">
-                  <div className="header-icon">
-                    <AiOutlineGlobal />
-                  </div>
-                </Dropdown>
-              </div>
-              {/* <button class="IconButton-sc-6b71ah-0 eWiIvS">
+                {/* <button class="IconButton-sc-6b71ah-0 eWiIvS">
                 <div
                   variant="medium"
                   defaultcolor="currentColor"
@@ -1051,7 +1055,7 @@ export default function EcommerceHeader() {
                   </div>
                 </div>
               </button> */}
-              {/* <div
+                {/* <div
                 cursor="unset"
                 class="Box-sc-15jsbqj-0 FlexBox-sc-vldgmo-0 jUQkgC edOqpx undefined cursor-pointer"
               >
@@ -1102,10 +1106,10 @@ export default function EcommerceHeader() {
                   </span>
                 </div>
               </div> */}
+              </div>
             </div>
-          </div>
-        </header>
-      </div>
-    </>
+          </header>
+        </div>
+      </>
   );
 }

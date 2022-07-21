@@ -1,16 +1,14 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import 'antd/dist/antd.css';
 import "./App.css";
 import Routers from "./config/routers/Routers";
 import Header from "../src/component/header/Header";
-import { useTranslation } from 'react-i18next'
+import {useTranslation} from 'react-i18next'
 import cookies from 'js-cookie'
 import Footer from "./component/Footer";
 import SearchBar from "./component/Search_Bar/SearchBar";
-import { updateCart } from "./store/actions";
 import EcommerceHeader from "./component/EcommerceHeader/EcommerceHeader";
-import Bannar from "./component/Bannar/Bannar";
 
 const languages = [
   {
@@ -33,9 +31,9 @@ function App() {
 
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  useEffect(() => {
-  dispatch(updateCart())
-  }, [auth.authenticate]);
+  // useEffect(() => {
+  // dispatch(updateCart())
+  // }, [auth.authenticate]);
 
   useEffect(() => {
     document.body.dir = currentLanguage.dir || 'ltr'

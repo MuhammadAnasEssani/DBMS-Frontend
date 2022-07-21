@@ -2,7 +2,7 @@ import axios from "../helper/axios";
 
 
 function getCategories() {
-  return axios.get(`/category/getcategory`).then((res) => res)
+  return axios.get(`/get-categories`).then((res) => res)
 }
 
 

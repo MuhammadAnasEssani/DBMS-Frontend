@@ -1,13 +1,9 @@
 import React from "react";
 import Slider from "react-slick";
-import { useTranslation } from "react-i18next";
-import NoImage from "../../images/No-image.jpg";
-import NoImageArabic from "../../images/No-image-arabic.jpg";
+import {useTranslation} from "react-i18next";
 import "./style.css";
-import Card from "../Card";
-import { RiStarSFill } from "react-icons/ri";
 
-import { Link, useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
 // import { BaseUrl } from "../../config/api/_Domain";
 
 export default function CardSlider(props) {
@@ -56,7 +52,7 @@ export default function CardSlider(props) {
                     <div>
                       <div class="col-lg-12 col-md-12 col-12">
                         <div class="single-banner">
-                          <img src={offer.avatar} alt="#" />
+                          <img src={`http://localhost:3333/uploads/offer/${offer.avatar}`} alt="#" />
                           {/* <div class="content">
                           <p>{offer.title}</p>
                           <h3>
@@ -95,10 +91,10 @@ export default function CardSlider(props) {
             {offers.length > 0
               ? offers.map((offer) => {
                   return (
-                    <div>
-                      <div class="col-lg-12 col-md-12 col-12">
+                      <div>
+                        <div class="col-lg-12 col-md-12 col-12">
                         <div class="single-banner">
-                          <img src={offer.avatar} alt="#" />
+                          <img src={`http://localhost:3333/uploads/offer/${offer.avatar}`} alt="#" />
                           {/* <div class="content">
                             <p>{offer.title}</p>
                             <h3>
@@ -117,10 +113,10 @@ export default function CardSlider(props) {
                               {offer.description}
                             </div>
                             <button
-                              class="Button-sc-l2616d-0 bRMjZL button-link"
+                                class="Button-sc-l2616d-0 bRMjZL button-link"
                               color="primary"
                               onClick={() => {
-                                history.push(`product/${offer._id}`);
+                                history.push(`product-by-offer/${offer.id}`);
                               }}
                             >
                               Visit Collections

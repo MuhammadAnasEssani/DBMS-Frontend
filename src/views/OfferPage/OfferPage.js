@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Card from "../../component/Card";
-import NoImageArabic from "../../images/No-image-arabic.jpg";
-import { FaFilter } from "react-icons/fa";
-import { Rate } from "antd";
-import { getProducts, getProductsByOffer } from "../../config/api/products";
-import { Link, useParams } from "react-router-dom";
+import {FaFilter} from "react-icons/fa";
+import {Rate, Skeleton, Spin} from "antd";
+import {getProductsByOffer} from "../../config/api/products";
+import {useParams} from "react-router-dom";
 import Notification from "../../component/notification/Notification";
-import { Skeleton, Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import {LoadingOutlined} from "@ant-design/icons";
+
 export default function OfferPage() {
   const shops = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [products, setProducts] = useState([]);
@@ -16,7 +15,7 @@ export default function OfferPage() {
   const [lowestValue, setLowestValue] = useState(0);
   const [highestValue, setHighestValue] = useState(0);
   const [filter, setFilter] = useState(false);
-  const { offerId } = useParams();
+  const { id } = useParams();
   const shopLoaderArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [productLoader, setProductLoader] = useState(true);
   const [filterOnSale, setFilterOnSale] = useState(false);
@@ -27,35 +26,35 @@ export default function OfferPage() {
 
   const getProduct = async () => {
     setProductLoader(true);
-    const model = {
-      lower: Lowest,
-      higher: Highest,
-    };
+    // const model = {
+    //   lower: Lowest,
+    //   higher: Highest,
+    // };
     try {
-      const res = await getProductsByOffer(offerId, model);
+      const res = await getProductsByOffer(id);
       // console.log(res)
       if (res.status == 200) {
-        setProducts(res.data.products);
-        var lowest = Number.POSITIVE_INFINITY;
-        var highest = Number.NEGATIVE_INFINITY;
-        var tmp;
-        for (var i = res.data.products.length - 1; i >= 0; i--) {
-          tmp = res.data.products[i].price;
-          if (tmp < lowest) {
-            lowest = tmp;
-            setLowest(tmp);
-            setLowestValue(tmp);
-          }
-          if (tmp > highest) {
-            highest = tmp;
-            setHighest(tmp);
-            setHighestValue(tmp);
-          }
-        }
+        setProducts(res.data.data);
+        // var lowest = Number.POSITIVE_INFINITY;
+        // var highest = Number.NEGATIVE_INFINITY;
+        // var tmp;
+        // for (var i = res.data.products.length - 1; i >= 0; i--) {
+        //   tmp = res.data.products[i].price;
+        //   if (tmp < lowest) {
+        //     lowest = tmp;
+        //     setLowest(tmp);
+        //     setLowestValue(tmp);
+        //   }
+        //   if (tmp > highest) {
+        //     highest = tmp;
+        //     setHighest(tmp);
+        //     setHighestValue(tmp);
+        //   }
+        // }
         setProductLoader(false);
         return;
       } else {
-        Notification("Products", "Something went wrong", "Error");
+        Notification("Products", res.data.message, "Error");
         return;
       }
     } catch (err) {
@@ -64,37 +63,37 @@ export default function OfferPage() {
   };
   const getProductForFilter = async (e) => {
     e.preventDefault();
-    const model = {
-      lower: Lowest,
-      higher: Highest,
-    };
-    const modell = {};
-    if (filterOnSale) {
-      modell.sale = true;
-    }
-    if (filterInStock) {
-      modell.stock = true;
-    }
-    if (filterFeatured) {
-      modell.feature = true;
-    }
-    if (filterRating.length > 0) {
-      modell.rating = filterRating;
-    }
-    setProductLoader(true);
-    try {
-      const res = await getProductsByOffer(offerId, model, modell);
-      if (res.status == 200) {
-        setProducts(res.data.products);
-        setProductLoader(false);
-        return;
-      } else {
-        Notification("Search Products", res.data.message, "Error");
-        return;
-      }
-    } catch (err) {
-      Notification("Search Products", "Something went wrong", "Error");
-    }
+    // const model = {
+    //   lower: Lowest,
+    //   higher: Highest,
+    // };
+    // const modell = {};
+    // if (filterOnSale) {
+    //   modell.sale = true;
+    // }
+    // if (filterInStock) {
+    //   modell.stock = true;
+    // }
+    // if (filterFeatured) {
+    //   modell.feature = true;
+    // }
+    // if (filterRating.length > 0) {
+    //   modell.rating = filterRating;
+    // }
+    // setProductLoader(true);
+    // try {
+    //   const res = await getProductsByOffer(offerId, model, modell);
+    //   if (res.status == 200) {
+    //     setProducts(res.data.products);
+    //     setProductLoader(false);
+    //     return;
+    //   } else {
+    //     Notification("Search Products", res.data.message, "Error");
+    //     return;
+    //   }
+    // } catch (err) {
+    //   Notification("Search Products", "Something went wrong", "Error");
+    // }
   };
   useEffect(() => {
     //   console.log("Hello")
@@ -500,14 +499,14 @@ export default function OfferPage() {
                             // style={{ display: "flex", justifyContent: "center" }}
                           >
                             <Card
-                              id={data._id}
-                              image={data.productPictures[0].avatar}
-                              name={data.name}
-                              rating={data.rating}
-                              noOfRatings={data.noOfRatings}
-                              price={data.price}
-                              slug={data.slug}
-                              discount={data.discount}
+                                id={data.id}
+                                image={data.pictures[0].avatar}
+                                name={data.name}
+                                rating={4}
+                                noOfRatings={6}
+                                price={data.price}
+                                slug={data.id}
+                                discount={data.discount}
                             />
                           </div>
                         );

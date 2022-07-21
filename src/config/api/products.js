@@ -1,38 +1,27 @@
 import axios from "../helper/axios";
 
-function getProducts(slug,model,modell) {
-  return axios.post(`/products/${slug}?price[gte]=${model.lower}&price[lte]=${model.higher}`,{
-    ...modell
-  }).then((res) => res);
+function getProducts(refId) {
+    return axios.get(`/get-products/?type=30&ref_id=${refId}`).then((res) => res)
 }
 
 function getProductDetail(productId) {
   return axios.get(`/product/${productId}`).then((res) => res);
 }
-function getFeaturedProduct(model,modell) {
-  return axios.post(`/getFeaturedProducts?price[gte]=${model.lower}&price[lte]=${model.higher}`,{
-    ...modell
-  }).then((res) => res);
+
+function getFeaturedProduct() {
+    return axios.get(`/get-products/?type=10`).then((res) => res)
 }
-function getDiscountedProduct(model,modell) {
-  return axios.post(`/getDiscountedProducts?price[gte]=${model.lower}&price[lte]=${model.higher}`,{
-    ...modell
-  }).then((res) => res);;
+function getDiscountedProduct() {
+    return axios.get(`/get-products/?type=20`).then((res) => res)
 }
 
-function getProductsByShop(data,model,modell) {
+function getProductsByShop(refId) {
   // console.log(data)
-  return axios.post(`/getProductsByShop?price[gte]=${model.lower}&price[lte]=${model.higher}`, {
-      shopId: data,
-      ...modell
-    }).then((res) => res)
+    return axios.get(`/get-products/?type=40&ref_id=${refId}`).then((res) => res)
 }
-function getProductsByOffer(data,model,modell) {
+function getProductsByOffer(refId) {
   // console.log(data)
-  return axios.post(`/getProductsByOffer?price[gte]=${model.lower}&price[lte]=${model.higher}`, {
-      offerId: data,
-      ...modell
-    }).then((res) => res)
+    return axios.get(`/get-products/?type=50&ref_id=${refId}`).then((res) => res)
 }
 function getSearchedProducts(data,model,modell) {
   // console.log(data)

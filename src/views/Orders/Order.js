@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
+import {Link} from "react-router-dom";
 import Notification from "../../component/notification/Notification";
-import { getOrders } from "../../config/api/order";
+import {getOrders} from "../../config/api/order";
 
 export default function Order() {
   const [orders, setOrders] = useState([]);
@@ -11,9 +11,9 @@ export default function Order() {
     try {
       const res = await getOrders();
       if (res.status === 200) {
-        setOrders(res.data.orders);
+        setOrders(res.data.data);
       } else {
-        Notification("Orders", "Something went wrong", "Error");
+        Notification("Orders", res.data.message, "Error");
       }
     } catch (err) {
       Notification("Orders", "Something went wrong", "Error");
@@ -117,7 +117,7 @@ export default function Order() {
           orders.map((data) => {
             return (
               <Link
-                to={`/invoice/${data._id}`}
+                to={`/invoice/${data.id}`}
                 class="TableRow-sc-1sslxri-0 jvUCMA"
               >
                 <h5
@@ -125,7 +125,7 @@ export default function Order() {
                   font-size="16px"
                   class="Typography-sc-1nbqu5-0 hdlFid"
                 >
-                  {data._id}
+                  {data.id}
                 </h5>
                 <div cursor="unset" class="Box-sc-15jsbqj-0 jXhFuk">
                   <div class="Chip-sc-1ovzis5-0 btpcmM">
@@ -135,21 +135,7 @@ export default function Order() {
                       class="Typography-sc-1nbqu5-0 fooWlQ"
                     >
                       {
-                        data.orderStatus[
-                          data.orderStatus.findIndex(
-                            (status) => {
-                              return (
-                                status.isCompleted == false
-                              );
-                            }
-                          ) != -1 ? data.orderStatus.findIndex(
-                            (status) => {
-                              return (
-                                status.isCompleted == false
-                              );
-                            }
-                          ) - 1 : 3
-                        ].type
+                        data.order_status
                       }
                     </span>
                   </div>
@@ -158,7 +144,15 @@ export default function Order() {
                   Feb 28, 2022
                 </div>
                 <div class="Typography-sc-1nbqu5-0 lfYJYZ">
-                  {data.totalAmount}
+                  {/*{data.totalAmount}*/}
+                  {data.order_items.reduce(
+                      (totalPrice, data) => {
+                        return (
+                            totalPrice + data.payable_price * data.purchased_qty
+                        );
+                      },
+                      0
+                  )}
                 </div>
                 <div class="Hidden__StyledHidden-sc-1qvibwv-0 XhRLt">
                   <div color="text.muted" class="Typography-sc-1nbqu5-0 sUFlx">

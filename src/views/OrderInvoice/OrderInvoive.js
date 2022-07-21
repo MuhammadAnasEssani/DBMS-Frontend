@@ -1,11 +1,10 @@
-import { Modal, Rate } from "antd";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { getOrderDetail } from "../../config/api/order";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Spin, Skeleton } from "antd";
-import { addReviews } from "../../config/api/rating";
+import {Modal, Rate, Skeleton, Spin} from "antd";
+import React, {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
+import {useParams} from "react-router-dom";
+import {getOrderDetail} from "../../config/api/order";
+import {LoadingOutlined} from "@ant-design/icons";
+import {addReviews} from "../../config/api/rating";
 import Notification from "../../component/notification/Notification";
 
 export default function OrderInvoive() {
@@ -54,17 +53,18 @@ export default function OrderInvoive() {
     // }
   };
   const fetchOrderDetail = async () => {
-    const payload = {
-      orderId: orderId,
-    };
+    // const payload = {
+    //   orderId: orderId,
+    // };
     try {
-      const res = await getOrderDetail(payload);
+      const res = await getOrderDetail(orderId);
+      console.log(res)
       if (res.status === 200) {
-        setOrderDetail(res.data.order);
+        setOrderDetail(res.data.data);
         setMainLoading(false);
         return;
       } else {
-        Notification("Invoice", "Something went wrong", "Error");
+        Notification("Invoice", res.data.message, "Error");
         return;
       }
     } catch (err) {
@@ -240,7 +240,7 @@ export default function OrderInvoive() {
                   color="gray.white"
                   class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"
                   className={
-                    orderDetail.orderStatus[1].isCompleted
+                    orderDetail.order_status == 20
                       ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"
                       : "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 CEKcw"
                   }
@@ -283,7 +283,7 @@ export default function OrderInvoive() {
                     </div>
                   </span>
                 </div>
-                {orderDetail.orderStatus[1].isComplete && (
+                {orderDetail.order_status == 20 && (
                   <div cursor="unset" class="Box-sc-15jsbqj-0 fyCHB">
                     <div
                       size="22"
@@ -336,7 +336,7 @@ export default function OrderInvoive() {
                 height="4"
                 cursor="unset"
                 className={
-                  orderDetail.orderStatus[1].isCompleted
+                  orderDetail.order_status == 20
                     ? "Box-sc-15jsbqj-0 gbwuDb"
                     : "Box-sc-15jsbqj-0 kYfptl"
                 }
@@ -349,7 +349,7 @@ export default function OrderInvoive() {
                   color="gray.white"
                   // class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"
                   className={
-                    orderDetail.orderStatus[2].isCompleted
+                    orderDetail.order_status == 30
                       ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"
                       : "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 CEKcw"
                   }
@@ -382,7 +382,7 @@ export default function OrderInvoive() {
                     </div>
                   </span>
                 </div>
-                {orderDetail.orderStatus[2].isComplete && (
+                {orderDetail.order_status == 30 && (
                   <div cursor="unset" class="Box-sc-15jsbqj-0 fyCHB">
                     <div
                       size="22"
@@ -435,7 +435,7 @@ export default function OrderInvoive() {
                 height="4"
                 cursor="unset"
                 className={
-                  orderDetail.orderStatus[2].isCompleted
+                  orderDetail.order_status == 20
                     ? "Box-sc-15jsbqj-0 gbwuDb"
                     : "Box-sc-15jsbqj-0 kYfptl"
                 }
@@ -446,7 +446,7 @@ export default function OrderInvoive() {
                   size="64"
                   color="primary.main"
                   className={
-                    orderDetail.orderStatus[3].isCompleted
+                    orderDetail.order_status == 40
                       ? "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 bUoeVR"
                       : "AvatarStyle__StyledAvatar-sc-1tfjtzs-0 CEKcw"
                   }
@@ -493,7 +493,7 @@ export default function OrderInvoive() {
                     </div>
                   </span>
                 </div>
-                {orderDetail.orderStatus[3].isComplete && (
+                {orderDetail.order_status == 40 && (
                   <div cursor="unset" class="Box-sc-15jsbqj-0 fyCHB">
                     <div
                       size="22"
@@ -574,7 +574,7 @@ export default function OrderInvoive() {
                   Order ID:
                 </div>
                 <div font-size="14px" class="Typography-sc-1nbqu5-0 gVliBE">
-                  {orderDetail._id}
+                  {orderDetail.id}
                 </div>
               </div>
               <div
@@ -609,10 +609,10 @@ export default function OrderInvoive() {
               </div>
             </div>
             <div cursor="unset" class="Box-sc-15jsbqj-0 kBYRep">
-              {orderDetail.items.map((data) => {
+              {orderDetail.order_items.map((data) => {
                 // console.log(data);
                 return (
-                  <div
+                    <div
                     cursor="unset"
                     class="Box-sc-15jsbqj-0 FlexBox-vldgmo-0 iZSoIB hrPsZn"
                   >
@@ -625,7 +625,7 @@ export default function OrderInvoive() {
                         class="AvatarStyle__StyledAvatar-sc-1tfjtzs-0 ffSehd"
                       >
                         <img
-                          src={data.productId.productPictures[0].avatar}
+                            // src={data.productId.productPictures[0].avatar}
                           alt="avatar"
                         />
                       </div>
@@ -635,14 +635,14 @@ export default function OrderInvoive() {
                           font-size="14px"
                           class="Typography-sc-1nbqu5-0 JPPAF"
                         >
-                          {data.productId.name}
+                          {/*{data.productId.name}*/}
                         </h6>
                         <div
                           font-size="14px"
                           color="text.muted"
                           class="Typography-sc-1nbqu5-0 huVebp"
                         >
-                          ${data.payablePrice} x {data.purchasedQty}
+                          ${data.payable_price} x {data.purchased_qty}
                         </div>
                       </div>
                     </div>
@@ -666,13 +666,13 @@ export default function OrderInvoive() {
                         <div
                           font-size="14px"
                           class="Typography-sc-1nbqu5-0 gVliBE"
-                          onClick={() => {
-                            setProductId(data.productId._id);
-                            setVendorId(data.productVendor);
-                            ratingVisible
-                              ? setRatingVisible(false)
-                              : setRatingVisible(true);
-                          }}
+                            // onClick={() => {
+                            //   setProductId(data.productId._id);
+                            //   setVendorId(data.productVendor);
+                            //   ratingVisible
+                            //     ? setRatingVisible(false)
+                            //     : setRatingVisible(true);
+                            // }}
                         >
                           Write a Review
                         </div>
@@ -738,7 +738,7 @@ export default function OrderInvoive() {
                       City
                     </h5>
                     <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
-                      {orderDetail.address.cityDistrictTown}
+                      {orderDetail.address.city}
                     </p>
                   </div>
                 </div>
@@ -752,7 +752,7 @@ export default function OrderInvoive() {
                       Mobile Number
                     </h5>
                     <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
-                      {orderDetail.address.mobileNumber}
+                      {orderDetail.address.mobile_number}
                     </p>
                   </div>
                   <div className="col-lg-6">
@@ -764,7 +764,7 @@ export default function OrderInvoive() {
                       Postal Code
                     </h5>
                     <p font-size="14px" class="Typography-sc-1nbqu5-0 fqZdaU">
-                      {orderDetail.address.pinCode}
+                      {orderDetail.address.pin_code}
                     </p>
                   </div>
                 </div>
@@ -802,7 +802,14 @@ export default function OrderInvoive() {
                     font-size="14px"
                     class="Typography-sc-1nbqu5-0 JPPAF"
                   >
-                    ${orderDetail.totalAmount}
+                    ${orderDetail.order_items.reduce(
+                      (totalPrice, data) => {
+                        return (
+                            totalPrice + data.payable_price * data.purchased_qty
+                        );
+                      },
+                      0
+                  )}
                   </h6>
                 </div>
                 <div
@@ -860,7 +867,15 @@ export default function OrderInvoive() {
                     font-size="14px"
                     class="Typography-sc-1nbqu5-0 JPPAF"
                   >
-                    ${orderDetail.totalAmount}
+                    {/*${orderDetail.totalAmount}*/}
+                    ${orderDetail.order_items.reduce(
+                        (totalPrice, data) => {
+                          return (
+                              totalPrice + data.payable_price * data.purchased_qty
+                          );
+                        },
+                        0
+                    )}
                   </h6>
                 </div>
                 {/* <div font-size="14px" class="Typography-sc-1nbqu5-0 gVliBE">

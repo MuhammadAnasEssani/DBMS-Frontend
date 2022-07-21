@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import { getCategories } from '../../config/api/categories';
+import React, {useEffect, useState} from 'react'
+import {getCategories} from '../../config/api/categories';
 import Notification from "../../component/notification/Notification";
-import { Link } from 'react-router-dom';
-import { RiArrowRightSLine } from "react-icons/ri";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
+import {useHistory} from "react-router-dom";
 
 export default function MenuHeader() {
   const [categories, setCategories] = useState([]);
   const { t } = useTranslation();
+  const history = useHistory();
 
   const getAllCategories = async () => {
     try {
       const res = await getCategories();
       if (res.status == 200) {
-        setCategories(res.data.categoryList)
+        setCategories(res.data.data)
       } else {
         Notification("Categories", "Something went wrong", "Error");
       }
@@ -29,33 +29,26 @@ export default function MenuHeader() {
     let myCategories = [];
     for (let category of categories) {
       myCategories.push(
-        <li key={category.name}>
-          {category.parentId ? (
-            <>
-              <Link
-                to={`/${category.slug}?cid=${category._id}&type=${category.type}`}
-              >
-                {/* {category.name} */}
-                {t("lang") == "en" ? (
-                  truncate(category.name, 12)
-                ) : (
-                  truncate(category.nameArabic, 12)
-                )}
-                {/* {truncate(category.name, 12)} */}
-              </Link>
-              {/* <RiArrowRightSLine /> */}
-            </>
-          ) : (
-            t("lang") == "en" ? (
-            <span>{category.name}</span>
-            ) : (
-              <span>{category.nameArabic}</span>
-            )
-          )}
-          {category.children.length > 0 ? (
-            <ul className="mega-box">{renderCategories(category.children)}</ul>
-          ) : null}
-        </li>
+          <li key={category.name}>
+            {/*{category.parentId ? (*/}
+            {/*    <>*/}
+            {/*      <Link*/}
+            {/*          to={`/${category.slug}?cid=${category._id}&type=${category.type}`}*/}
+            {/*      >*/}
+            {/*        {truncate(category.name, 12)}*/}
+            {/*        /!* {truncate(category.name, 12)} *!/*/}
+            {/*      </Link>*/}
+            {/*      /!* <RiArrowRightSLine /> *!/*/}
+            {/*    </>*/}
+            {/*) : (*/}
+            {/*<Link*/}
+            {/*    to={`/${category.id}?cid=${category.id}&type=${category.type}`}*/}
+            {/*>*/}
+            <span onClick={()=> history.push(`/product-by-category/${category.id}`)}>{category.name}</span>
+            {/*</Link>*/}
+            {/*)}*/}
+
+          </li>
       );
     }
     return myCategories;
@@ -63,14 +56,13 @@ export default function MenuHeader() {
   useEffect(() => {
     getAllCategories();
   }, []);
-  console.log(categories)
   return (
-    <div className='menuHeader'>
-      <ul>
-        {categories.length > 0
-          ? renderCategories(categories)
-          : null}
-      </ul>
-    </div>
+      <div className='menuHeader'>
+        <ul>
+          {categories.length > 0
+              ? renderCategories(categories)
+              : null}
+        </ul>
+      </div>
   )
 }

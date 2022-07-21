@@ -2,7 +2,7 @@ import axios from "../helper/axios";
 
 
 function getOffers() {
-  return axios.post(`/offers/getOffers`).then((res) => res)
+  return axios.get(`/get-offers`).then((res) => res)
 }
 
 

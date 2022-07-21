@@ -1,4 +1,3 @@
-
 import PageNotFound from "../../views/404/PageNotFound";
 import ActivateAccount from "../../views/ActivateAccount/ActivateAccount";
 import Checkout from "../../views/Checkout/Checkout";
@@ -77,7 +76,7 @@ const routes = [
     component: () => <ShopPage />,
   },
   {
-    path: "/product/:offerId",
+    path: "/product-by-offer/:id",
     title: "Shop Page",
     component: () => <OfferPage />,
   },
@@ -87,21 +86,22 @@ const routes = [
     component: () => <SearchProducts />,
   },
   {
+    path: "/product-by-category/:id",
+    title: "Products",
+    component: () => <ProductPage />,
+  },
+  {
     path: "/authentication/activate/:token",
     title: "Verify Account",
     // isLoginRequired: true,
     component: () => <ActivateAccount />,
   },
   {
-    path: "/:productSlug/:productId/p",
+    path: "/product-detail/:id",
     title: "Product Detail",
     component: () => <ProductDetailPage />,
   },
-  {
-    path: "/:slug",
-    title: "Products",
-    component: () => <ProductPage />,
-  },
+
   // {
   //   path: "/forgot-password",
   //   title: "forgot",

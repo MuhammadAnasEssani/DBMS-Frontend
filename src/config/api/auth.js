@@ -1,9 +1,8 @@
 import axios from "../helper/axios";
 
 
-
 function userSignup(user) {
-    return axios.post(`/signup`, {
+    return axios.post(`/user`, {
         ...user,
     }).then((res) => res)
 }
@@ -15,7 +14,7 @@ function userActivation(model){
 }
 
 function userSignin(user) {
-    return axios.post("/signin", {
+    return axios.post("/login", {
         ...user,
       }).then((res) => res)
 }
